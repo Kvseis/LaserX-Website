@@ -1,0 +1,30 @@
+{
+  "name": "laserx",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack --hostname 0.0.0.0",
+    "build": "next build --webpack",
+    "start": "next start --hostname 0.0.0.0",
+    "typecheck": "tsc --noEmit --incremental false",
+    "check:visual": "node scripts/visual-check.mjs",
+    "check:technology": "node scripts/technology-check.mjs",
+    "check:about": "node scripts/about-check.mjs",
+    "check:comparison": "node scripts/comparison-check.mjs"
+  },
+  "dependencies": {
+    "@gsap/react": "latest",
+    "gsap": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "playwright-core": "^1.65.0",
+    "typescript": "latest"
+  }
+}

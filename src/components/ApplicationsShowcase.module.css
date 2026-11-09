@@ -1,0 +1,112 @@
+.applications {
+  --tech-red: #ef5149;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(82px, 7vw, 116px) max(4vw, calc((100% - 1320px) / 2));
+  color: #f4f4f1;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(239, 81, 73, .08), transparent 32%),
+    #0c0d0d;
+  border-top: 1px solid #282a2a;
+  border-bottom: 1px solid #282a2a;
+}
+
+.sectionIntro {
+  max-width: 850px;
+  margin: 0 auto 58px;
+  text-align: center;
+}
+
+.sectionIntro h2 {
+  margin: 0;
+  font-size: clamp(44px, 5vw, 72px);
+  line-height: .98;
+  letter-spacing: -.055em;
+  font-weight: 540;
+}
+
+.sectionIntro h2 em {
+  color: var(--tech-red);
+  font-style: normal;
+}
+
+.sectionIntro p {
+  max-width: 580px;
+  margin: 20px auto 0;
+  color: #91938f;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.applicationGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 10px;
+}
+
+.applicationGrid article {
+  min-height: 190px;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #121414;
+  border: 1px solid #343636;
+  border-radius: 12px;
+  transition: transform 280ms ease, border-color 280ms ease, background 280ms ease;
+}
+
+.applicationGrid article:hover {
+  background: #181a1a;
+  border-color: var(--tech-red);
+  transform: translateY(-4px);
+}
+
+.applicationGrid article > span {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  color: var(--tech-red);
+  border: 1px solid var(--tech-red);
+  border-radius: 50%;
+}
+
+.applicationGrid svg {
+  width: 42px;
+  height: 42px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.applicationGrid h3 {
+  margin: 19px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (max-width: 1000px) {
+  .applicationGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .applications { padding: 68px 16px; }
+  .sectionIntro { margin-bottom: 38px; text-align: left; }
+  .sectionIntro h2 { font-size: 42px; }
+  .sectionIntro p { margin-left: 0; font-size: 12px; }
+  .applicationGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .applicationGrid article { min-height: 150px; padding: 20px 8px; }
+  .applicationGrid article > span { width: 56px; height: 56px; }
+  .applicationGrid svg { width: 32px; height: 32px; }
+  .applicationGrid h3 { margin-top: 14px; font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .applicationGrid article { opacity: 1 !important; transform: none !important; }
+}
