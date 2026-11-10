@@ -14,18 +14,18 @@ export type AboutCopy = {
 const aboutCopy: Record<Locale, AboutCopy> = {
   az: {
     hero: ['Lazer təmizləmə.', 'Səthə yeni baxış.'],
-    description: 'LaserX Bakıda metal, daş və ağac səthlər üçün dəqiq, nəzarətli lazer təmizləmə xidməti göstərir.',
+    description: 'Bakıda metal, daş və ağac üçün lazer təmizləmə xidməti.',
     heroAlt: 'Metal detalın lazerlə təmizlənməsini göstərən illüstrativ səhnə',
     servicesLink: 'Xidmətlərə baxın', technologyLink: 'Texnologiyanı tanıyın',
-    storyLabel: 'Biz kimik', storyTitle: 'Materialı tanıyırıq. Uyğun üsulu seçirik.',
-    story: ['Pas, boya, oksid və çirk qatlarını təmizləyərək səthləri yenidən istifadəyə hazırlayırıq.', 'Hər materialın öz xüsusiyyəti var. Buna görə işi səthin qiymətləndirilməsi və kiçik sınaq sahəsi ilə başlayırıq. Lazer parametrlərini alınan nəticəyə uyğun seçirik.'],
+    storyLabel: 'Biz kimik', storyTitle: 'Hər materiala uyğun yanaşma.',
+    story: ['LaserX səthləri yenidən istifadəyə hazırlayır. Əvvəl kiçik sahədə sınaq aparır, sonra uyğun iş rejimini seçirik.'],
     storyAlt: 'Oyma daş səthin diqqətlə yoxlanmasını göstərən illüstrativ səhnə',
-    missionLabel: 'Məqsədimiz', missionTitle: 'Dəqiq təmizlik. Materiala diqqət.',
+    missionLabel: 'Məqsədimiz', missionTitle: 'İş prinsiplərimiz',
     missionText: 'Müasir texnologiyanı səthə uyğun yanaşma ilə birləşdiririk.',
     values: [
       { title: 'Texnologiya', text: 'Lazer enerjisini arzuolunmaz qata yönəldirik.' },
       { title: 'Nəticə', text: 'Təmizlənmiş səthi işin sonunda yoxlayırıq.' },
-      { title: 'Əlaqə', text: 'Layihəni sizinlə müzakirə edir, işin gedişini aydın izah edirik.' },
+      { title: 'Əlaqə', text: 'İşin həcmini və gedişini sizinlə razılaşdırırıq.' },
     ],
     reasonsTitle: 'Niyə LaserX?',
     reasons: [
@@ -36,7 +36,7 @@ const aboutCopy: Record<Locale, AboutCopy> = {
       { title: 'Daha az əlavə tullantı', text: 'Abraziv qum istifadə edilmir; ayrılan qalıqlar nəzarətlə toplanır.' },
       { title: 'Aydın iş planı', text: 'Səth, işin həcmi və gözlənilən nəticə əvvəlcədən müzakirə olunur.' },
     ],
-    surfacesTitle: 'Fərqli səthlər. Eyni diqqət.',
+    surfacesTitle: 'İşlədiyimiz səthlər',
     surfacesIntro: 'Sənaye detallarından bərpa işlərinə qədər.',
     surfaces: [
       { title: 'Metal', text: 'Pas, oksid və sənaye örtüklərinin təmizlənməsi.' },
@@ -47,13 +47,13 @@ const aboutCopy: Record<Locale, AboutCopy> = {
   },
   en: {
     hero: ['Laser cleaning.', 'A fresh view of surfaces.'],
-    description: 'LaserX provides precise, controlled laser cleaning for metal, stone and wood in Baku.',
+    description: 'Laser cleaning for metal, stone and wood in Baku.',
     heroAlt: 'Illustrative scene of laser cleaning a metal component',
     servicesLink: 'View our services', technologyLink: 'See the technology',
-    storyLabel: 'Who we are', storyTitle: 'Understand the material. Choose the right method.',
-    story: ['We remove rust, paint, oxides and deposits to prepare surfaces for use again.', 'Every material is different. We start with a surface assessment and a small test patch, then choose laser settings based on the result.'],
+    storyLabel: 'Who we are', storyTitle: 'An approach for each material.',
+    story: ['LaserX prepares surfaces for reuse. We test a small area first, then select the right settings.'],
     storyAlt: 'Illustrative scene of a carved stone surface being inspected',
-    missionLabel: 'Our purpose', missionTitle: 'Precise cleaning. Care for the material.',
+    missionLabel: 'Our purpose', missionTitle: 'How we work',
     missionText: 'We combine modern technology with an approach suited to each surface.',
     values: [
       { title: 'Technology', text: 'We direct laser energy at the unwanted layer.' },
@@ -69,7 +69,7 @@ const aboutCopy: Record<Locale, AboutCopy> = {
       { title: 'Less secondary waste', text: 'No abrasive grit is used; removed residue is collected under control.' },
       { title: 'A clear work plan', text: 'We discuss the surface, scope and expected result in advance.' },
     ],
-    surfacesTitle: 'Different surfaces. The same care.',
+    surfacesTitle: 'Surfaces we work with',
     surfacesIntro: 'From industrial components to restoration work.',
     surfaces: [
       { title: 'Metal', text: 'Removal of rust, oxides and industrial coatings.' },
@@ -80,13 +80,13 @@ const aboutCopy: Record<Locale, AboutCopy> = {
   },
   ru: {
     hero: ['Лазерная очистка.', 'Новый взгляд на поверхности.'],
-    description: 'LaserX выполняет точную, контролируемую лазерную очистку металла, камня и дерева в Баку.',
+    description: 'Лазерная очистка металла, камня и дерева в Баку.',
     heroAlt: 'Иллюстрация лазерной очистки металлической детали',
     servicesLink: 'Посмотреть услуги', technologyLink: 'Узнать о технологии',
-    storyLabel: 'Кто мы', storyTitle: 'Изучаем материал. Выбираем подходящий метод.',
-    story: ['Удаляем ржавчину, краску, оксиды и загрязнения, подготавливая поверхности к дальнейшему использованию.', 'Каждый материал имеет свои особенности. Мы начинаем с оценки поверхности и пробы на небольшом участке, затем подбираем настройки по результату.'],
+    storyLabel: 'Кто мы', storyTitle: 'Подход к каждому материалу.',
+    story: ['LaserX готовит поверхности к повторному использованию. Сначала проводим пробу на небольшом участке, затем подбираем режим работы.'],
     storyAlt: 'Иллюстрация осмотра резной каменной поверхности',
-    missionLabel: 'Наша цель', missionTitle: 'Точная очистка. Внимание к материалу.',
+    missionLabel: 'Наша цель', missionTitle: 'Наши принципы',
     missionText: 'Современная технология и подход с учётом особенностей поверхности.',
     values: [
       { title: 'Технология', text: 'Направляем энергию лазера на нежелательный слой.' },
@@ -102,7 +102,7 @@ const aboutCopy: Record<Locale, AboutCopy> = {
       { title: 'Меньше вторичных отходов', text: 'Не используем абразивный песок; отделённые остатки собираем под контролем.' },
       { title: 'Понятный план', text: 'Заранее обсуждаем поверхность, объём работ и ожидаемый результат.' },
     ],
-    surfacesTitle: 'Разные поверхности. Одинаковое внимание.',
+    surfacesTitle: 'С чем мы работаем',
     surfacesIntro: 'От промышленных деталей до реставрационных работ.',
     surfaces: [
       { title: 'Металл', text: 'Удаление ржавчины, оксидов и промышленных покрытий.' },
@@ -113,13 +113,13 @@ const aboutCopy: Record<Locale, AboutCopy> = {
   },
   tr: {
     hero: ['Lazer temizleme.', 'Yüzeylere yeni bir bakış.'],
-    description: 'LaserX, Bakü’de metal, taş ve ahşap yüzeyler için hassas ve kontrollü lazer temizleme hizmeti sunar.',
+    description: 'Bakü’de metal, taş ve ahşap için lazer temizleme hizmeti.',
     heroAlt: 'Metal bir parçanın lazerle temizlenmesini gösteren temsili görsel',
     servicesLink: 'Hizmetleri inceleyin', technologyLink: 'Teknolojiyi tanıyın',
-    storyLabel: 'Biz kimiz', storyTitle: 'Malzemeyi tanırız. Uygun yöntemi seçeriz.',
-    story: ['Pas, boya, oksit ve kir tabakalarını temizleyerek yüzeyleri yeniden kullanıma hazırlarız.', 'Her malzemenin özellikleri farklıdır. Yüzeyi değerlendirip küçük bir alanda deneme yapar, lazer ayarlarını sonuca göre seçeriz.'],
+    storyLabel: 'Biz kimiz', storyTitle: 'Her malzemeye uygun yaklaşım.',
+    story: ['LaserX yüzeyleri yeniden kullanıma hazırlar. Önce küçük bir alanda deneme yapar, ardından uygun çalışma ayarlarını seçeriz.'],
     storyAlt: 'Oyma taş yüzeyin incelenmesini gösteren temsili görsel',
-    missionLabel: 'Amacımız', missionTitle: 'Hassas temizlik. Malzemeye özen.',
+    missionLabel: 'Amacımız', missionTitle: 'Çalışma ilkelerimiz',
     missionText: 'Modern teknolojiyi yüzeye uygun bir yaklaşımla birleştiriyoruz.',
     values: [
       { title: 'Teknoloji', text: 'Lazer enerjisini istenmeyen katmana yönlendiririz.' },
@@ -135,7 +135,7 @@ const aboutCopy: Record<Locale, AboutCopy> = {
       { title: 'Daha az ikincil atık', text: 'Aşındırıcı kum kullanılmaz; çıkan kalıntılar kontrollü toplanır.' },
       { title: 'Açık bir çalışma planı', text: 'Yüzey, işin kapsamı ve beklenen sonuç önceden görüşülür.' },
     ],
-    surfacesTitle: 'Farklı yüzeyler. Aynı özen.',
+    surfacesTitle: 'Çalıştığımız yüzeyler',
     surfacesIntro: 'Endüstriyel parçalardan restorasyon çalışmalarına.',
     surfaces: [
       { title: 'Metal', text: 'Pas, oksit ve endüstriyel kaplamaların temizlenmesi.' },

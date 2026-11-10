@@ -33,21 +33,17 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
       <section className={styles.hero}>
         <div className={`${styles.container} ${styles.heroLayout}`}>
         <div className={styles.heroContent}>
-          <p className={styles.label}>{copy.nav.about}</p>
-          <h1>{about.hero[0]}<span>{about.hero[1]}</span></h1>
+          <h1>{copy.nav.about}</h1>
           <p className={styles.lead}>{about.description}</p>
-          <div className={styles.actions}>
-            <a className={styles.whatsapp} href={whatsapp}><WhatsAppLogo />{copy.nav.whatsapp}</a>
-            <a className={styles.secondary} href={`${sitePath(locale)}#xidmetler`}>{about.servicesLink}</a>
-          </div>
         </div>
         <div className={styles.heroFrame}>
-          <Image className={styles.heroImage} src="/images/about-hero.webp" fill priority sizes="(max-width: 760px) 92vw, 52vw" alt={about.heroAlt} />
+          <Image className={styles.heroImage} src="/images/about-hero.webp" fill preload sizes="100vw" alt={about.heroAlt} />
         </div>
         </div>
       </section>
 
-      <section className={`${styles.container} ${styles.story}`}>
+      <section className={styles.storySection}>
+      <div className={`${styles.container} ${styles.story}`}>
         <div>
           <p className={styles.label}>{about.storyLabel}</p>
           <h2>{about.storyTitle}</h2>
@@ -57,6 +53,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         <div className={styles.storyImage}>
           <Image src="/images/about-restoration.webp" width={960} height={1200} sizes="(max-width: 760px) 92vw, 42vw" alt={about.storyAlt} />
         </div>
+      </div>
       </section>
 
       <section className={styles.mission}>
@@ -78,10 +75,10 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
       <section className={`${styles.container} ${styles.reasons}`}>
         <div className={styles.sectionIntro}><h2>{about.reasonsTitle}</h2></div>
         <div className={styles.reasonGrid}>
-          {about.reasons.map((item, index) => <article key={item.title}>
+          {about.reasons.map((item, index) => [1, 2, 4].includes(index) ? <article key={item.title}>
             <span className={styles.icon}><AboutIcon index={reasonIcons[index]} /></span>
-            <h3>{item.title}</h3><p>{item.text}</p>
-          </article>)}
+            <div><h3>{item.title}</h3><p>{item.text}</p></div>
+          </article> : null)}
         </div>
       </section>
 
