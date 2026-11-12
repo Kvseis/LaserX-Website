@@ -4,6 +4,7 @@ import { sitePath, type Locale } from '@/lib/locales';
 import { getAboutCopy } from '@/lib/about-copy';
 import SiteHeader, { PhoneIcon } from './SiteHeader';
 import WhatsAppLogo from './WhatsAppLogo';
+import AboutReveal from './AboutReveal';
 import styles from './AboutPage.module.css';
 
 function AboutIcon({ index }: { index: number }) {
@@ -29,7 +30,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
 
   return <div className={styles.page} id="top">
     <SiteHeader locale={locale} page="about" copy={copy.nav} />
-    <main>
+    <AboutReveal>
       <section className={styles.hero}>
         <div className={`${styles.container} ${styles.heroLayout}`}>
         <div className={styles.heroContent}>
@@ -101,7 +102,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         <a className="big-phone" href={phone} aria-label={copy.nav.callNumber}>055 390 00 28<PhoneIcon /></a>
         <a className="button contact-whatsapp" href={whatsapp}><WhatsAppLogo />{copy.nav.whatsapp}</a>
       </section>
-    </main>
+    </AboutReveal>
     <p className={styles.disclosure}>{about.disclosure}</p>
     <footer>
       <a className="wordmark nav-brand" href={sitePath(locale)} aria-label={copy.nav.home}><Image src="/images/logo-mark-transparent.png" width={40} height={40} alt="" /><span>LaserX</span></a>
