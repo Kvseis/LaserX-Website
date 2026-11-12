@@ -5,9 +5,9 @@
 .page h3 { font-size: 23px; font-weight: 550; line-height: 1.25; letter-spacing: -.025em; }
 .page .label { margin-bottom: 24px; font-size: 14px; font-weight: 550; color: var(--accent); }
 .page .body { margin-top: 24px; font-size: 17px; line-height: 1.7; color: #bfc4c1; }
-.hero { padding: 112px 20px 20px; }
-.heroLayout { position: relative; isolation: isolate; width: 100%; max-width: 1560px; min-height: 630px; display: flex; align-items: center; overflow: hidden; border-radius: 20px; }
-.heroContent { position: relative; z-index: 2; width: min(1200px, calc(100% - 80px)); margin-inline: auto; padding-block: 72px; }
+.hero { padding: 84px 16px 16px; }
+.heroLayout { position: relative; isolation: isolate; width: 100%; max-width: 1560px; min-height: 470px; display: flex; align-items: center; overflow: hidden; border-radius: 16px; }
+.heroContent { position: relative; z-index: 2; width: min(1200px, calc(100% - 80px)); margin-inline: auto; padding-block: 48px; }
 .heroFrame { position: absolute; z-index: -1; inset: 0; }
 .heroFrame::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #090b0be8 0%, #090b0bb3 40%, #090b0b05 80%); }
 .heroImage { object-fit: cover; object-position: center; }
@@ -68,8 +68,8 @@
 .page :global(.contact > p) { margin-top: 28px; }
 .disclosure { padding: 24px 4vw 0; color: #a9ada9; background: #111; font-size: 13px; line-height: 1.65; text-align: center; }
 @media (max-width: 1100px) {
-  .hero { padding-top: 84px; }
-  .heroLayout { min-height: 580px; }
+  .hero { padding-top: 76px; }
+  .heroLayout { min-height: 440px; }
   .hero h1 { max-width: 640px; }
   .story { gap: 40px; }
   .reasons { grid-template-columns: 1fr; gap: 36px; }
