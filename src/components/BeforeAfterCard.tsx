@@ -90,12 +90,14 @@ export default function BeforeAfterCard({ id, title, detail, copy }: {
         suppressClick.current = false;
       }}
     >
-      <img src={`/images/comparisons/${id}-after-480.webp`} srcSet={`/images/comparisons/${id}-after-480.webp 480w, /images/comparisons/${id}-after-960.webp 960w`} width={1536} height={1024} sizes={imageSizes} loading="lazy" decoding="async" draggable={false} alt={`${title}: ${copy.afterAlt}`} />
+      <div className="result-after" style={{ clipPath: `inset(0 0 0 ${split}%)` }}>
+        <img src={`/images/comparisons/${id}-after-480.webp`} srcSet={`/images/comparisons/${id}-after-480.webp 480w, /images/comparisons/${id}-after-960.webp 960w`} width={1536} height={1024} sizes={imageSizes} loading="lazy" decoding="async" draggable={false} alt={`${title}: ${copy.afterAlt}`} />
+        <span className="result-label after-label">{copy.after}</span>
+      </div>
       <div className="result-before" style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}>
         <img src={`/images/comparisons/${id}-before-480.webp`} srcSet={`/images/comparisons/${id}-before-480.webp 480w, /images/comparisons/${id}-before-960.webp 960w`} width={1536} height={1024} sizes={imageSizes} loading="lazy" decoding="async" draggable={false} alt={`${title}: ${copy.beforeAlt}`} />
+        <span className="result-label before-label">{copy.before}</span>
       </div>
-      <span className="result-label before-label">{copy.before}</span>
-      <span className="result-label after-label">{copy.after}</span>
       <span className="result-divider" style={{ left: `${split}%` }} aria-hidden="true" />
       <input
         aria-label={copy.slider.replace('{title}', title)}
