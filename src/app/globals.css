@@ -181,6 +181,7 @@ main { width: 100%; max-width: 100%; overflow-x: hidden; }
 .hero-contacts .contact-rail { min-height: 52px; padding: 7px 12px; grid-template-columns: 28px 1fr; gap: 8px; border-radius: 13px; box-shadow: 0 9px 22px rgba(0,0,0,.2); }
 .hero-contacts .contact-rail:hover { transform: translateY(-2px); }
 .hero-contacts .contact-rail-icon { width: 28px; height: 28px; }
+.hero-contacts .whatsapp-rail .contact-rail-icon { background: transparent; border: 0; }
 .hero-contacts .contact-rail-icon svg { width: 16px; height: 16px; }
 .hero-contacts .contact-rail > span:nth-child(2) { gap: 0; }
 .hero-contacts .contact-rail strong { font-size: 12px; line-height: 1; }
