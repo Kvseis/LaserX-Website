@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Camera, ScanLine, Zap, ClipboardCheck } from 'lucide-react';
 import type { SiteCopy } from '@/lib/messages/az';
 import { sitePath, type Locale } from '@/lib/locales';
 import { getAboutCopy } from '@/lib/about-copy';
@@ -27,6 +28,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
   const whatsapp = 'https://wa.me/994553900028';
   const surfaceImages = ['rust-after.webp', 'graffiti-after.webp', 'wood-after.webp'];
   const reasonIcons = [1, 3, 4, 5, 6, 7];
+  const processIcons = [Camera, ScanLine, Zap, ClipboardCheck];
 
   return <div className={styles.page} id="top">
     <SiteHeader locale={locale} page="about" copy={copy.nav} />
@@ -35,6 +37,9 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         <div className={`${styles.container} ${styles.heroLayout}`}>
         <div className={styles.heroContent}>
           <h1>{copy.nav.about}</h1>
+          <nav className={styles.breadcrumb} aria-label={copy.nav.about}>
+            <a href={sitePath(locale)}>{about.breadcrumbHome}</a><span aria-hidden="true">/</span><span aria-current="page">{copy.nav.about}</span>
+          </nav>
           <p className={styles.lead}>{about.description}</p>
         </div>
         <div className={styles.heroFrame}>
@@ -47,7 +52,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
       <div className={`${styles.container} ${styles.story}`}>
         <div>
           <p className={styles.label}>{about.storyLabel}</p>
-          <h2>{about.storyTitle}</h2>
+          <h2><span className={styles.mutedTitle}>{about.storyMuted}</span>{about.storyTitle.slice(about.storyMuted.length)}</h2>
           {about.story.map((paragraph) => <p className={styles.body} key={paragraph}>{paragraph}</p>)}
           <a className={styles.textLink} href={sitePath(locale, 'technology')}>{about.technologyLink}<span aria-hidden="true">→</span></a>
         </div>
@@ -73,19 +78,40 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         </div>
       </section>
 
-      <section className={`${styles.container} ${styles.reasons}`}>
-        <div className={styles.sectionIntro}><h2>{about.reasonsTitle}</h2></div>
+      <section className={styles.process}>
+        <div className={styles.container}>
+          <div className={styles.processIntro}>
+            <p className={styles.label}>{about.processLabel}</p>
+            <h2>{about.processTitle}</h2>
+            <p className={styles.body}>{about.processText}</p>
+          </div>
+          <div className={styles.processGrid}>
+            {about.process.map((item, index) => {
+              const Icon = processIcons[index];
+              return <article key={item.title}>
+                <div className={styles.processTop}><span>{String(index + 1).padStart(2, '0')}</span><Icon aria-hidden="true" size={32} strokeWidth={1.5} /></div>
+                <h3>{item.title}</h3><p>{item.text}</p>
+              </article>;
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.reasons}>
+        <div className={styles.container}>
+        <div className={styles.sectionIntro}><h2 className={styles.label}>{about.reasonsTitle}</h2></div>
         <div className={styles.reasonGrid}>
           {about.reasons.map((item, index) => [1, 2, 4].includes(index) ? <article key={item.title}>
             <span className={styles.icon}><AboutIcon index={reasonIcons[index]} /></span>
             <div><h3>{item.title}</h3><p>{item.text}</p></div>
           </article> : null)}
         </div>
+        </div>
       </section>
 
       <section className={styles.surfaces}>
         <div className={styles.container}>
-          <div className={styles.sectionIntro}><h2>{about.surfacesTitle}</h2><p className={styles.body}>{about.surfacesIntro}</p></div>
+          <div className={styles.sectionIntro}><h2 className={styles.label}>{about.surfacesTitle}</h2><p className={styles.body}>{about.surfacesIntro}</p></div>
           <div className={styles.surfaceGrid}>
             {about.surfaces.map((item, index) => <article key={item.title}>
               <div className={styles.surfaceImage}><Image src={`/images/${surfaceImages[index]}`} fill sizes="(max-width: 760px) 92vw, 30vw" alt="" /></div>
@@ -96,7 +122,8 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         </div>
       </section>
 
-      <section className="contact">
+      <section className={`contact ${styles.contactBanner}`}>
+        <Image className={styles.contactImage} src="/images/about-hero.webp" fill sizes="92vw" alt="" />
         <h2>{copy.home.contactTitle[0]}<br />{copy.home.contactTitle[1]}</h2>
         <p>{copy.home.contactDescription}</p>
         <a className="big-phone" href={phone} aria-label={copy.nav.callNumber}>055 390 00 28<PhoneIcon /></a>

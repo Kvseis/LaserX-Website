@@ -23,6 +23,14 @@ try {
       }
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
       if (overflow > 1) throw Error(`${locale}/${width}: overflow ${overflow}`);
+      const processCards = page.locator('main section').filter({ has: page.locator('[class*="processGrid"]') }).locator('article');
+      if (await processCards.count() !== 4) throw Error(`${locale}: process steps missing`);
+      const cardPositions = await processCards.evaluateAll((cards) => cards.map((card) => ({ x: card.getBoundingClientRect().x, y: card.getBoundingClientRect().y })));
+      if (width === 390 && !cardPositions.every((position) => position.x === cardPositions[0].x)) throw Error('Mobile steps must stack');
+      if (width === 1440 && !cardPositions.every((position) => position.y === cardPositions[0].y)) throw Error('Desktop steps must share one row');
+      const heroGap = await page.evaluate(() => document.querySelector('main section > div').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom);
+      if (Math.abs(heroGap - 16) > 1) throw Error(`${locale}/${width}: hero gap is ${heroGap}`);
+      if (await page.locator('main nav a').getAttribute('href') !== (prefix || '/')) throw Error('Breadcrumb home link loses locale');
       const nav = await page.locator('#main-navigation a').evaluateAll((links) => links.map((link) => ({ text: link.textContent, href: link.getAttribute('href') })));
       if (nav.length !== 5 || nav[0].href !== `${prefix}/about`) throw Error('About navigation missing');
       const flagLinks = await page.locator('.language-switch li a').evaluateAll((links) => links.map((link) => link.getAttribute('href')));

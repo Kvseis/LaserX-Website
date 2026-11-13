@@ -5,6 +5,9 @@ export type AboutCopy = {
   hero: [string, string]; description: string; heroAlt: string;
   servicesLink: string; technologyLink: string;
   storyLabel: string; storyTitle: string; story: string[]; storyAlt: string;
+  storyMuted: string;
+  breadcrumbHome: string;
+  processLabel: string; processTitle: string; processText: string; process: Item[];
   missionLabel: string; missionTitle: string; missionText: string; values: Item[];
   reasonsTitle: string; reasons: Item[];
   surfacesTitle: string; surfacesIntro: string; surfaces: Item[];
@@ -13,6 +16,16 @@ export type AboutCopy = {
 
 const aboutCopy: Record<Locale, AboutCopy> = {
   az: {
+    breadcrumbHome: 'Ana səhifə',
+    storyMuted: 'Hər materiala',
+    processLabel: 'Necə işləyirik', processTitle: 'Dörd addımda təmiz səth.',
+    processText: 'İlk əlaqədən son yoxlamaya qədər aydın iş prosesi.',
+    process: [
+      { title: 'Şəkil göndərin və ya təsvir edin', text: 'Səthin şəklini və ya qısa təsvirini bizimlə paylaşın.' },
+      { title: 'Kiçik sahədə sınaq', text: 'Materiala uyğun rejimi kiçik bir sahədə yoxlayırıq.' },
+      { title: 'Lazerlə təmizləmə', text: 'Seçilmiş parametrlərlə arzuolunmaz qatı təmizləyirik.' },
+      { title: 'Nəticənin yoxlanması', text: 'İşi təhvil verməzdən əvvəl təmizlənmiş səthi yoxlayırıq.' },
+    ],
     hero: ['Lazer təmizləmə.', 'Səthə yeni baxış.'],
     description: 'Bakıda metal, daş və ağac üçün lazer təmizləmə xidməti.',
     heroAlt: 'Metal detalın lazerlə təmizlənməsini göstərən illüstrativ səhnə',
@@ -46,6 +59,16 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     disclosure: 'Bu səhifədəki vizuallar AI ilə hazırlanmış illüstrasiyalardır, real layihə və ya komanda fotoları deyil.',
   },
   en: {
+    breadcrumbHome: 'Home',
+    storyMuted: 'An approach',
+    processLabel: 'How we work', processTitle: 'A clean surface in four steps.',
+    processText: 'A clear process from first contact to final inspection.',
+    process: [
+      { title: 'Send a photo or description', text: 'Share a photo or a short description of the surface.' },
+      { title: 'Test a small area', text: 'We test suitable settings on a small part of the material.' },
+      { title: 'Laser cleaning', text: 'We remove the unwanted layer using the selected settings.' },
+      { title: 'Check the result', text: 'We inspect the cleaned surface before handing it over.' },
+    ],
     hero: ['Laser cleaning.', 'A fresh view of surfaces.'],
     description: 'Laser cleaning for metal, stone and wood in Baku.',
     heroAlt: 'Illustrative scene of laser cleaning a metal component',
@@ -79,6 +102,16 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     disclosure: 'Images on this page are AI-generated illustrations, not photographs of our projects or team.',
   },
   ru: {
+    breadcrumbHome: 'Главная',
+    storyMuted: 'Подход',
+    processLabel: 'Как мы работаем', processTitle: 'Чистая поверхность за четыре шага.',
+    processText: 'Понятный процесс от первого обращения до проверки результата.',
+    process: [
+      { title: 'Пришлите фото или описание', text: 'Поделитесь фотографией или кратким описанием поверхности.' },
+      { title: 'Проба на небольшом участке', text: 'Проверяем подходящие настройки на небольшом участке материала.' },
+      { title: 'Лазерная очистка', text: 'Удаляем нежелательный слой с выбранными настройками.' },
+      { title: 'Проверка результата', text: 'Проверяем очищенную поверхность перед сдачей работы.' },
+    ],
     hero: ['Лазерная очистка.', 'Новый взгляд на поверхности.'],
     description: 'Лазерная очистка металла, камня и дерева в Баку.',
     heroAlt: 'Иллюстрация лазерной очистки металлической детали',
@@ -112,6 +145,16 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     disclosure: 'Изображения созданы с помощью ИИ. Это иллюстрации, а не фотографии наших проектов или команды.',
   },
   tr: {
+    breadcrumbHome: 'Ana sayfa',
+    storyMuted: 'Her malzemeye',
+    processLabel: 'Nasıl çalışıyoruz', processTitle: 'Dört adımda temiz yüzey.',
+    processText: 'İlk iletişimden son kontrole kadar açık bir iş süreci.',
+    process: [
+      { title: 'Fotoğraf veya açıklama gönderin', text: 'Yüzeyin fotoğrafını veya kısa bir açıklamasını bizimle paylaşın.' },
+      { title: 'Küçük bir alanda deneme', text: 'Malzemeye uygun ayarları küçük bir alanda kontrol ederiz.' },
+      { title: 'Lazerle temizleme', text: 'Seçilen ayarlarla istenmeyen katmanı temizleriz.' },
+      { title: 'Sonucun kontrolü', text: 'İşi teslim etmeden önce temizlenen yüzeyi kontrol ederiz.' },
+    ],
     hero: ['Lazer temizleme.', 'Yüzeylere yeni bir bakış.'],
     description: 'Bakü’de metal, taş ve ahşap için lazer temizleme hizmeti.',
     heroAlt: 'Metal bir parçanın lazerle temizlenmesini gösteren temsili görsel',
