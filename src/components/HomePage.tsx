@@ -19,25 +19,51 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top">
-      <section className="hero">
-        <HeroVideo />
-        <div className="hero-shade" />
-        <div className="hero-copy">
-          <h1>{home.headline[0]}<br />{home.headline[1]}<br /><em>{home.headline[2]}</em></h1>
-          <p>{home.description}</p>
-          <div className="hero-proof"><span aria-hidden="true">✓</span><p>{home.proof}</p></div>
-          <div className="hero-contacts">
-            <a className="contact-rail call-rail" href={phone}>
-              <span className="contact-rail-icon" aria-hidden="true"><PhoneIcon /></span>
-              <span><strong>{nav.call}</strong></span>
-            </a>
-            <a className="contact-rail whatsapp-rail" href={whatsapp}>
-              <span className="contact-rail-icon" aria-hidden="true"><WhatsAppLogo /></span>
-              <span><strong>WhatsApp</strong></span>
-            </a>
+      <section className="hero hero-v2" aria-labelledby="laserx-hero-title">
+        <div className="hero-v2-frame">
+          <HeroVideo />
+          <div className="hero-shade" />
+          <div className="hero-v2-grid" aria-hidden="true" />
+
+          <div className="hero-v2-meta">
+            <span>LASERX <span aria-hidden="true">/</span> 01</span>
+            <span>{copy.location}</span>
+          </div>
+
+          <div className="hero-copy">
+            <p className="hero-v2-kicker"><span className="hero-v2-spark" aria-hidden="true">✳</span>{home.tagline}</p>
+            <h1 id="laserx-hero-title">
+              <span>{home.headline[0]}</span>
+              <span>{home.headline[1]}</span>
+              <em>{home.headline[2]}</em>
+            </h1>
+            <p className="hero-v2-description">{home.description}</p>
+
+            <div className="hero-v2-actions">
+              <a className="hero-v2-cta" href={whatsapp}>
+                <span>{nav.whatsapp}</span>
+                <span className="hero-v2-cta-icon" aria-hidden="true">↗</span>
+              </a>
+              <a className="hero-v2-secondary" href="#neticeler">
+                {home.seeResults} <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <div className="hero-v2-proof">
+              <span aria-hidden="true">✓</span>
+              <p>{home.proof}</p>
+            </div>
+          </div>
+
+          <div className="hero-v2-aside" aria-hidden="true">
+            <span className="hero-v2-aside-mark">✳</span>
+            <span>LASERX<small>{home.tagline}</small></span>
+          </div>
+
+          <div className="hero-v2-footer">
+            <span>LASERX — PRECISION</span>
+            <a href="#proses">{home.filmScrollCue} <span aria-hidden="true">↓</span></a>
           </div>
         </div>
-        <div className="hero-bottom"><span>{home.tagline}</span><a href="#proses">{home.seeResults} <span aria-hidden="true">↓</span></a></div>
       </section>
 
       <ScrollCleaningFilm copy={home} />
