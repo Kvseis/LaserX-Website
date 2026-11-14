@@ -1,0 +1,149 @@
+.section {
+  position: relative;
+  height: 250svh;
+  color: #18211d;
+  background: #f7f4eb;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 640px;
+  overflow: hidden;
+  background: #f7f4eb url('/images/laserx-scroll-poster.webp') center / cover no-repeat;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: min(1440px, 100% - 8vw);
+  height: 100%;
+  margin: 0 auto;
+  padding: clamp(150px, 19vh, 220px) 0 110px;
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 680;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.content h2 {
+  max-width: 610px;
+  margin-top: 20px;
+  font-size: clamp(50px, 5.7vw, 82px);
+  font-weight: 550;
+  letter-spacing: -.065em;
+  line-height: .98;
+  text-wrap: balance;
+}
+
+.content p {
+  max-width: 430px;
+  margin: 25px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.scrollCue {
+  width: min(290px, 100%);
+  margin-top: 48px;
+  display: grid;
+  gap: 13px;
+  font-size: 10px;
+  font-weight: 680;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.progressTrack {
+  height: 2px;
+  overflow: hidden;
+  background: rgba(24, 33, 29, .22);
+}
+
+.progressFill {
+  display: block;
+  width: var(--film-progress, 0%);
+  height: 100%;
+  background: #df342d;
+}
+
+.disclosure {
+  position: absolute;
+  z-index: 1;
+  right: 4vw;
+  bottom: 27px;
+  margin: 0;
+  color: #4f554e;
+  font-size: 11px;
+}
+
+.section[data-static='true'] {
+  height: auto;
+}
+
+.section[data-static='true'] .stage {
+  position: relative;
+}
+
+.section[data-static='true'] .video {
+  display: none;
+}
+
+.section[data-static='true'] .scrollCue {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .section { height: 235svh; }
+  .stage {
+    min-height: 660px;
+    background-image: none;
+  }
+  .video {
+    top: 44%;
+    bottom: auto;
+    height: 50%;
+    object-position: 61% center;
+  }
+  .content {
+    width: calc(100% - 36px);
+    padding: 132px 0 0;
+  }
+  .eyebrow { font-size: 9px; }
+  .content h2 {
+    max-width: 360px;
+    margin-top: 14px;
+    font-size: clamp(43px, 11vw, 60px);
+  }
+  .content p {
+    max-width: 320px;
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .scrollCue { width: 178px; margin-top: 23px; font-size: 9px; }
+  .disclosure { left: 18px; right: 18px; bottom: 17px; font-size: 9px; }
+  .section[data-static='true'] .stage { background-image: url('/images/laserx-scroll-poster.webp'); background-position: 61% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section { height: auto; }
+  .stage { position: relative; }
+  .video, .scrollCue { display: none; }
+  .stage { background-image: url('/images/laserx-scroll-poster.webp'); }
+}

@@ -133,7 +133,7 @@ img { display: block; }
 .language-switch a[aria-current] { box-shadow: inset 2px 0 #ef5149; }
 .menu-button { display: none; }
 
-main { width: 100%; max-width: 100%; overflow-x: hidden; }
+main { width: 100%; max-width: 100%; overflow-x: clip; }
 .hero {
   position: relative;
   min-height: 760px;

@@ -7,6 +7,7 @@ import { phone, whatsapp } from '@/lib/contact';
 import WhatsAppLogo from './WhatsAppLogo';
 import BeforeAfterCard from './BeforeAfterCard';
 import HeroVideo from './HeroVideo';
+import ScrollCleaningFilm from './ScrollCleaningFilm';
 
 const resultIds = ['rust', 'coating', 'mold', 'grease', 'graffiti', 'soot', 'biofilm', 'wood'];
 
@@ -36,8 +37,10 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             </a>
           </div>
         </div>
-        <div className="hero-bottom"><span>{home.tagline}</span><a href="#neticeler">{home.seeResults} <span aria-hidden="true">↓</span></a></div>
+        <div className="hero-bottom"><span>{home.tagline}</span><a href="#proses">{home.seeResults} <span aria-hidden="true">↓</span></a></div>
       </section>
+
+      <ScrollCleaningFilm copy={home} />
 
       <section className="results-section" id="neticeler"><div className="results wrap">
         <div className="results-intro">
