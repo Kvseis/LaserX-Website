@@ -58,22 +58,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
 
       <ServicesShowcase copy={copy.services} technologyPath={technologyPath} />
 
-      <section className="technology-preview" id="texnologiya">
-        <div className="technology-preview-inner">
-          <div className="technology-preview-media">
-            <Image src="/images/technology-hero.webp" width={1920} height={1080} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1565px) 92vw, 1440px" alt={home.technologyAlt} />
-          </div>
-          <div className="technology-preview-copy">
-            <h2>{home.technologyTitle[0]} <em>{home.technologyTitle[1]}</em></h2>
-            <p>{home.technologyDescription}</p>
-            <ul>
-              {home.technologyPoints.map((point) => <li key={point}><span aria-hidden="true">✓</span>{point}</li>)}
-            </ul>
-            <a className="technology-preview-cta" href={technologyPath}><span>{home.technologyLink}</span><i aria-hidden="true">↗</i></a>
-          </div>
-        </div>
-      </section>
-
       <section className="methods" id="ustunlukler"><span className="comparison-accent" aria-hidden="true" /><div className="wrap methods-layout">
         <div className="methods-copy">
           <h2><span>{methods.laser}</span><em>VS</em><span>{methods.traditional}</span></h2>
@@ -90,6 +74,22 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
           </div>)}
         </div>
       </div></section>
+
+      <section className="technology-preview" id="texnologiya">
+        <div className="technology-preview-inner">
+          <div className="technology-preview-media">
+            <Image src="/images/technology-hero.webp" width={1920} height={1080} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1565px) 92vw, 1440px" alt={home.technologyAlt} />
+          </div>
+          <div className="technology-preview-copy">
+            <h2>{home.technologyTitle[0]} <em>{home.technologyTitle[1]}</em></h2>
+            <p>{home.technologyDescription}</p>
+            <ul>
+              {home.technologyPoints.map((point) => <li key={point}><span aria-hidden="true">✓</span>{point}</li>)}
+            </ul>
+            <a className="technology-preview-cta" href={technologyPath}><span>{home.technologyLink}</span><i aria-hidden="true">↗</i></a>
+          </div>
+        </div>
+      </section>
 
       <section className="contact">
         <h2>{home.contactTitle[0]}<br />{home.contactTitle[1]}</h2>
