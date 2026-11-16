@@ -418,27 +418,30 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 .methods-copy h2 { font-size: clamp(35px, 9.2vw, 48px); }
 .methods-copy h2 em { margin: 8px 0; font-size: .53em; }
   .methods-intro { font-size: 14px; }
-  .comparison-matrix { margin-top: 38px; overflow: hidden; border: 1px solid #d8d5cf; border-radius: 16px; background: #fff; }
+  .comparison-matrix { margin-top: 32px; overflow: hidden; border: 1px solid #d8d5cf; border-radius: 14px; background: #fff; }
 .comparison-head { min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .comparison-label-head { display: none; }
-.comparison-head > b { min-height: 60px; padding: 10px 12px; display: flex; align-items: center; justify-content: center; border-left: 1px solid #d8d5cf; font-size: 13px; font-weight: 650; text-align: center; }
+.comparison-head > b { min-height: 52px; padding: 8px 10px; display: flex; align-items: center; justify-content: center; border-left: 1px solid #d8d5cf; font-size: 12px; font-weight: 650; text-align: center; }
 .comparison-head > b small { display: none; }
-.comparison-laser-head { min-height: 60px; padding: 10px 12px; justify-content: center; border-radius: 0; }
-.comparison-laser-brand { gap: 7px; font-size: 13px; text-align: center; }
-.comparison-laser-brand img { width: 23px; height: 23px; }
+.comparison-laser-head { min-height: 52px; padding: 8px 10px; justify-content: center; border-radius: 0; }
+.comparison-laser-brand { gap: 6px; font-size: 12px; text-align: center; }
+.comparison-laser-brand img { width: 20px; height: 20px; }
 .comparison-row { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; border: 0; border-radius: 0; background: #fff; }
 .comparison-row + .comparison-row { border-top: 1px solid #d8d5cf; }
-.comparison-criterion { grid-column: 1 / -1; min-height: 0; padding: 14px 16px; border-top: 0; font-size: 13px; }
-  .comparison-icon { width: 20px; height: 20px; flex-basis: 20px; }
-.comparison-value { min-height: 72px; padding: 12px; align-items: center; gap: 8px; font-size: 12px; overflow-wrap: anywhere; }
+.comparison-criterion { grid-column: 1 / -1; min-height: 34px; padding: 7px 12px; gap: 8px; border-top: 0; font-size: 11.5px; }
+  .comparison-icon { width: 16px; height: 16px; flex-basis: 16px; }
+.comparison-value { min-height: 58px; padding: 9px 10px; align-items: center; gap: 7px; font-size: 11.5px; line-height: 1.3; overflow-wrap: anywhere; }
+.comparison-value .comparison-mark { width: 17px; height: 17px; flex-basis: 17px; }
+.comparison-value .comparison-mark.good::after { top: 3px; left: 5px; }
+.comparison-value .comparison-mark.bad::before, .comparison-value .comparison-mark.bad::after { top: 7px; left: 3px; }
 .comparison-value .comparison-mark { margin-top: 0; }
 .comparison-value > span { display: block; }
 .comparison-mobile-label { display: none; }
 .laser-value { border-top: 1px solid rgba(255,255,255,.16); }
 .traditional-value { border-top: 1px solid #d8d5cf; border-left: 1px solid #d8d5cf; }
 .comparison-laser-footer { display: block; }
-.comparison-laser-action { margin: 0; padding: 16px; border-radius: 0; }
-.comparison-contact { width: 100%; min-height: 48px; }
+.comparison-laser-action { margin: 0; padding: 12px; border-radius: 0; }
+.comparison-contact { width: 100%; min-height: 46px; }
   .methods-steps { margin-top: 30px; grid-template-columns: 1fr; gap: 9px; }
   .contact { min-height: 620px; padding: 82px 16px; }
   html:not(:lang(az)) .contact h2 { font-size: clamp(40px, 10vw, 54px); }
