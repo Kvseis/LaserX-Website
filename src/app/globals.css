@@ -301,10 +301,10 @@ h2 { margin: 0; font-size: clamp(42px, 5.1vw, 74px); line-height: 1.01; letter-s
 .comparison-row:last-child .laser-value { border-radius: 0 0 17px 17px; }
 .traditional-value { border-top: 1px solid #d8d5cf; }
 .comparison-mark { position: relative; width: 19px; height: 19px; flex: 0 0 19px; }
-.comparison-mark.good { background: var(--red); border-radius: 50%; }
+.comparison-mark.good { background: #1d9b63; border-radius: 50%; }
 .comparison-mark.good::after { position: absolute; top: 4px; left: 6px; width: 5px; height: 8px; content: ''; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
-.comparison-mark.bad { border: 1.5px solid #777; border-radius: 5px; }
-.comparison-mark.bad::before, .comparison-mark.bad::after { position: absolute; top: 8px; left: 4px; width: 9px; height: 1.5px; content: ''; background: #777; transform: rotate(45deg); }
+.comparison-mark.bad { border: 1.5px solid var(--red); border-radius: 5px; }
+.comparison-mark.bad::before, .comparison-mark.bad::after { position: absolute; top: 8px; left: 4px; width: 9px; height: 1.5px; content: ''; background: var(--red); transform: rotate(45deg); }
 .comparison-mark.bad::after { transform: rotate(-45deg); }
 .comparison-mobile-label { display: none; }
 .methods-steps { width: 100%; margin: 48px 0 0; padding: 23px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; border-top: 1px solid #d8d5cf; list-style: none; }
