@@ -67,7 +67,10 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
         <div className="comparison-matrix" role="table" aria-label={methods.label}>
           <div className="comparison-head" role="row">
             <span className="comparison-label-head" aria-hidden="true" />
-            <b role="columnheader">{methods.laser}</b>
+            <div className="comparison-laser-head" role="columnheader">
+              <span className="comparison-laser-brand"><Image src="/images/logo-mark.webp" width={28} height={28} alt="" />{methods.laser}</span>
+              <a className="comparison-contact" href={phone}>{methods.contact} <span aria-hidden="true">↗</span></a>
+            </div>
             <b role="columnheader">{methods.traditional}<small>{methods.examples}</small></b>
           </div>
           {methods.rows.map(([laser, traditional], index) => <div className="comparison-row" role="row" key={laser}>

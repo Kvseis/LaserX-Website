@@ -88,6 +88,7 @@ const en: SiteCopy = {
     ],
   },
   methods: {
+    contact: 'Contact us now',
     laser: 'Laser cleaning',
     traditional: 'Traditional methods',
     examples: 'Blasting / chemicals',

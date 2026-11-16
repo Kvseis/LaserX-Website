@@ -86,6 +86,7 @@ const az = {
     ],
   },
   methods: {
+    contact: 'İndi əlaqə saxla',
     laser: 'Lazer təmizləmə',
     traditional: 'Ənənəvi üsullar',
     examples: 'Qumlama / kimyəvi',

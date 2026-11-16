@@ -88,6 +88,7 @@ const ru: SiteCopy = {
     ],
   },
   methods: {
+    contact: 'Связаться сейчас',
     laser: 'Лазерная очистка',
     traditional: 'Традиционные методы',
     examples: 'Пескоструйная / химическая очистка',

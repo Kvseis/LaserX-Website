@@ -88,6 +88,7 @@ const tr: SiteCopy = {
     ],
   },
   methods: {
+    contact: 'Şimdi iletişime geç',
     laser: 'Lazer temizleme',
     traditional: 'Geleneksel yöntemler',
     examples: 'Kumlama / kimyasal',
