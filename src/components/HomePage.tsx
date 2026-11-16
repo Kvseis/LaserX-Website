@@ -68,8 +68,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
           <div className="comparison-head" role="row">
             <span className="comparison-label-head" aria-hidden="true" />
             <div className="comparison-laser-head" role="columnheader">
-              <span className="comparison-laser-brand"><Image src="/images/logo-mark.webp" width={28} height={28} alt="" />{methods.laser}</span>
-              <a className="comparison-contact" href={phone}>{methods.contact} <span aria-hidden="true">↗</span></a>
+              <span className="comparison-laser-brand"><Image src="/images/logo-mark-transparent.png" width={28} height={28} alt="" loading="eager" />{methods.laser}</span>
             </div>
             <b role="columnheader">{methods.traditional}<small>{methods.examples}</small></b>
           </div>
@@ -78,6 +77,11 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             <span className="comparison-value laser-value" role="cell"><i className="comparison-mark good" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.laser}</small>{laser}</span></span>
             <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.traditional}</small>{traditional}</span></span>
           </div>)}
+          <div className="comparison-laser-footer" role="presentation">
+            <div className="comparison-laser-action">
+              <a className="comparison-contact" href={phone}>{methods.contact} <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
         </div>
         <ul className="methods-steps">
           {methods.steps.map((step, index) => <li key={step}><span aria-hidden="true">0{index + 1}</span>{step}</li>)}

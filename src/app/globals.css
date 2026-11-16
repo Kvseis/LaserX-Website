@@ -291,18 +291,19 @@ h2 { margin: 0; font-size: clamp(42px, 5.1vw, 74px); line-height: 1.01; letter-s
 .comparison-head, .comparison-row { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .9fr) minmax(0, 1.1fr); }
 .comparison-head { min-height: 66px; }
 .comparison-head b { min-width: 0; padding: 17px 24px; display: flex; flex-direction: column; justify-content: center; font-size: clamp(18px, 1.65vw, 24px); line-height: 1.1; font-weight: 600; }
-.comparison-laser-head { min-width: 0; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #fff; background: var(--dark); border-radius: 17px 17px 0 0; }
+.comparison-laser-head { min-width: 0; padding: 17px 24px; display: flex; align-items: center; color: #fff; background: var(--dark); border-radius: 17px 17px 0 0; }
 .comparison-laser-brand { display: inline-flex; align-items: center; gap: 9px; min-width: 0; font-size: clamp(16px, 1.45vw, 21px); font-weight: 650; line-height: 1.1; }
-.comparison-laser-brand img { flex: 0 0 auto; width: 25px; height: 25px; object-fit: contain; }
-.comparison-contact { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; padding: 9px 10px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; color: #fff; font-size: 10px; font-weight: 650; line-height: 1; transition: background 180ms ease, color 180ms ease; }
-.comparison-contact:hover, .comparison-contact:focus-visible { color: var(--dark); background: #fff; }
+.comparison-laser-brand img { flex: 0 0 auto; width: 29px; height: 29px; object-fit: contain; }
+.comparison-contact { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; padding: 12px 20px; border-radius: 999px; color: var(--dark); background: #efb8b4; font-size: 12px; font-weight: 700; line-height: 1; transition: background 180ms ease, transform 180ms ease; }
+.comparison-contact:hover, .comparison-contact:focus-visible { background: #fff; transform: translateY(-2px); }
 .comparison-head small { margin-top: 5px; color: #777; font-family: inherit; font-size: 12px; }
 .comparison-criterion, .comparison-value { min-width: 0; min-height: 65px; padding: 15px 24px; display: flex; align-items: center; gap: 13px; font-size: 14px; line-height: 1.35; }
 .comparison-criterion { border-top: 1px solid #d8d5cf; background: var(--paper-2); font-weight: 650; }
 .comparison-icon { flex: 0 0 22px; color: var(--red); }
 .comparison-value { font-weight: 560; }
 .laser-value { color: #fff; background: var(--dark); border-top: 1px solid rgba(255,255,255,.16); }
-.comparison-row:last-child .laser-value { border-radius: 0 0 17px 17px; }
+.comparison-laser-footer { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .9fr) minmax(0, 1.1fr); }
+.comparison-laser-action { grid-column: 2; padding: 18px 24px 22px; display: flex; justify-content: center; background: var(--dark); border-radius: 0 0 17px 17px; }
 .traditional-value { border-top: 1px solid #d8d5cf; }
 .comparison-mark { position: relative; width: 19px; height: 19px; flex: 0 0 19px; }
 .comparison-mark.good { background: #1d9b63; border-radius: 50%; }
@@ -426,7 +427,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 .comparison-mobile-label { display: block; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .65; }
 .laser-value { border-top: 0; }
 .traditional-value { border-top: 0; }
-.comparison-row:last-child .laser-value { border-radius: 0; }
+.comparison-laser-footer { display: block; }
+.comparison-laser-action { margin-top: 4px; padding: 16px; border-radius: 12px; }
+.comparison-contact { width: 100%; min-height: 48px; }
   .methods-steps { margin-top: 30px; grid-template-columns: 1fr; gap: 9px; }
   .contact { min-height: 620px; padding: 82px 16px; }
   html:not(:lang(az)) .contact h2 { font-size: clamp(40px, 10vw, 54px); }
