@@ -93,6 +93,7 @@ const en: SiteCopy = {
     examples: 'Blasting / chemicals',
     label: 'Comparison of laser and traditional cleaning methods',
     intro: 'The right cleaning method depends on the surface and the layer to be removed.',
+    rowLabels: ['Surface protection', 'Chemicals', 'Final cleanup', 'Precision', 'Material dispersion', 'Completion time', 'Long-term cost'],
     steps: [
       'We assess the surface and the layer that needs removing.',
       'We test suitable laser settings on a small area.',

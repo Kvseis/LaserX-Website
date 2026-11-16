@@ -91,6 +91,7 @@ const az = {
     examples: 'Qumlama / kimyəvi',
     label: 'Lazer və ənənəvi təmizləmə üsullarının müqayisəsi',
     intro: 'Uyğun təmizləmə üsulu səthin materialına və çıxarılacaq qata görə seçilir.',
+    rowLabels: ['Səthin qorunması', 'Kimyəvi maddələr', 'Son təmizlik', 'Dəqiqlik', 'Ətrafa yayılma', 'İş müddəti', 'Uzunmüddətli xərc'],
     steps: [
       'Səthi və təmizlənəcək qatı qiymətləndiririk.',
       'Kiçik sahədə uyğun lazer parametrlərini sınaqdan keçiririk.',

@@ -8,6 +8,7 @@ import WhatsAppLogo from './WhatsAppLogo';
 import BeforeAfterCard from './BeforeAfterCard';
 import HeroVideo from './HeroVideo';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
+import ComparisonIcon from './ComparisonIcon';
 
 const resultIds = ['rust', 'coating', 'mold', 'grease', 'graffiti', 'soot', 'biofilm', 'wood'];
 
@@ -58,21 +59,26 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
 
       <ServicesShowcase copy={copy.services} technologyPath={technologyPath} />
 
-      <section className="methods" id="ustunlukler"><span className="comparison-accent" aria-hidden="true" /><div className="wrap methods-layout">
+      <section className="methods" id="ustunlukler"><div className="wrap methods-layout">
         <div className="methods-copy">
           <h2><span>{methods.laser}</span><em>VS</em><span>{methods.traditional}</span></h2>
           <p className="methods-intro">{methods.intro}</p>
-          <ul className="methods-steps">
-            {methods.steps.map((step) => <li key={step}><span aria-hidden="true">✓</span>{step}</li>)}
-          </ul>
         </div>
         <div className="comparison-matrix" role="table" aria-label={methods.label}>
-          <div className="comparison-head" role="row"><b role="columnheader">{methods.laser}</b><b role="columnheader">{methods.traditional}<small>{methods.examples}</small></b></div>
-          {methods.rows.map(([laser, traditional]) => <div className="comparison-row" role="row" key={laser}>
+          <div className="comparison-head" role="row">
+            <span className="comparison-label-head" aria-hidden="true" />
+            <b role="columnheader">{methods.laser}</b>
+            <b role="columnheader">{methods.traditional}<small>{methods.examples}</small></b>
+          </div>
+          {methods.rows.map(([laser, traditional], index) => <div className="comparison-row" role="row" key={laser}>
+            <strong className="comparison-criterion" role="rowheader"><ComparisonIcon index={index} />{methods.rowLabels[index]}</strong>
             <span className="comparison-value laser-value" role="cell"><i className="comparison-mark good" aria-hidden="true" />{laser}</span>
             <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" />{traditional}</span>
           </div>)}
         </div>
+        <ul className="methods-steps">
+          {methods.steps.map((step, index) => <li key={step}><span aria-hidden="true">0{index + 1}</span>{step}</li>)}
+        </ul>
       </div></section>
 
       <section className="technology-preview" id="texnologiya">

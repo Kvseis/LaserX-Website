@@ -93,6 +93,7 @@ const tr: SiteCopy = {
     examples: 'Kumlama / kimyasal',
     label: 'Lazer ve geleneksel temizleme yöntemlerinin karşılaştırması',
     intro: 'Uygun temizleme yöntemi yüzeye ve çıkarılacak katmana göre seçilir.',
+    rowLabels: ['Yüzeyin korunması', 'Kimyasal maddeler', 'Son temizlik', 'Hassasiyet', 'Malzeme yayılımı', 'İş süresi', 'Uzun vadeli maliyet'],
     steps: [
       'Yüzeyi ve temizlenecek katmanı değerlendiriyoruz.',
       'Uygun lazer ayarlarını küçük bir alanda deniyoruz.',
