@@ -72,8 +72,8 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
           </div>
           {methods.rows.map(([laser, traditional], index) => <div className="comparison-row" role="row" key={laser}>
             <strong className="comparison-criterion" role="rowheader"><ComparisonIcon index={index} />{methods.rowLabels[index]}</strong>
-            <span className="comparison-value laser-value" role="cell"><i className="comparison-mark good" aria-hidden="true" />{laser}</span>
-            <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" />{traditional}</span>
+            <span className="comparison-value laser-value" role="cell"><i className="comparison-mark good" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.laser}</small>{laser}</span></span>
+            <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.traditional}</small>{traditional}</span></span>
           </div>)}
         </div>
         <ul className="methods-steps">
