@@ -34,7 +34,7 @@ async function verifyViewport(name, viewport) {
   if (headerStyle.position !== 'fixed' || Math.abs(headerStyle.top) > 1) {
     throw new Error(`${name}: navbar viewport-un yuxarısında sabit deyil`);
   }
-  if (headerStyle.linkColor !== (viewport.width <= 1100 ? 'rgb(255, 255, 255)' : 'rgb(23, 23, 23)') || headerStyle.linkSize < 13) {
+  if (headerStyle.linkColor !== 'rgb(255, 255, 255)' || headerStyle.linkSize < 13) {
     throw new Error(`${name}: navbar linklərinin rəng və ya ölçüsü yanlışdır`);
   }
 
@@ -54,7 +54,9 @@ async function verifyViewport(name, viewport) {
   if ((await page.locator('.results-contact').count()) !== 0) {
     throw new Error(`${name}: Before/After əlaqə düyməsi silinməyib`);
   }
-  if ((await page.locator('a[href="#xidmetler"]').count()) < 1 || (await page.getByRole('link', {name:'Əlaqə saxla', exact:true}).count()) !== 1) throw new Error(name+': hero actions missing');
+  if ((await page.locator('.hero-contacts .call-rail').count()) !== 1 || (await page.locator('.hero-contacts .whatsapp-rail').count()) !== 1) {
+    throw new Error(`${name}: hero əlaqə düymələri natamamdır`);
+  }
   const services = page.getByRole('region', { name: 'Lazer təmizləmə xidmətləri' });
   const serviceCards = services.locator('article');
   if ((await serviceCards.count()) !== 8
@@ -68,7 +70,7 @@ async function verifyViewport(name, viewport) {
   if (scrollRange < 100) {
     throw new Error(`${name}: xidmət kartları üfüqi sürüşmür`);
   }
-  if ((await page.getByRole('heading', { level: 1, name: /Təmiz səth\s*buradan başlayır\./ }).count()) !== 1
+  if ((await page.getByRole('heading', { level: 1, name: /Daha təmiz\.\s*Daha dəqiq\.\s*Daha güclü\./ }).count()) !== 1
     || (await page.locator('.contact').getByRole('link', { name: 'WhatsApp-da yazın' }).count()) !== 1) {
     throw new Error(`${name}: ilk ekran başlığı və ya WhatsApp düymələri natamamdır`);
   }
@@ -94,11 +96,17 @@ async function verifyViewport(name, viewport) {
     throw new Error(`${name}: silinməli mətn etiketləri hələ görünür`);
   }
 
-  const heroVideos = page.locator('#proses video');
-  if (await heroVideos.count() !== 3) throw new Error(name+': three scene videos required');
-  await page.waitForFunction(() => Array.from(document.querySelectorAll('#proses video')).every(v=>v.readyState>=2 && v.paused));
+  const heroVideo = page.locator('video.hero-media');
+  const expectedVideoCount = 1;
+  if ((await heroVideo.count()) !== expectedVideoCount) throw new Error(`${name}: hero video strategiyası yanlışdır`);
+  if (expectedVideoCount === 1) {
+    await page.waitForFunction(() => {
+      const video = document.querySelector('video.hero-media');
+      return video?.readyState >= 2 && !video.paused && video.currentSrc.endsWith('-720p.mp4');
+    });
+  }
 
-  if ((await page.locator('img[src*="images.jpg"]').count()) < 2) {
+  if ((await page.locator('img[src*="images.jpg"]').count()) < 3) {
     throw new Error(`${name}: images.jpg WhatsApp loqoları tam inteqrasiya edilməyib`);
   }
 
@@ -154,8 +162,7 @@ async function verifyViewport(name, viewport) {
     })),
   ));
 
-  await page.evaluate(() => scrollTo({top:0,behavior:'instant'}));
-  await page.locator('#proses > div').screenshot({ path: path.join(artifactDir, `laserx-${name}-hero.png`) });
+  await page.locator('.hero').screenshot({ path: path.join(artifactDir, `laserx-${name}-hero.png`) });
   await page.locator('.results').screenshot({ path: path.join(artifactDir, `laserx-${name}-results.png`) });
   await page.locator('#xidmetler').screenshot({ path: path.join(artifactDir, `laserx-${name}-services.png`) });
   await page.locator('.technology-preview').screenshot({ path: path.join(artifactDir, `laserx-${name}-technology.png`) });

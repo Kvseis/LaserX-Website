@@ -6,7 +6,8 @@ import SiteHeader, { PhoneIcon } from './SiteHeader';
 import { phone, whatsapp } from '@/lib/contact';
 import WhatsAppLogo from './WhatsAppLogo';
 import BeforeAfterCard from './BeforeAfterCard';
-import HeroSequence from './HeroSequence';
+import HeroVideo from './HeroVideo';
+import ScrollCleaningFilm from './ScrollCleaningFilm';
 import ComparisonIcon from './ComparisonIcon';
 
 const resultIds = ['rust', 'coating', 'mold', 'grease', 'graffiti', 'soot', 'biofilm', 'wood'];
@@ -19,9 +20,28 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top">
-      <HeroSequence copy={home} />
+      <section className="hero">
+        <HeroVideo />
+        <div className="hero-shade" />
+        <div className="hero-copy">
+          <h1>{home.headline[0]}<br />{home.headline[1]}<br /><em>{home.headline[2]}</em></h1>
+          <p>{home.description}</p>
+          <div className="hero-proof"><span aria-hidden="true">✓</span><p>{home.proof}</p></div>
+          <div className="hero-contacts">
+            <a className="contact-rail call-rail" href={phone}>
+              <span className="contact-rail-icon" aria-hidden="true"><PhoneIcon /></span>
+              <span><strong>{nav.call}</strong></span>
+            </a>
+            <a className="contact-rail whatsapp-rail" href={whatsapp}>
+              <span className="contact-rail-icon" aria-hidden="true"><WhatsAppLogo /></span>
+              <span><strong>WhatsApp</strong></span>
+            </a>
+          </div>
+        </div>
+        <div className="hero-bottom"><span>{home.tagline}</span><a href="#proses">{home.seeResults} <span aria-hidden="true">↓</span></a></div>
+      </section>
 
-      <ServicesShowcase copy={copy.services} technologyPath={technologyPath} />
+      <ScrollCleaningFilm copy={home} />
 
       <section className="results-section" id="neticeler"><div className="results wrap">
         <div className="results-intro">
@@ -36,6 +56,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
         </div>
       </div></section>
 
+      <ServicesShowcase copy={copy.services} technologyPath={technologyPath} />
 
       <section className="methods" id="ustunlukler"><div className="wrap methods-layout">
         <div className="methods-copy">
@@ -78,7 +99,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
         </div>
       </section>
 
-      <section className="contact" id="elaqe">
+      <section className="contact">
         <h2>{home.contactTitle[0]}<br />{home.contactTitle[1]}</h2>
         <p>{home.contactDescription}</p>
         <a className="big-phone" href={phone} aria-label={nav.callNumber}>

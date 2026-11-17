@@ -26,7 +26,7 @@ const tr: SiteCopy = {
     },
     home: {
       title: 'Bakü’de Lazer Temizleme | LaserX',
-      description: "Profesyonel lazer temizleme hizmeti. İşinize uygun lazer cihazı seçimi ve satışı.",
+      description: 'Bakü’de metal, taş ve ahşap yüzeyler için lazer temizleme. Pas, boya ve endüstriyel kalıntıları temizliyoruz. 055 390 00 28.',
     },
     technology: {
       title: 'Lazer Temizleme Teknolojisi | LaserX Bakü',
@@ -34,10 +34,8 @@ const tr: SiteCopy = {
     },
   },
   home: {
-    headline: ["Temiz bir yüzey","burada başlar."],
-    description: "Profesyonel lazer temizleme hizmeti. İşinize uygun lazer cihazı seçimi ve satışı.",
-    exploreServices: "Hizmetleri keşfet",
-    contactAction: "İletişime geç",
+    headline: ['Daha temiz.', 'Daha hassas.', 'Daha güçlü.'],
+    description: 'Metal, taş ve ahşap yüzeylerden pası, boyayı ve istenmeyen katmanları kontrollü lazerle temizliyoruz.',
     proof: 'Her projeye bir deneme alanıyla başlar, ayarları malzemeye göre seçeriz.',
     tagline: 'Her yüzeye hassas yaklaşım',
     seeResults: 'Farkı görün',
