@@ -30,7 +30,7 @@ export default function SiteHeader({ locale, page, copy }: {
   ];
 
   return (
-    <header className="site-header">
+    <header className={`site-header${page === 'home' ? ' home-header' : ''}`}>
       <Link prefetch={false} className="wordmark nav-brand" href={page === 'home' ? '#top' : home} aria-label={copy.home}>
         <Image src="/images/logo-mark-transparent.png" width={42} height={42} alt="" priority />
         <span>LaserX</span>

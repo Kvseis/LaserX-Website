@@ -133,6 +133,19 @@ img { display: block; }
 .language-switch a[aria-current] { box-shadow: inset 2px 0 #ef5149; }
 .menu-button { display: none; }
 
+.home-header { color: #171717; background: #f7f6f2f5; border-bottom: 1px solid #24241e18; box-shadow: none; }
+.home-header .nav-brand, .home-header nav { color: #171717; }
+.home-header .nav-call { color: #252525; background: transparent; border-color: #b4b3ac; }
+.home-header .nav-call:hover { color: #252525; background: #e8e6e0; }
+.home-header .language-switch summary { color: #252525; background: transparent; border-color: #b4b3ac; }
+.home-header .language-switch ul { color: #fff; }
+.home-header .menu-button { color: #171717; }
+.home-header .menu-button span { background: #171717; }
+@media (max-width: 760px) {
+  .home-header nav { color: #fff; }
+  .home-header .menu-button span { background: #171717; }
+}
+
 main { width: 100%; max-width: 100%; overflow-x: clip; }
 .hero {
   position: relative;

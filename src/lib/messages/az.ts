@@ -24,7 +24,7 @@ const az = {
     },
     home: {
       title: 'LaserX — Bakıda lazer təmizləmə',
-      description: 'Bakıda metal, daş və ağac səthlərin lazerlə təmizlənməsi. Pas, boya və sənaye çirklərinin təmizlənməsi. 055 390 00 28.',
+      description: "Peşəkar lazer təmizləmə xidməti. İşinizə uyğun lazer aparatının seçimi və satışı.",
     },
     technology: {
       title: 'Lazer təmizləmə texnologiyası | LaserX Bakı',
@@ -32,8 +32,10 @@ const az = {
     },
   },
   home: {
-    headline: ['Daha təmiz.', 'Daha dəqiq.', 'Daha güclü.'],
-    description: 'Metal, daş və ağac səthlərdən pası, boyanı və arzuolunmaz qatları nəzarətli lazer texnologiyası ilə təmizləyirik.',
+    headline: ["Təmiz səth","buradan başlayır."],
+    description: "Peşəkar lazer təmizləmə xidməti. İşinizə uyğun lazer aparatının seçimi və satışı.",
+    exploreServices: "Xidmətləri kəşf et",
+    contactAction: "Əlaqə saxla",
     proof: 'Hər layihə sınaq sahəsi və materiala uyğun parametrlərlə başlayır.',
     tagline: 'Hər səthə dəqiq yanaşma',
     seeResults: 'Fərqi kəşf edin',

@@ -26,7 +26,7 @@ const en: SiteCopy = {
     },
     home: {
       title: 'Laser Cleaning in Baku | LaserX',
-      description: 'Laser cleaning for metal, stone and wood in Baku. LaserX removes rust, paint and industrial deposits. Call 055 390 00 28.',
+      description: "Professional laser cleaning. Selection and sales of laser equipment suited to your work.",
     },
     technology: {
       title: 'Laser Cleaning Technology | LaserX Baku',
@@ -34,8 +34,10 @@ const en: SiteCopy = {
     },
   },
   home: {
-    headline: ['Cleaner.', 'More precise.', 'More powerful.'],
-    description: 'We use controlled laser cleaning to remove rust, paint and unwanted deposits from metal, stone and wood.',
+    headline: ["A clean surface","starts here."],
+    description: "Professional laser cleaning. Selection and sales of laser equipment suited to your work.",
+    exploreServices: "Explore services",
+    contactAction: "Contact us",
     proof: 'We begin each project with a test patch and settings suited to the material.',
     tagline: 'Precision for every surface',
     seeResults: 'See the difference',

@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit --incremental false",
     "lint": "eslint src",
     "check:visual": "node scripts/visual-check.mjs",
+    "check:hero": "node scripts/hero-check.mjs",
     "check:technology": "node scripts/technology-check.mjs",
     "check:about": "node scripts/about-check.mjs",
     "check:comparison": "node scripts/comparison-check.mjs"
