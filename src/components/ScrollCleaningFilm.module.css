@@ -33,29 +33,14 @@
   pointer-events: none;
 }
 
-.eyebrow {
-  display: block;
-  font-size: 11px;
-  font-weight: 680;
-  letter-spacing: .17em;
-  text-transform: uppercase;
-}
-
 .content h2 {
   max-width: 610px;
-  margin-top: 20px;
+  margin-top: 0;
   font-size: clamp(50px, 5.7vw, 82px);
   font-weight: 550;
   letter-spacing: -.065em;
   line-height: .98;
   text-wrap: balance;
-}
-
-.content p {
-  max-width: 430px;
-  margin: 25px 0 0;
-  font-size: 16px;
-  line-height: 1.6;
 }
 
 .scrollCue {
@@ -80,16 +65,6 @@
   width: var(--film-progress, 0%);
   height: 100%;
   background: #df342d;
-}
-
-.disclosure {
-  position: absolute;
-  z-index: 1;
-  right: 4vw;
-  bottom: 27px;
-  margin: 0;
-  color: #4f554e;
-  font-size: 11px;
 }
 
 .section[data-static='true'] {
@@ -124,20 +99,12 @@
     width: calc(100% - 36px);
     padding: 132px 0 0;
   }
-  .eyebrow { font-size: 9px; }
   .content h2 {
     max-width: 360px;
-    margin-top: 14px;
+    margin-top: 0;
     font-size: clamp(43px, 11vw, 60px);
   }
-  .content p {
-    max-width: 320px;
-    margin-top: 16px;
-    font-size: 13px;
-    line-height: 1.5;
-  }
   .scrollCue { width: 178px; margin-top: 23px; font-size: 9px; }
-  .disclosure { left: 18px; right: 18px; bottom: 17px; font-size: 9px; }
   .section[data-static='true'] .stage { background-image: url('/images/laserx-scroll-poster.webp'); background-position: 61% center; }
 }
 

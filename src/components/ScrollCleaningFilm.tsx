@@ -103,15 +103,12 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         aria-hidden="true"
       />
       <div className={styles.content}>
-        <span className={styles.eyebrow}>LaserX / 01</span>
         <h2 id="cleaning-film-title">{copy.filmTitle}</h2>
-        <p>{copy.filmDescription}</p>
         <div className={styles.scrollCue} aria-hidden="true">
           <span className={styles.progressTrack}><span className={styles.progressFill} /></span>
           <span>{copy.filmScrollCue} ↓</span>
         </div>
       </div>
-      <p className={styles.disclosure}>{copy.filmDisclosure}</p>
     </div>
   </section>;
 }
