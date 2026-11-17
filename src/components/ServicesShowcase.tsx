@@ -6,14 +6,14 @@ import type { SiteCopy } from '@/lib/messages/az';
 import styles from './ServicesShowcase.module.css';
 
 const serviceImages = [
-  '/images/rust-before.webp',
-  '/images/graffiti-before.webp',
-  '/images/coating-before.webp',
-  '/images/about-restoration.webp',
-  '/images/biofilm-before.webp',
-  '/images/mold-before.webp',
-  '/images/grease-before.webp',
-  '/images/soot-before.webp',
+  '/images/services/rust.webp',
+  '/images/services/graffiti.webp',
+  '/images/services/coating.webp',
+  '/images/services/restoration.webp',
+  '/images/services/biofilm.webp',
+  '/images/services/mold.webp',
+  '/images/services/grease.webp',
+  '/images/services/soot.webp',
 ];
 
 const serviceIcons = [
@@ -60,12 +60,14 @@ export default function ServicesShowcase({ copy, technologyPath }: {
   copy: SiteCopy['services'];
   technologyPath: string;
 }) {
+  const sectionRef = useRef<HTMLElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const rail = railRef.current;
-    if (!rail) return;
+    const section = sectionRef.current;
+    if (!rail || !section) return;
     let frame = 0;
     let target = rail.scrollLeft;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -76,11 +78,13 @@ export default function ServicesShowcase({ copy, technologyPath }: {
         frame = 0;
         return;
       }
-      rail.scrollLeft += difference * .12;
+      rail.scrollLeft += Math.sign(difference) * Math.min(Math.abs(difference), Math.max(1, Math.abs(difference) * .12));
       frame = requestAnimationFrame(animate);
     };
     const handleWheel = (event: WheelEvent) => {
-      if (window.innerWidth <= 760 || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+      if (window.innerWidth <= 760 || event.ctrlKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+      const bounds = rail.getBoundingClientRect();
+      if (bounds.top >= window.innerHeight || bounds.bottom <= 92) return;
       const remaining = rail.scrollWidth - rail.clientWidth;
       if ((event.deltaY > 0 && rail.scrollLeft >= remaining - 2) ||
         (event.deltaY < 0 && rail.scrollLeft <= 2)) return;
@@ -95,11 +99,11 @@ export default function ServicesShowcase({ copy, technologyPath }: {
       cancelAnimationFrame(frame);
       frame = 0;
     };
-    rail.addEventListener('wheel', handleWheel, { passive: false });
+    section.addEventListener('wheel', handleWheel, { passive: false });
     rail.addEventListener('pointerdown', cancelAnimation);
     return () => {
       cancelAnimation();
-      rail.removeEventListener('wheel', handleWheel);
+      section.removeEventListener('wheel', handleWheel);
       rail.removeEventListener('pointerdown', cancelAnimation);
     };
   }, []);
@@ -120,7 +124,7 @@ export default function ServicesShowcase({ copy, technologyPath }: {
   };
 
   return (
-    <section className={styles.services} id="xidmetler" aria-labelledby="xidmetler-basliq">
+    <section ref={sectionRef} className={styles.services} id="xidmetler" aria-labelledby="xidmetler-basliq">
       <div className={styles.inner}>
         <div className={styles.intro}>
           <h2 id="xidmetler-basliq">{copy.heading[0]} <span>{copy.heading[1]}</span></h2>
@@ -132,7 +136,7 @@ export default function ServicesShowcase({ copy, technologyPath }: {
         <div className={styles.grid} ref={railRef} onScroll={updateProgress}>
           <a className={styles.brandCard} href={`${technologyPath}#tetbiqler`}>
             <Image src="/images/logo-mark-transparent.png" width={54} height={54} alt="LaserX" />
-            <div className={styles.brandMessage}><p>{copy.statement}</p><span aria-hidden="true">↗</span></div>
+            <div className={styles.brandMessage}><p>{copy.statement}</p></div>
           </a>
           {copy.items.map(([title, description], index) => (
             <article className={styles.service} key={title}

@@ -74,7 +74,7 @@ const tr: SiteCopy = {
     ],
   },
   services: {
-    statement: 'Metal, taş ve ahşap yüzeylere hassas ve kontrollü yaklaşım.',
+    statement: 'Her yüzeyin altında yeni bir başlangıç var.',
     previous: 'Önceki hizmetler',
     next: 'Sonraki hizmetler',
     heading: ['Lazer temizleme', 'hizmetleri'],

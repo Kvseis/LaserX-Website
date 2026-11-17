@@ -74,7 +74,7 @@ const en: SiteCopy = {
     ],
   },
   services: {
-    statement: 'A precise, controlled approach to metal, stone and wood surfaces.',
+    statement: 'Every surface has a fresh start beneath it.',
     previous: 'Previous services',
     next: 'Next services',
     heading: ['Laser cleaning', 'services'],
