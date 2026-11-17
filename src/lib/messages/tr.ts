@@ -74,6 +74,8 @@ const tr: SiteCopy = {
     ],
   },
   services: {
+    previous: 'Önceki hizmetler',
+    next: 'Sonraki hizmetler',
     heading: ['Lazer temizleme', 'hizmetleri'],
     link: 'Tüm uygulama alanlarını görün',
     items: [

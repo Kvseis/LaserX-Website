@@ -61,14 +61,14 @@ async function verifyViewport(name, viewport) {
   const serviceCards = services.locator('article');
   if ((await serviceCards.count()) !== 8
     || (await serviceCards.locator('svg').count()) !== 8
-    || (await serviceCards.locator('p').count()) !== 8) {
-    throw new Error(`${name}: xidmətlərin ikonları və ya izahları natamamdır`);
+    || (await serviceCards.locator('p').count()) !== 8
+    || (await serviceCards.locator('img').count()) !== 8) {
+    throw new Error(`${name}: xidmətlərin şəkilləri, ikonları və ya izahları natamamdır`);
   }
-  const serviceColumns = await serviceCards.first().evaluate((card) =>
-    getComputedStyle(card.parentElement).gridTemplateColumns.split(' ').length,
-  );
-  if (serviceColumns !== (mobile ? 2 : 4)) {
-    throw new Error(`${name}: xidmətlər düzgün sütunlarda düzülməyib`);
+  const serviceRail = serviceCards.first().locator('..');
+  const scrollRange = await serviceRail.evaluate((rail) => rail.scrollWidth - rail.clientWidth);
+  if (scrollRange < 100) {
+    throw new Error(`${name}: xidmət kartları üfüqi sürüşmür`);
   }
   if ((await page.getByRole('heading', { level: 1, name: /Daha təmiz\.\s*Daha dəqiq\.\s*Daha güclü\./ }).count()) !== 1
     || (await page.locator('.contact').getByRole('link', { name: 'WhatsApp-da yazın' }).count()) !== 1) {
@@ -156,7 +156,7 @@ async function verifyViewport(name, viewport) {
     await page.waitForTimeout(100);
   }
   await page.locator('img').evaluateAll((images) => Promise.all(
-    images.map((image) => image.complete ? Promise.resolve() : new Promise((resolve) => {
+    images.filter((image) => !image.closest('#xidmetler') || image.complete).map((image) => image.complete ? Promise.resolve() : new Promise((resolve) => {
       image.addEventListener('load', resolve, { once: true });
       image.addEventListener('error', resolve, { once: true });
     })),

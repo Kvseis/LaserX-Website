@@ -1,5 +1,20 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import type { SiteCopy } from '@/lib/messages/az';
 import styles from './ServicesShowcase.module.css';
+
+const serviceImages = [
+  '/images/rust-before.webp',
+  '/images/graffiti-before.webp',
+  '/images/coating-before.webp',
+  '/images/about-restoration.webp',
+  '/images/biofilm-before.webp',
+  '/images/mold-before.webp',
+  '/images/grease-before.webp',
+  '/images/soot-before.webp',
+];
 
 const serviceIcons = [
   {
@@ -45,25 +60,70 @@ export default function ServicesShowcase({ copy, technologyPath }: {
   copy: SiteCopy['services'];
   technologyPath: string;
 }) {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const handleWheel = (event: WheelEvent) => {
+      if (window.innerWidth <= 760 || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+      const remaining = rail.scrollWidth - rail.clientWidth;
+      if ((event.deltaY > 0 && rail.scrollLeft >= remaining - 2) ||
+        (event.deltaY < 0 && rail.scrollLeft <= 2)) return;
+      event.preventDefault();
+      rail.scrollLeft += event.deltaY;
+    };
+    rail.addEventListener('wheel', handleWheel, { passive: false });
+    return () => rail.removeEventListener('wheel', handleWheel);
+  }, []);
+
+  const updateProgress = () => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const distance = rail.scrollWidth - rail.clientWidth;
+    setProgress(distance > 0 ? rail.scrollLeft / distance : 1);
+  };
+
+  const move = (direction: -1 | 1) => {
+    const rail = railRef.current;
+    const card = rail?.querySelector<HTMLElement>(`.${styles.service}`);
+    if (!rail || !card) return;
+    rail.scrollBy({ left: direction * (card.offsetWidth + 12), behavior: 'smooth' });
+  };
+
   return (
     <section className={styles.services} id="xidmetler" aria-labelledby="xidmetler-basliq">
       <div className={styles.inner}>
-        <h2 id="xidmetler-basliq">{copy.heading[0]} <span>{copy.heading[1]}</span></h2>
-        <div className={styles.grid}>
+        <div className={styles.intro}>
+          <h2 id="xidmetler-basliq">{copy.heading[0]} <span>{copy.heading[1]}</span></h2>
+          <a className={styles.link} href={`${technologyPath}#tetbiqler`}>
+            {copy.link}
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>
+          </a>
+        </div>
+        <div className={styles.grid} ref={railRef} onScroll={updateProgress}>
           {copy.items.map(([title, description], index) => (
             <article className={styles.service} key={title}>
-              <div className={styles.icon} aria-hidden="true">
-                <svg viewBox="0 0 48 48">{serviceIcons[index].icon}</svg>
+              <div className={styles.cardContent}>
+                <div className={styles.cardTop}>
+                  <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
+                  <div className={styles.icon} aria-hidden="true"><svg viewBox="0 0 48 48">{serviceIcons[index].icon}</svg></div>
+                </div>
+                <h3>{title}</h3>
+                <p>{description}</p>
               </div>
-              <h3>{title}</h3>
-              <p>{description}</p>
+              <div className={styles.media}><Image src={serviceImages[index]} alt="" fill sizes="(max-width: 760px) 72vw, 290px" /></div>
             </article>
           ))}
         </div>
-        <a className={styles.link} href={`${technologyPath}#tetbiqler`}>
-          {copy.link}
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>
-        </a>
+        <div className={styles.controls}>
+          <span className={styles.track}><span style={{ transform: `scaleX(${Math.max(.15, progress)})` }} /></span>
+          <div className={styles.arrows}>
+            <button type="button" aria-label={copy.previous} onClick={() => move(-1)} disabled={progress <= .001}>←</button>
+            <button type="button" aria-label={copy.next} onClick={() => move(1)} disabled={progress >= .999}>→</button>
+          </div>
+        </div>
       </div>
     </section>
   );

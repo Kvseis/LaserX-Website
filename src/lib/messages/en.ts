@@ -74,6 +74,8 @@ const en: SiteCopy = {
     ],
   },
   services: {
+    previous: 'Previous services',
+    next: 'Next services',
     heading: ['Laser cleaning', 'services'],
     link: 'See all applications',
     items: [

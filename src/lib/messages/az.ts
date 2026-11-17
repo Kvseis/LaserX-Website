@@ -72,6 +72,8 @@ const az = {
     ],
   },
   services: {
+    previous: 'Əvvəlki xidmətlər',
+    next: 'Növbəti xidmətlər',
     heading: ['Lazer təmizləmə', 'xidmətləri'],
     link: 'Bütün tətbiq sahələrinə bax',
     items: [
