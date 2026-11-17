@@ -72,6 +72,7 @@ const az = {
     ],
   },
   services: {
+    statement: 'Metal, daş və ağac səthlərə dəqiq və nəzarətli yanaşma.',
     previous: 'Əvvəlki xidmətlər',
     next: 'Növbəti xidmətlər',
     heading: ['Lazer təmizləmə', 'xidmətləri'],

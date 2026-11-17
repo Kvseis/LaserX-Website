@@ -215,7 +215,7 @@ async function verifyLanguages() {
       || (await page.getByRole('heading', { name: services, exact: true }).count()) !== 1) {
       throw new Error(`${locale}: ana səhifənin dil versiyası natamamdır`);
     }
-    const serviceLink = page.locator('#xidmetler a');
+    const serviceLink = page.locator('#xidmetler a').first();
     if ((await serviceLink.getAttribute('href')) !== `/${locale}/technology#tetbiqler`) {
       throw new Error(`${locale}: xidmətlərdən keçid seçilmiş dili saxlamır`);
     }

@@ -66,16 +66,42 @@ export default function ServicesShowcase({ copy, technologyPath }: {
   useEffect(() => {
     const rail = railRef.current;
     if (!rail) return;
+    let frame = 0;
+    let target = rail.scrollLeft;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const animate = () => {
+      const difference = target - rail.scrollLeft;
+      if (Math.abs(difference) < .8) {
+        rail.scrollLeft = target;
+        frame = 0;
+        return;
+      }
+      rail.scrollLeft += difference * .12;
+      frame = requestAnimationFrame(animate);
+    };
     const handleWheel = (event: WheelEvent) => {
       if (window.innerWidth <= 760 || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
       const remaining = rail.scrollWidth - rail.clientWidth;
       if ((event.deltaY > 0 && rail.scrollLeft >= remaining - 2) ||
         (event.deltaY < 0 && rail.scrollLeft <= 2)) return;
       event.preventDefault();
-      rail.scrollLeft += event.deltaY;
+      if (!frame) target = rail.scrollLeft;
+      const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? rail.clientWidth : 1);
+      target = Math.max(0, Math.min(remaining, target + delta));
+      if (reducedMotion.matches) rail.scrollLeft = target;
+      else if (!frame) frame = requestAnimationFrame(animate);
+    };
+    const cancelAnimation = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
     };
     rail.addEventListener('wheel', handleWheel, { passive: false });
-    return () => rail.removeEventListener('wheel', handleWheel);
+    rail.addEventListener('pointerdown', cancelAnimation);
+    return () => {
+      cancelAnimation();
+      rail.removeEventListener('wheel', handleWheel);
+      rail.removeEventListener('pointerdown', cancelAnimation);
+    };
   }, []);
 
   const updateProgress = () => {
@@ -89,7 +115,8 @@ export default function ServicesShowcase({ copy, technologyPath }: {
     const rail = railRef.current;
     const card = rail?.querySelector<HTMLElement>(`.${styles.service}`);
     if (!rail || !card) return;
-    rail.scrollBy({ left: direction * (card.offsetWidth + 12), behavior: 'smooth' });
+    rail.dispatchEvent(new Event('pointerdown'));
+    rail.scrollBy({ left: direction * (card.offsetWidth + 12), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   };
 
   return (
@@ -103,17 +130,27 @@ export default function ServicesShowcase({ copy, technologyPath }: {
           </a>
         </div>
         <div className={styles.grid} ref={railRef} onScroll={updateProgress}>
+          <a className={styles.brandCard} href={`${technologyPath}#tetbiqler`}>
+            <Image src="/images/logo-mark-transparent.png" width={54} height={54} alt="LaserX" />
+            <div className={styles.brandMessage}><p>{copy.statement}</p><span aria-hidden="true">↗</span></div>
+          </a>
           {copy.items.map(([title, description], index) => (
-            <article className={styles.service} key={title}>
-              <div className={styles.cardContent}>
-                <div className={styles.cardTop}>
+            <article className={styles.service} key={title}
+              onPointerMove={(event) => {
+                const bounds = event.currentTarget.getBoundingClientRect();
+                event.currentTarget.style.setProperty('--pointer-x', `${event.clientX - bounds.left}px`);
+                event.currentTarget.style.setProperty('--pointer-y', `${event.clientY - bounds.top}px`);
+              }}>
+              <div className={styles.media}><Image src={serviceImages[index]} alt="" fill sizes="(max-width: 760px) 76vw, 310px" /></div>
+              <a className={styles.cardLink} href={`${technologyPath}#tetbiqler`} aria-label={title}><span className={styles.cursor} aria-hidden="true">↗</span></a>
+              <div className={styles.cardTop}>
                   <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
                   <div className={styles.icon} aria-hidden="true"><svg viewBox="0 0 48 48">{serviceIcons[index].icon}</svg></div>
-                </div>
+              </div>
+              <div className={styles.cardContent}>
                 <h3>{title}</h3>
                 <p>{description}</p>
               </div>
-              <div className={styles.media}><Image src={serviceImages[index]} alt="" fill sizes="(max-width: 760px) 72vw, 290px" /></div>
             </article>
           ))}
         </div>
