@@ -54,7 +54,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             return <BeforeAfterCard id={id} title={title} detail={detail} copy={results} key={id} />;
           })}
         </div>
-        <p className="disclosure">{results.disclosure}</p>
       </div></section>
 
       <ServicesShowcase copy={copy.services} technologyPath={technologyPath} />
