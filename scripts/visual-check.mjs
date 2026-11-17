@@ -47,10 +47,9 @@ async function verifyViewport(name, viewport) {
   if ((await page.locator('.comparison-row').count()) !== 7) {
     throw new Error(`${name}: müqayisə matrisinin sətirləri natamamdır`);
   }
-  if ((await page.locator('.methods-steps li').count()) !== 3
-    || (await page.getByRole('cell', { name: 'Səthə zərər vermir', exact: true }).count()) !== 1
+  if ((await page.getByRole('cell', { name: 'Səthə zərər vermir', exact: true }).count()) !== 1
     || (await page.getByRole('cell', { name: 'Daha yüksək uzunmüddətli xərc', exact: true }).count()) !== 1) {
-    throw new Error(`${name}: müqayisə mətni və ya yeni iş addımları natamamdır`);
+    throw new Error(`${name}: müqayisə mətni natamamdır`);
   }
   if ((await page.locator('.results-contact').count()) !== 0) {
     throw new Error(`${name}: Before/After əlaqə düyməsi silinməyib`);
@@ -213,8 +212,7 @@ async function verifyLanguages() {
     await switcher.getByRole('link', { name, exact: true }).tap();
     await page.waitForURL(`**/${locale}`);
     if ((await page.locator('html').getAttribute('lang')) !== locale
-      || (await page.getByRole('heading', { name: services, exact: true }).count()) !== 1
-      || (await page.locator('.methods-steps li').count()) !== 3) {
+      || (await page.getByRole('heading', { name: services, exact: true }).count()) !== 1) {
       throw new Error(`${locale}: ana səhifənin dil versiyası natamamdır`);
     }
     const serviceLink = page.locator('#xidmetler a');

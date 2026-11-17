@@ -62,7 +62,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
       <section className="methods" id="ustunlukler"><div className="wrap methods-layout">
         <div className="methods-copy">
           <h2><span>{methods.laser}</span><em>VS</em><span>{methods.traditional}</span></h2>
-          <p className="methods-intro">{methods.intro}</p>
         </div>
         <div className="comparison-matrix" role="table" aria-label={methods.label}>
           <div className="comparison-head" role="row">
@@ -83,9 +82,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             </div>
           </div>
         </div>
-        <ul className="methods-steps">
-          {methods.steps.map((step, index) => <li key={step}><span aria-hidden="true">0{index + 1}</span>{step}</li>)}
-        </ul>
       </div></section>
 
       <section className="technology-preview" id="texnologiya">
