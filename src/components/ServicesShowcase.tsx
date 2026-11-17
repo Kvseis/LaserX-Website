@@ -146,14 +146,13 @@ export default function ServicesShowcase({ copy, technologyPath }: {
           </a>
         </div>
         <div className={styles.grid} ref={railRef} onScroll={updateProgress}>
-          <a className={styles.brandCard} href={`${technologyPath}#tetbiqler`}>
+          <div className={styles.brandCard}>
             <Image src="/images/logo-mark-transparent.png" width={54} height={54} alt="LaserX" />
             <div className={styles.brandMessage}><p>{copy.statement}</p></div>
-          </a>
+          </div>
           {copy.items.map(([title, description], index) => (
             <article className={styles.service} key={title}>
               <div className={styles.media}><Image src={serviceImages[index]} alt="" fill sizes="(max-width: 760px) 76vw, 310px" /></div>
-              <a className={styles.cardLink} href={`${technologyPath}#tetbiqler`} aria-label={title} />
               <div className={styles.cardTop}>
                   <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
                   <div className={styles.icon} aria-hidden="true"><svg viewBox="0 0 48 48">{serviceIcons[index].icon}</svg></div>
