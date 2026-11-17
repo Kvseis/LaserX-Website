@@ -61,50 +61,56 @@ export default function ServicesShowcase({ copy, technologyPath }: {
   technologyPath: string;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const rail = railRef.current;
     const section = sectionRef.current;
-    if (!rail || !section) return;
+    const stage = stageRef.current;
+    if (!rail || !section || !stage) return;
     let frame = 0;
-    let target = rail.scrollLeft;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const animate = () => {
-      const difference = target - rail.scrollLeft;
-      if (Math.abs(difference) < .8) {
-        rail.scrollLeft = target;
-        frame = 0;
-        return;
-      }
-      rail.scrollLeft += Math.sign(difference) * Math.min(Math.abs(difference), Math.max(1, Math.abs(difference) * .12));
-      frame = requestAnimationFrame(animate);
-    };
-    const handleWheel = (event: WheelEvent) => {
-      if (window.innerWidth <= 760 || event.ctrlKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
-      const bounds = rail.getBoundingClientRect();
-      if (bounds.top >= window.innerHeight || bounds.bottom <= 92) return;
-      const remaining = rail.scrollWidth - rail.clientWidth;
-      if ((event.deltaY > 0 && rail.scrollLeft >= remaining - 2) ||
-        (event.deltaY < 0 && rail.scrollLeft <= 2)) return;
-      event.preventDefault();
-      if (!frame) target = rail.scrollLeft;
-      const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? rail.clientWidth : 1);
-      target = Math.max(0, Math.min(remaining, target + delta));
-      if (reducedMotion.matches) rail.scrollLeft = target;
-      else if (!frame) frame = requestAnimationFrame(animate);
-    };
-    const cancelAnimation = () => {
-      cancelAnimationFrame(frame);
+    const desktop = window.matchMedia('(min-width: 761px) and (min-height: 740px)');
+    const update = () => {
       frame = 0;
+      if (section.dataset.scroll !== 'page') return;
+      const distance = Math.max(0, rail.scrollWidth - rail.clientWidth);
+      const position = Math.min(distance, Math.max(0, 92 - section.getBoundingClientRect().top));
+      rail.scrollLeft = position;
     };
-    section.addEventListener('wheel', handleWheel, { passive: false });
-    rail.addEventListener('pointerdown', cancelAnimation);
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    const measure = () => {
+      const enabled = desktop.matches && !reducedMotion.matches;
+      section.dataset.scroll = enabled ? 'page' : 'native';
+      if (enabled) {
+        const distance = rail.scrollWidth - rail.clientWidth;
+        section.style.height = `${stage.offsetHeight + Math.max(0, distance)}px`;
+        update();
+      } else {
+        section.style.removeProperty('height');
+      }
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(stage);
+    observer.observe(rail);
+    measure();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', measure);
+    desktop.addEventListener('change', measure);
+    reducedMotion.addEventListener('change', measure);
     return () => {
-      cancelAnimation();
-      section.removeEventListener('wheel', handleWheel);
-      rail.removeEventListener('pointerdown', cancelAnimation);
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', measure);
+      desktop.removeEventListener('change', measure);
+      reducedMotion.removeEventListener('change', measure);
+      delete section.dataset.scroll;
+      section.style.removeProperty('height');
     };
   }, []);
 
@@ -119,13 +125,19 @@ export default function ServicesShowcase({ copy, technologyPath }: {
     const rail = railRef.current;
     const card = rail?.querySelector<HTMLElement>(`.${styles.service}`);
     if (!rail || !card) return;
-    rail.dispatchEvent(new Event('pointerdown'));
-    rail.scrollBy({ left: direction * (card.offsetWidth + 12), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    const gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+    const next = Math.max(0, Math.min(rail.scrollWidth - rail.clientWidth, rail.scrollLeft + direction * (card.offsetWidth + gap)));
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+    if (sectionRef.current?.dataset.scroll === 'page') {
+      window.scrollTo({ top: window.scrollY + sectionRef.current.getBoundingClientRect().top - 92 + next, behavior });
+    } else {
+      rail.scrollTo({ left: next, behavior });
+    }
   };
 
   return (
     <section ref={sectionRef} className={styles.services} id="xidmetler" aria-labelledby="xidmetler-basliq">
-      <div className={styles.inner}>
+      <div ref={stageRef} className={styles.inner}>
         <div className={styles.intro}>
           <h2 id="xidmetler-basliq">{copy.heading[0]} <span>{copy.heading[1]}</span></h2>
           <a className={styles.link} href={`${technologyPath}#tetbiqler`}>

@@ -41,6 +41,12 @@
 .arrows button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #c9c5bd; border-radius: 50%; color: var(--ink); background: transparent; font-size: 19px; cursor: pointer; transition: color 180ms ease, background 180ms ease, border-color 180ms ease; }
 .arrows button:hover:not(:disabled), .arrows button:focus-visible:not(:disabled) { color: #fff; background: var(--dark); border-color: var(--dark); }
 .arrows button:disabled { opacity: .35; cursor: default; }
+.services[data-scroll='page'] { position: relative; padding: 0; }
+.services[data-scroll='page'] .inner { position: sticky; top: 92px; padding-block: 20px; }
+.services[data-scroll='page'] .intro { min-height: 0; }
+.services[data-scroll='page'] .service, .services[data-scroll='page'] .brandCard { height: clamp(260px, calc(100svh - 470px), 490px); }
+.services[data-scroll='page'] .grid { overflow-x: hidden; }
+.services[data-scroll='page'] .brandMessage { margin-bottom: 18px; }
 @media (max-width: 760px) {
   .services { padding: 68px 0 70px; }
   .intro { min-height: 0; margin-bottom: 26px; display: block; }
