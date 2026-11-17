@@ -26,14 +26,8 @@
 .media::after { position: absolute; inset: 0; content: ''; background: linear-gradient(180deg, rgba(0,0,0,.23), transparent 35%, rgba(0,0,0,.15) 45%, rgba(0,0,0,.88)); pointer-events: none; }
 .media img { object-fit: cover; transition: transform 900ms cubic-bezier(.22,1,.36,1); }
 .service:hover .media img, .service:focus-within .media img { transform: scale(1.055); }
-.cardLink { position: absolute; z-index: 1; inset: 0; }
+.cardLink { position: absolute; z-index: 1; inset: 0; cursor: pointer; }
 .cardLink:focus-visible { outline: 3px solid var(--red); outline-offset: -4px; }
-.cursor { position: absolute; left: var(--pointer-x, 50%); top: var(--pointer-y, 42%); width: 54px; height: 54px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--red); font-size: 24px; transform: translate(-50%, -50%) scale(.6); opacity: 0; pointer-events: none; transition: opacity 200ms ease, transform 300ms ease; }
-@media (hover: hover) and (pointer: fine) {
-  .cardLink { cursor: none; }
-  .service:hover .cursor { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-.service:focus-within .cursor { opacity: 1; }
 .controls { margin-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
 .track { height: 2px; display: block; flex: 1; overflow: hidden; background: #d5d1c9; }
 .track > span { width: 100%; height: 100%; display: block; background: var(--red); transform-origin: left; transition: transform 160ms ease; }
@@ -60,6 +54,6 @@
   .controls { margin-top: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .service, .brandCard, .cursor, .media img, .track > span, .arrows button, .link { transition: none; }
+  .service, .brandCard, .media img, .track > span, .arrows button, .link { transition: none; }
   .service:hover .media img, .service:focus-within .media img { transform: none; }
 }

@@ -151,14 +151,9 @@ export default function ServicesShowcase({ copy, technologyPath }: {
             <div className={styles.brandMessage}><p>{copy.statement}</p></div>
           </a>
           {copy.items.map(([title, description], index) => (
-            <article className={styles.service} key={title}
-              onPointerMove={(event) => {
-                const bounds = event.currentTarget.getBoundingClientRect();
-                event.currentTarget.style.setProperty('--pointer-x', `${event.clientX - bounds.left}px`);
-                event.currentTarget.style.setProperty('--pointer-y', `${event.clientY - bounds.top}px`);
-              }}>
+            <article className={styles.service} key={title}>
               <div className={styles.media}><Image src={serviceImages[index]} alt="" fill sizes="(max-width: 760px) 76vw, 310px" /></div>
-              <a className={styles.cardLink} href={`${technologyPath}#tetbiqler`} aria-label={title}><span className={styles.cursor} aria-hidden="true">↗</span></a>
+              <a className={styles.cardLink} href={`${technologyPath}#tetbiqler`} aria-label={title} />
               <div className={styles.cardTop}>
                   <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
                   <div className={styles.icon} aria-hidden="true"><svg viewBox="0 0 48 48">{serviceIcons[index].icon}</svg></div>
