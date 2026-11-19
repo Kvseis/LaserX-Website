@@ -39,6 +39,9 @@ export default function SiteFooter({ locale, copy }: { locale: Locale; copy: Sit
         </div>
       </div>
     </div>
-    <div className={styles.bottom}><span>{copy.location}</span><span>© {new Date().getFullYear()} LaserX</span></div>
+    <div className={styles.scene} aria-hidden="true">
+      <Image src="/images/footer-cleaning.webp" width={2400} height={770} sizes="100vw" alt="" />
+    </div>
+    <div className={styles.bottom}><span>{copy.footer.illustration}</span><span>© {new Date().getFullYear()} LaserX</span></div>
   </footer>;
 }

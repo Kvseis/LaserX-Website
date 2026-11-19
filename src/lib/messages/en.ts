@@ -18,6 +18,7 @@ const en: SiteCopy = {
     language: 'Choose language',
   },
   footer: {
+    illustration: 'AI-generated illustrative visual.',
     title: 'Let’s start your laser cleaning today.',
     description: 'Precision laser cleaning for metal, stone and wood. An approach tailored to every surface.',
     contact: 'Have a question? Get in touch.',
