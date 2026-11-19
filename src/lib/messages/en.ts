@@ -17,6 +17,38 @@ const en: SiteCopy = {
     close: 'Close menu',
     language: 'Choose language',
   },
+  faq: {
+    "title": "Frequently asked questions.",
+    "link": "Questions and answers",
+    "intro": "What you need to know about laser cleaning.",
+    "contact": "Have another question? Message us",
+    "items": [
+      [
+        "What can laser cleaning remove?",
+        "Laser cleaning can remove rust, oxides, old paint, oil, carbon and other unwanted layers. Suitability depends on the underlying material and the properties of the layer to be removed."
+      ],
+      [
+        "Which surfaces can be cleaned?",
+        "There are applications for metal, stone and wood. Each material needs a different approach; we assess the surface and test a small area before starting."
+      ],
+      [
+        "Can cleaning damage the surface?",
+        "Unsuitable settings can damage a material. We select laser power and other parameters for the surface and check the result on a small test area first."
+      ],
+      [
+        "How is the price calculated?",
+        "The price depends on surface area, material, contamination, layer thickness and working conditions. Send photos and approximate dimensions on WhatsApp for an initial assessment."
+      ],
+      [
+        "How long does cleaning take?",
+        "Timing depends on the size and condition of the surface and the layer to be removed. After reviewing photos and project details, we agree an estimated timeframe with you."
+      ],
+      [
+        "How can I book a service?",
+        "Call +994 55 390 00 28 or message us on WhatsApp. Share surface photos, approximate dimensions and the job location so we can discuss the details and next steps."
+      ]
+    ]
+  },
   footer: {
     illustration: 'AI-generated illustrative visual.',
     title: 'Give your surface a fresh start.',

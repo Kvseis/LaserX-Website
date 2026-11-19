@@ -15,6 +15,38 @@ const az = {
     close: 'Menyunu bağla',
     language: 'Dil seçin',
   },
+  faq: {
+    "title": "Tez-tez verilən suallar.",
+    "link": "Suallar və cavablar",
+    "intro": "Lazer təmizləmə barədə bilməli olduqlarınız.",
+    "contact": "Başqa sualınız var? Bizə yazın",
+    "items": [
+      [
+        "Lazerlə hansı çirkləri təmizləmək olar?",
+        "Pas, oksid, köhnə boya, yağ, karbon və digər arzuolunmaz qatları təmizləmək mümkündür. Uyğunluq səthin materialına və çıxarılacaq qatın xüsusiyyətlərinə görə qiymətləndirilir."
+      ],
+      [
+        "Hansı səthlər üçün uyğundur?",
+        "Metal, daş və ağac səthlər üçün tətbiqlər mövcuddur. Hər material fərqli yanaşma tələb edir; işə başlamazdan əvvəl səthi qiymətləndirir və kiçik sahədə sınaq aparırıq."
+      ],
+      [
+        "Təmizləmə səthə zərər verə bilər?",
+        "Uyğun olmayan parametr materialı zədələyə bilər. Buna görə lazerin gücü və digər parametrlər materiala uyğun seçilir, əvvəlcə sınaq sahəsində nəticə yoxlanılır."
+      ],
+      [
+        "Qiymət necə müəyyən olunur?",
+        "Qiymət səthin sahəsi, materialı, çirklənmənin növü, qatın qalınlığı və iş şəraitindən asılıdır. İlkin qiymətləndirmə üçün WhatsApp-da şəkil və təxmini ölçüləri göndərin."
+      ],
+      [
+        "İş nə qədər vaxt aparır?",
+        "Müddət sahənin ölçüsünə, səthin vəziyyətinə və çıxarılacaq qata görə dəyişir. Şəkillərə və layihənin detallarına baxdıqdan sonra təxmini müddəti sizinlə razılaşdırırıq."
+      ],
+      [
+        "Xidməti necə sifariş edə bilərəm?",
+        "055 390 00 28 nömrəsinə zəng edin və ya WhatsApp-da yazın. Səthin şəkillərini, təxmini ölçülərini və işin yerini paylaşın; detalları və növbəti addımları birlikdə dəqiqləşdirək."
+      ]
+    ]
+  },
   footer: {
     illustration: 'AI ilə hazırlanmış illüstrativ vizual.',
     title: 'Səthinizə yeni başlanğıc verin.',

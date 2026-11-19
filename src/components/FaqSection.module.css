@@ -1,0 +1,28 @@
+.section { padding: 100px 4vw 112px; color: var(--ink); background: var(--paper); }
+.layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(48px, 8vw, 128px); max-width: 1440px; margin-inline: auto; }
+.intro h2 { max-width: 440px; margin: 0; font-size: clamp(36px, 3.8vw, 58px); font-weight: 650; line-height: 1.08; letter-spacing: -.05em; }
+.intro > p { max-width: 340px; margin: 24px 0; color: #55554f; font-size: 17px; line-height: 1.65; }
+.intro a { display: inline-flex; align-items: center; gap: 24px; padding-block: 8px; border-bottom: 1px solid currentColor; font-size: 16px; font-weight: 600; transition: color 180ms ease; }
+.intro a:hover { color: var(--red); }
+.questions { border-top: 1px solid var(--line); }
+.item { border-bottom: 1px solid var(--line); }
+.item summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 88px; padding: 24px 4px; list-style: none; cursor: pointer; font-size: 19px; font-weight: 600; line-height: 1.45; letter-spacing: -.02em; transition: color 180ms ease; }
+.item summary::-webkit-details-marker { display: none; }
+.item summary:hover { color: var(--red); }
+.item summary i { position: relative; flex: 0 0 24px; height: 24px; }
+.item summary i::before, .item summary i::after { content: ''; position: absolute; top: 11px; left: 4px; width: 16px; height: 2px; background: currentColor; }
+.item summary i::after { transform: rotate(90deg); transition: transform 180ms ease; }
+.item[open] summary i::after { transform: rotate(0); }
+.item[open] summary { color: #b52c26; }
+.item > p { max-width: 660px; margin: 0; padding: 0 48px 28px 4px; color: #55554f; font-size: 16px; line-height: 1.8; }
+@media (max-width: 760px) {
+  .section { padding: 64px 4vw 72px; }
+  .layout { grid-template-columns: 1fr; gap: 36px; }
+  .intro h2 { max-width: 370px; font-size: 38px; }
+  .intro > p { margin-block: 20px 16px; font-size: 16px; }
+  .item summary { min-height: 80px; gap: 16px; font-size: 17px; }
+  .item > p { padding-right: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section a, .item summary, .item summary i::after { transition: none; }
+}

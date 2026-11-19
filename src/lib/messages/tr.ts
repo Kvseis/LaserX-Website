@@ -17,6 +17,38 @@ const tr: SiteCopy = {
     close: 'Menüyü kapat',
     language: 'Dil seçin',
   },
+  faq: {
+    "title": "Sıkça sorulan sorular.",
+    "link": "Sorular ve cevaplar",
+    "intro": "Lazer temizleme hakkında bilmeniz gerekenler.",
+    "contact": "Başka sorunuz mu var? Bize yazın",
+    "items": [
+      [
+        "Lazer temizleme neleri giderir?",
+        "Pas, oksit, eski boya, yağ, karbon ve diğer istenmeyen katmanlar temizlenebilir. Uygunluk, yüzeyin malzemesine ve çıkarılacak katmanın özelliklerine göre değerlendirilir."
+      ],
+      [
+        "Hangi yüzeyler için uygundur?",
+        "Metal, taş ve ahşap için uygulamalar vardır. Her malzeme farklı bir yaklaşım gerektirir; işe başlamadan önce yüzeyi değerlendirir ve küçük bir alanda deneme yaparız."
+      ],
+      [
+        "Temizleme yüzeye zarar verebilir mi?",
+        "Uygun olmayan ayarlar malzemeye zarar verebilir. Bu nedenle lazer gücü ve diğer parametreler yüzeye göre seçilir, sonuç önce küçük bir deneme alanında kontrol edilir."
+      ],
+      [
+        "Fiyat nasıl belirlenir?",
+        "Fiyat; yüzey alanına, malzemeye, kirlilik türüne, katman kalınlığına ve çalışma koşullarına bağlıdır. İlk değerlendirme için WhatsApp üzerinden fotoğraf ve yaklaşık ölçüleri gönderin."
+      ],
+      [
+        "İş ne kadar sürer?",
+        "Süre, alanın büyüklüğüne, yüzeyin durumuna ve çıkarılacak katmana göre değişir. Fotoğrafları ve proje ayrıntılarını inceledikten sonra tahmini süreyi sizinle birlikte belirleriz."
+      ],
+      [
+        "Nasıl hizmet talep edebilirim?",
+        "+994 55 390 00 28 numarasını arayın veya WhatsApp üzerinden yazın. Ayrıntıları ve sonraki adımları görüşmek için yüzey fotoğraflarını, yaklaşık ölçüleri ve işin yapılacağı yeri paylaşın."
+      ]
+    ]
+  },
   footer: {
     illustration: 'Yapay zekâ ile oluşturulmuş temsili görsel.',
     title: 'Yüzeyinize yeni bir başlangıç verin.',

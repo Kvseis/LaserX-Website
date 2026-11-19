@@ -106,6 +106,16 @@ async function verifyViewport(name, viewport) {
     });
   }
 
+  const faq = page.locator('#suallar');
+  if (await faq.locator('details').count() !== 6) throw new Error(`${name}: suallar bölməsi natamamdır`);
+  const firstQuestion = faq.locator('summary').first();
+  await firstQuestion.focus();
+  await firstQuestion.press('Enter');
+  if (!await faq.locator('details').first().locator('p').isVisible()) throw new Error(`${name}: sual klaviatura ilə açılmır`);
+  await faq.screenshot({ path: path.join(artifactDir, `laserx-${name}-faq.png`) });
+  await firstQuestion.press('Space');
+  if (await faq.locator('details').first().getAttribute('open') !== null) throw new Error(`${name}: sual klaviatura ilə bağlanmır`);
+
   if ((await page.locator('img[src*="images.jpg"]').count()) < 3) {
     throw new Error(`${name}: images.jpg WhatsApp loqoları tam inteqrasiya edilməyib`);
   }

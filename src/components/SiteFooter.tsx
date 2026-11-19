@@ -31,6 +31,7 @@ export default function SiteFooter({ locale, copy }: { locale: Locale; copy: Sit
           <a href={`${home}#neticeler`}>{copy.nav.results}</a>
           <a href={sitePath(locale, 'technology')}>{copy.nav.technology}</a>
           <a href={`${home}#ustunlukler`}>{copy.nav.benefits}</a>
+          <a href={`${home}#suallar`}>{copy.faq.link}</a>
         </nav>
         <nav className={styles.links} aria-label={copy.nav.services}>
           {[0, 2, 5, 6, 3].map((index) => <a href={`${home}#xidmetler`} key={index}>{copy.services.items[index][0]}</a>)}
