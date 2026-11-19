@@ -52,7 +52,6 @@ const az = {
     "intro": "Səthiniz barədə məlumat verin. Layihənizə uyğun yanaşmanı və vaxtı birlikdə dəqiqləşdirək.",
     "name": "Adınız",
     "namePlaceholder": "Ad və soyad",
-    "phone": "Telefon nömrəsi",
     "surface": "Səthin növü",
     "chooseSurface": "Səthi seçin",
     "surfaces": [

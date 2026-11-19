@@ -17,9 +17,8 @@ try {
     await page.locator('#sifaris').screenshot({ path: `artifacts/booking-${name}.png` });
     if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)) throw new Error(`${name}: horizontal overflow`);
     await form.locator('[name="name"]').fill('Test User');
-    await form.locator('[name="phone"]').fill('abc');
-    if (await form.evaluate((element) => element.checkValidity())) throw new Error(`${name}: invalid phone accepted`);
-    await form.locator('[name="phone"]').fill('+994 55 555 01 00');
+    if (await form.locator('[name="phone"], input[type="tel"]').count()) throw new Error(`${name}: redundant phone field remains`);
+    if (await form.evaluate((element) => element.checkValidity())) throw new Error(`${name}: surface selection is not required`);
     await form.locator('[name="surface"]').selectOption({ index: 1 });
     if (!await form.evaluate((element) => element.checkValidity())) throw new Error(`${name}: optional fields are required`);
     await form.locator('[name="area"]').fill('12 m²');
@@ -31,8 +30,9 @@ try {
     await form.getByRole('button').click();
     const url = new URL((await request).url());
     const message = url.searchParams.get('text');
+    if (message?.includes('Telefon nömrəsi:')) throw new Error(`${name}: phone included in draft`);
     if (url.pathname !== '/994553900028') throw new Error(`${name}: wrong WhatsApp destination`);
-    for (const value of ['Test User', '+994 55 555 01 00', '12 m²', '2027-01-20', 'Sınaq: pas & boya\nBakı']) {
+    for (const value of ['Test User', '12 m²', '2027-01-20', 'Sınaq: pas & boya\nBakı']) {
       if (!message?.includes(value)) throw new Error(`${name}: missing draft field ${value}`);
     }
     await page.close();

@@ -54,7 +54,6 @@ const en: SiteCopy = {
     "intro": "Tell us about your surface. We will discuss the right approach and timing for your project.",
     "name": "Your name",
     "namePlaceholder": "Full name",
-    "phone": "Phone number",
     "surface": "Surface type",
     "chooseSurface": "Select a surface",
     "surfaces": [

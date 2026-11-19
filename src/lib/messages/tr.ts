@@ -54,7 +54,6 @@ const tr: SiteCopy = {
     "intro": "Yüzeyiniz hakkında bilgi verin. Projenize uygun yaklaşımı ve zamanı birlikte belirleyelim.",
     "name": "Adınız",
     "namePlaceholder": "Ad ve soyad",
-    "phone": "Telefon numarası",
     "surface": "Yüzey türü",
     "chooseSurface": "Yüzeyi seçin",
     "surfaces": [
