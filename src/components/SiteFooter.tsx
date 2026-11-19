@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Manrope } from 'next/font/google';
 import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
 import { phone, whatsapp } from '@/lib/contact';
@@ -6,9 +7,11 @@ import { PhoneIcon } from './SiteHeader';
 import WhatsAppLogo from './WhatsAppLogo';
 import styles from './SiteFooter.module.css';
 
+const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+
 export default function SiteFooter({ locale, copy }: { locale: Locale; copy: SiteCopy }) {
   const home = sitePath(locale);
-  return <footer className={styles.footer}>
+  return <footer className={`${styles.footer} ${manrope.className}`}>
     <div className={styles.content}>
       <div className={styles.heading}>
         <h2>{copy.footer.title}</h2>
