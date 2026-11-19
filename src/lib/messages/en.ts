@@ -49,6 +49,30 @@ const en: SiteCopy = {
       ]
     ]
   },
+  booking: {
+    "title": "Book your laser cleaning.",
+    "intro": "Tell us about your surface. We will discuss the right approach and timing for your project.",
+    "name": "Your name",
+    "namePlaceholder": "Full name",
+    "phone": "Phone number",
+    "surface": "Surface type",
+    "chooseSurface": "Select a surface",
+    "surfaces": [
+      "Metal",
+      "Stone and brick",
+      "Wood",
+      "Other"
+    ],
+    "area": "Approximate size",
+    "areaPlaceholder": "For example, 12 m²",
+    "date": "Preferred date",
+    "notes": "About your project",
+    "notesPlaceholder": "What needs cleaning? Include the job location and any other details.",
+    "optional": "(optional)",
+    "submit": "Open request in WhatsApp",
+    "notice": "Your details will open as a draft WhatsApp message. The booking and timing are confirmed after we discuss your request.",
+    "messageTitle": "LaserX — laser cleaning request"
+  },
   footer: {
     illustration: 'AI-generated illustrative visual.',
     title: 'Give your surface a fresh start.',

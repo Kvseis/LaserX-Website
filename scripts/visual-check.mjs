@@ -79,7 +79,7 @@ async function verifyViewport(name, viewport) {
   }
   if ((await page.getByRole('heading', { name: 'Səthinizə yeni başlanğıc verin.' }).count()) !== 1
     || (await page.locator('main > .contact').count()) !== 0
-    || (await page.locator('footer').getByRole('link', { name: 'Xidmət sifariş et' }).getAttribute('href')) !== 'tel:+994553900028') {
+    || (await page.locator('footer').getByRole('link', { name: 'Xidmət sifariş et' }).getAttribute('href')) !== '/#sifaris') {
     throw new Error(`${name}: son əlaqə bölməsi natamamdır`);
   }
   if ((await page.locator('.nav-actions .nav-call').count()) !== 1 || (await page.locator('.nav-actions .nav-whatsapp').count()) !== 1) {
@@ -98,6 +98,7 @@ async function verifyViewport(name, viewport) {
 
   const heroVideo = page.locator('video.hero-media');
   const expectedVideoCount = 1;
+  await heroVideo.waitFor({ state: 'attached' });
   if ((await heroVideo.count()) !== expectedVideoCount) throw new Error(`${name}: hero video strategiyası yanlışdır`);
   if (expectedVideoCount === 1) {
     await page.waitForFunction(() => {

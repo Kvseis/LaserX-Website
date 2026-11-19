@@ -47,6 +47,30 @@ const az = {
       ]
     ]
   },
+  booking: {
+    "title": "Lazer təmizləmə sifariş edin.",
+    "intro": "Səthiniz barədə məlumat verin. Layihənizə uyğun yanaşmanı və vaxtı birlikdə dəqiqləşdirək.",
+    "name": "Adınız",
+    "namePlaceholder": "Ad və soyad",
+    "phone": "Telefon nömrəsi",
+    "surface": "Səthin növü",
+    "chooseSurface": "Səthi seçin",
+    "surfaces": [
+      "Metal",
+      "Daş və kərpic",
+      "Ağac",
+      "Digər"
+    ],
+    "area": "Təxmini ölçü",
+    "areaPlaceholder": "Məsələn, 12 m²",
+    "date": "Arzulanan tarix",
+    "notes": "Layihə haqqında",
+    "notesPlaceholder": "Nə təmizlənməlidir? İşin yerini və əlavə detalları yazın.",
+    "optional": "(istəyə bağlı)",
+    "submit": "Sorğunu WhatsApp-da aç",
+    "notice": "Məlumatlar WhatsApp-da hazır mesaj kimi açılacaq. Sifariş və vaxt əlaqədən sonra təsdiqlənir.",
+    "messageTitle": "LaserX — lazer təmizləmə sorğusu"
+  },
   footer: {
     illustration: 'AI ilə hazırlanmış illüstrativ vizual.',
     title: 'Səthinizə yeni başlanğıc verin.',

@@ -49,6 +49,30 @@ const tr: SiteCopy = {
       ]
     ]
   },
+  booking: {
+    "title": "Lazer temizleme talep edin.",
+    "intro": "Yüzeyiniz hakkında bilgi verin. Projenize uygun yaklaşımı ve zamanı birlikte belirleyelim.",
+    "name": "Adınız",
+    "namePlaceholder": "Ad ve soyad",
+    "phone": "Telefon numarası",
+    "surface": "Yüzey türü",
+    "chooseSurface": "Yüzeyi seçin",
+    "surfaces": [
+      "Metal",
+      "Taş ve tuğla",
+      "Ahşap",
+      "Diğer"
+    ],
+    "area": "Yaklaşık ölçü",
+    "areaPlaceholder": "Örneğin, 12 m²",
+    "date": "Tercih edilen tarih",
+    "notes": "Projeniz hakkında",
+    "notesPlaceholder": "Ne temizlenmeli? İşin yapılacağı yeri ve diğer ayrıntıları yazın.",
+    "optional": "(isteğe bağlı)",
+    "submit": "Talebi WhatsApp’ta aç",
+    "notice": "Bilgileriniz WhatsApp’ta taslak mesaj olarak açılacak. Talep ve zaman, görüşmeden sonra onaylanır.",
+    "messageTitle": "LaserX — lazer temizleme talebi"
+  },
   footer: {
     illustration: 'Yapay zekâ ile oluşturulmuş temsili görsel.',
     title: 'Yüzeyinize yeni bir başlangıç verin.',

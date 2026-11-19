@@ -1,25 +1,40 @@
-.banner { position: relative; isolation: isolate; display: grid; place-items: center; min-height: 430px; padding: 72px 4vw; margin: 0; overflow: hidden; color: #fff; background: #151719; text-align: center; }
+.banner { position: relative; isolation: isolate; padding: 88px 4vw; margin: 0; overflow: hidden; color: #fff; background: #151719; }
 .image { z-index: -2; object-fit: cover; object-position: center; }
-.shade { position: absolute; z-index: -1; inset: 0; background: rgba(5, 7, 8, .58); }
-.content { width: min(860px, 100%); }
-.content h2 { margin: 0; font-size: clamp(36px, 4.4vw, 64px); font-weight: 650; line-height: 1.08; letter-spacing: -.045em; text-wrap: balance; }
-.content p { margin: 22px 0 0; color: #e1e1dd; font-size: 17px; line-height: 1.6; }
-.actions { display: flex; justify-content: center; gap: 14px; margin-top: 32px; }
-.actions a { display: inline-flex; justify-content: center; align-items: center; gap: 12px; min-width: 190px; min-height: 56px; padding: 14px 26px; border: 1px solid transparent; border-radius: 8px; font-size: 16px; font-weight: 650; line-height: 1.4; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease; }
-.call { color: #151719; background: #f4f2ed; box-shadow: 0 4px 14px #0003; }
-.call:hover { background: #fff; transform: translateY(-2px); }
-.call svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.actions .whatsapp { color: #fff; background: #171b19; border-color: #ffffff70; }
-.actions .whatsapp:hover { background: #232c27; border-color: #ffffffb0; transform: translateY(-2px); }
-.whatsapp :global(.whatsapp-logo) { width: 23px; height: 23px; }
-.actions a:active { transform: translateY(0); }
-@media (max-width: 600px) {
-  .banner { min-height: 450px; padding: 56px 6vw; }
-  .content h2 { font-size: 36px; }
-  .content p { font-size: 16px; }
-  .actions { flex-direction: column; gap: 12px; margin-top: 28px; }
-  .actions a { width: 100%; }
+.shade { position: absolute; z-index: -1; inset: 0; background: rgba(5, 7, 8, .83); }
+.layout { max-width: 1440px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); align-items: start; gap: clamp(40px, 7vw, 110px); }
+.content { padding-top: 32px; }
+.content h2 { max-width: 540px; margin: 0; font-size: clamp(38px, 4.1vw, 62px); font-weight: 650; line-height: 1.08; letter-spacing: -.045em; text-wrap: balance; }
+.content > p { max-width: 440px; margin: 24px 0 32px; color: #d0d2cd; font-size: 18px; line-height: 1.7; }
+.call { display: inline-flex; align-items: center; gap: 12px; padding-block: 10px; color: #fff; font-size: clamp(18px, 2vw, 24px); font-weight: 600; letter-spacing: -.025em; }
+.call:hover { text-decoration: underline; text-underline-offset: 6px; }
+.call svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.form { min-width: 0; margin: 0; padding: 32px; border: 1px solid #ffffff26; border-radius: 12px; color: var(--ink); background: var(--paper); }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 20px; }
+.fields label { min-width: 0; display: flex; flex-wrap: wrap; align-content: start; gap: 8px 6px; font-size: 14px; font-weight: 650; line-height: 1.4; }
+.optional { color: #666761; font-size: 12px; font-weight: 400; }
+.full { grid-column: 1 / -1; }
+.fields input, .fields select, .fields textarea { width: 100%; min-width: 0; min-height: 50px; padding: 12px 14px; border: 1px solid #c5c5be; border-radius: 6px; color: #151515; background: #fff; font: inherit; font-size: 16px; font-weight: 450; line-height: 1.5; }
+.fields textarea { resize: vertical; }
+.fields input::placeholder, .fields textarea::placeholder { color: #777971; opacity: 1; }
+.submit { width: 100%; min-height: 54px; margin-top: 24px; padding: 14px 18px; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; border: 1px solid #252923; border-radius: 7px; color: #fff; background: #252923; font: inherit; font-size: 16px; font-weight: 650; transition: background 180ms ease, transform 180ms ease; }
+.submit:hover { background: #3b4238; transform: translateY(-2px); }
+.submit:active { transform: translateY(0); }
+.submit :global(.whatsapp-logo) { width: 22px; height: 22px; }
+.notice { margin: 14px 0 0; color: #62635c; font-size: 13px; line-height: 1.6; }
+@media (max-width: 900px) {
+  .banner { padding-block: 64px; }
+  .layout { grid-template-columns: 1fr; gap: 32px; }
+  .content { padding: 0; }
+  .content h2 { max-width: 650px; font-size: 42px; }
+  .content > p { max-width: 650px; margin-block: 20px 16px; font-size: 17px; }
+}
+@media (max-width: 500px) {
+  .banner { padding: 52px 4vw; }
+  .content h2 { font-size: 38px; }
+  .form { padding: 24px 20px; }
+  .fields { grid-template-columns: 1fr; gap: 20px; }
+  .submit { font-size: 15px; padding-inline: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .actions a, .actions a:hover, .actions a:active { transition: none; transform: none; }
+  .submit, .submit:hover, .submit:active { transition: none; transform: none; }
 }
