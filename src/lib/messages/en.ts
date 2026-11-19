@@ -17,6 +17,11 @@ const en: SiteCopy = {
     close: 'Close menu',
     language: 'Choose language',
   },
+  footer: {
+    title: 'Let’s start your laser cleaning today.',
+    description: 'Precision laser cleaning for metal, stone and wood. An approach tailored to every surface.',
+    contact: 'Have a question? Get in touch.',
+  },
   city: 'Baku',
   location: 'Baku, Azerbaijan',
   meta: {

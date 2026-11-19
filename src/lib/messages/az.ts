@@ -15,6 +15,11 @@ const az = {
     close: 'Menyunu bağla',
     language: 'Dil seçin',
   },
+  footer: {
+    title: 'Lazer təmizləməyə bu gün başlayaq.',
+    description: 'Metal, daş və ağac üçün dəqiq lazer təmizləmə. Hər səthə uyğun yanaşma.',
+    contact: 'Sualınız var? Bizimlə əlaqə saxlayın.',
+  },
   city: 'Bakı',
   location: 'Bakı, Azərbaycan',
   meta: {

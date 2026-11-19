@@ -17,6 +17,11 @@ const tr: SiteCopy = {
     close: 'Menüyü kapat',
     language: 'Dil seçin',
   },
+  footer: {
+    title: 'Lazer temizliğine bugün başlayalım.',
+    description: 'Metal, taş ve ahşap için hassas lazer temizleme. Her yüzeye uygun yaklaşım.',
+    contact: 'Sorunuz mu var? Bize ulaşın.',
+  },
   city: 'Bakü',
   location: 'Bakü, Azerbaycan',
   meta: {

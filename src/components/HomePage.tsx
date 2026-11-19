@@ -1,3 +1,4 @@
+import SiteFooter from './SiteFooter';
 import Image from 'next/image';
 import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
@@ -113,6 +114,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
       </section>
     </main>
 
-    <footer><a className="footer-brand brand-logo" href="#top"><Image src="/images/logo.png" width={500} height={500} sizes="170px" alt="LaserX" /></a><p>© {new Date().getFullYear()} LaserX · {copy.city}</p><a href={whatsapp}>WhatsApp <span aria-hidden="true">↗</span></a></footer>
+    <SiteFooter locale={locale} copy={copy} />
   </div>;
 }

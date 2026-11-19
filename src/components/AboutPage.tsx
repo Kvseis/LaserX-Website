@@ -1,3 +1,4 @@
+import SiteFooter from './SiteFooter';
 import Image from 'next/image';
 import { Camera, ScanLine, Zap, ClipboardCheck } from 'lucide-react';
 import type { SiteCopy } from '@/lib/messages/az';
@@ -131,10 +132,6 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
       </section>
     </AboutReveal>
     <p className={styles.disclosure}>{about.disclosure}</p>
-    <footer>
-      <a className="wordmark nav-brand" href={sitePath(locale)} aria-label={copy.nav.home}><Image src="/images/logo-mark-transparent.png" width={40} height={40} alt="" /><span>LaserX</span></a>
-      <p>© {new Date().getFullYear()} LaserX · {copy.city}</p>
-      <a href={phone}>055 390 00 28</a>
-    </footer>
+    <SiteFooter locale={locale} copy={copy} />
   </div>;
 }

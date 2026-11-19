@@ -1,3 +1,4 @@
+import SiteFooter from './SiteFooter';
 import Image from 'next/image';
 import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
@@ -72,6 +73,6 @@ export default function TechnologyPage({ locale, copy }: { locale: Locale; copy:
       </section>
     </main>
 
-    <footer><a className="wordmark" href={sitePath(locale)}><Image src="/images/logo-mark-transparent.png" width={40} height={40} alt="" /><span>LaserX</span></a><p>© {new Date().getFullYear()} LaserX. {copy.location}.</p><a href={phone}>055 390 00 28</a></footer>
+    <SiteFooter locale={locale} copy={copy} />
   </div>;
 }
