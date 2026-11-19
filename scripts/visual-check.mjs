@@ -71,15 +71,15 @@ async function verifyViewport(name, viewport) {
     throw new Error(`${name}: xidmət kartları üfüqi sürüşmür`);
   }
   if ((await page.getByRole('heading', { level: 1, name: /Daha təmiz\.\s*Daha dəqiq\.\s*Daha güclü\./ }).count()) !== 1
-    || (await page.locator('.contact').getByRole('link', { name: 'WhatsApp-da yazın' }).count()) !== 1) {
+    || (await page.locator('footer').getByRole('link', { name: 'Xidmət sifariş et' }).count()) !== 1) {
     throw new Error(`${name}: ilk ekran başlığı və ya WhatsApp düymələri natamamdır`);
   }
   if ((await page.locator('.technology-preview').count()) !== 1 || (await page.locator('.steps').count()) !== 0) {
     throw new Error(`${name}: köhnə texnologiya bölməsi düzgün əvəz edilməyib`);
   }
   if ((await page.getByRole('heading', { name: 'Səthinizə yeni başlanğıc verin.' }).count()) !== 1
-    || (await page.locator('.contact .big-phone').count()) !== 1
-    || (await page.locator('.contact .contact-whatsapp').count()) !== 1) {
+    || (await page.locator('main > .contact').count()) !== 0
+    || (await page.locator('footer').getByRole('link', { name: 'Xidmət sifariş et' }).getAttribute('href')) !== 'tel:+994553900028') {
     throw new Error(`${name}: son əlaqə bölməsi natamamdır`);
   }
   if ((await page.locator('.nav-actions .nav-call').count()) !== 1 || (await page.locator('.nav-actions .nav-whatsapp').count()) !== 1) {
@@ -167,7 +167,7 @@ async function verifyViewport(name, viewport) {
   await page.locator('#xidmetler').screenshot({ path: path.join(artifactDir, `laserx-${name}-services.png`) });
   await page.locator('.technology-preview').screenshot({ path: path.join(artifactDir, `laserx-${name}-technology.png`) });
   await page.locator('#ustunlukler').screenshot({ path: path.join(artifactDir, `laserx-${name}-comparison.png`) });
-  await page.locator('.contact').screenshot({ path: path.join(artifactDir, `laserx-${name}-contact.png`) });
+  await page.locator('footer').screenshot({ path: path.join(artifactDir, `laserx-${name}-footer.png`) });
 
   if (name !== 'desktop') {
     const alignment = await page.locator('.methods-copy h2').evaluate((heading) => {

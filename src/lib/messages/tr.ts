@@ -19,7 +19,8 @@ const tr: SiteCopy = {
   },
   footer: {
     illustration: 'Yapay zekâ ile oluşturulmuş temsili görsel.',
-    title: 'Lazer temizliğine bugün başlayalım.',
+    title: 'Yüzeyinize yeni bir başlangıç verin.',
+    booking: 'Hizmet talep et',
     description: 'Metal, taş ve ahşap için hassas lazer temizleme. Her yüzeye uygun yaklaşım.',
     contact: 'Sorunuz mu var? Bize ulaşın.',
   },

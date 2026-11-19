@@ -17,7 +17,8 @@ const az = {
   },
   footer: {
     illustration: 'AI ilə hazırlanmış illüstrativ vizual.',
-    title: 'Lazer təmizləməyə bu gün başlayaq.',
+    title: 'Səthinizə yeni başlanğıc verin.',
+    booking: 'Xidmət sifariş et',
     description: 'Metal, daş və ağac üçün dəqiq lazer təmizləmə. Hər səthə uyğun yanaşma.',
     contact: 'Sualınız var? Bizimlə əlaqə saxlayın.',
   },

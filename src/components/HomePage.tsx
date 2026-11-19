@@ -100,18 +100,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
         </div>
       </section>
 
-      <section className="contact">
-        <h2>{home.contactTitle[0]}<br />{home.contactTitle[1]}</h2>
-        <p>{home.contactDescription}</p>
-        <a className="big-phone" href={phone} aria-label={nav.callNumber}>
-          055 390 00 28
-          <PhoneIcon />
-        </a>
-        <a className="button contact-whatsapp" href={whatsapp}>
-          <WhatsAppLogo />
-          {nav.whatsapp}
-        </a>
-      </section>
     </main>
 
     <SiteFooter locale={locale} copy={copy} />
