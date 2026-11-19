@@ -1,5 +1,6 @@
 import SiteFooter from './SiteFooter';
 import FaqSection from './FaqSection';
+import ContactBanner from './ContactBanner';
 import Image from 'next/image';
 import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
@@ -102,6 +103,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
       </section>
 
       <FaqSection copy={copy.faq} />
+      <ContactBanner copy={copy} />
     </main>
 
     <SiteFooter locale={locale} copy={copy} />

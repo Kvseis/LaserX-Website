@@ -217,10 +217,10 @@ async function verifyLanguages() {
   });
   const switcher = page.locator('.language-switch');
   for (const { locale, name, services, technology } of variants) {
-    await page.goto(baseUrl);
+    await page.goto(baseUrl, { waitUntil: 'networkidle' });
     await switcher.locator('summary').tap();
     await switcher.getByRole('link', { name, exact: true }).tap();
-    await page.waitForURL(`**/${locale}`);
+    await page.waitForURL(`**/${locale}`, { waitUntil: 'networkidle' });
     if ((await page.locator('html').getAttribute('lang')) !== locale
       || (await page.getByRole('heading', { name: services, exact: true }).count()) !== 1) {
       throw new Error(`${locale}: ana səhifənin dil versiyası natamamdır`);
@@ -230,7 +230,7 @@ async function verifyLanguages() {
       throw new Error(`${locale}: xidmətlərdən keçid seçilmiş dili saxlamır`);
     }
     await page.locator('.technology-preview-cta').tap();
-    await page.waitForURL(`**/${locale}/technology`);
+    await page.waitForURL(`**/${locale}/technology`, { waitUntil: 'networkidle' });
     const heading = page.getByRole('heading', { level: 1, name: technology, exact: true });
     if ((await page.locator('html').getAttribute('lang')) !== locale
       || (await heading.count()) !== 1

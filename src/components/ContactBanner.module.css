@@ -1,0 +1,25 @@
+.banner { position: relative; isolation: isolate; display: grid; place-items: center; min-height: 430px; padding: 72px 4vw; margin: 0; overflow: hidden; color: #fff; background: #151719; text-align: center; }
+.image { z-index: -2; object-fit: cover; object-position: center; }
+.shade { position: absolute; z-index: -1; inset: 0; background: rgba(5, 7, 8, .58); }
+.content { width: min(860px, 100%); }
+.content h2 { margin: 0; font-size: clamp(36px, 4.4vw, 64px); font-weight: 650; line-height: 1.08; letter-spacing: -.045em; text-wrap: balance; }
+.content p { margin: 22px 0 0; color: #e1e1dd; font-size: 17px; line-height: 1.6; }
+.actions { display: flex; justify-content: center; gap: 14px; margin-top: 32px; }
+.actions a { display: inline-flex; justify-content: center; align-items: center; gap: 12px; min-width: 190px; min-height: 56px; padding: 14px 26px; border: 1px solid transparent; border-radius: 8px; font-size: 16px; font-weight: 650; line-height: 1.4; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease; }
+.call { color: #151719; background: #f4f2ed; box-shadow: 0 4px 14px #0003; }
+.call:hover { background: #fff; transform: translateY(-2px); }
+.call svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.actions .whatsapp { color: #fff; background: #171b19; border-color: #ffffff70; }
+.actions .whatsapp:hover { background: #232c27; border-color: #ffffffb0; transform: translateY(-2px); }
+.whatsapp :global(.whatsapp-logo) { width: 23px; height: 23px; }
+.actions a:active { transform: translateY(0); }
+@media (max-width: 600px) {
+  .banner { min-height: 450px; padding: 56px 6vw; }
+  .content h2 { font-size: 36px; }
+  .content p { font-size: 16px; }
+  .actions { flex-direction: column; gap: 12px; margin-top: 28px; }
+  .actions a { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .actions a, .actions a:hover, .actions a:active { transition: none; transform: none; }
+}

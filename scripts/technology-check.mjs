@@ -11,8 +11,7 @@ await mkdir(artifactDir, { recursive: true });
 
 async function verify(name, viewport) {
   const page = await browser.newPage({ viewport, deviceScaleFactor: 1 });
-  await page.goto('http://127.0.0.1:3000/technology', { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(900);
+  await page.goto('http://127.0.0.1:3000/technology', { waitUntil: 'networkidle' });
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (overflow > 1) throw new Error(`${name}: ${overflow}px üfüqi daşma var`);

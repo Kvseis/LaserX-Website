@@ -1,11 +1,12 @@
 import SiteFooter from './SiteFooter';
+import ContactBanner from './ContactBanner';
 import Image from 'next/image';
-import { sitePath, type Locale } from '@/lib/locales';
+import { type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
 import styles from './TechnologyPage.module.css';
 import ApplicationsShowcase from './ApplicationsShowcase';
 import SiteHeader from './SiteHeader';
-import { phone, whatsapp } from '@/lib/contact';
+import { whatsapp } from '@/lib/contact';
 import WhatsAppLogo from './WhatsAppLogo';
 
 
@@ -66,11 +67,7 @@ export default function TechnologyPage({ locale, copy }: { locale: Locale; copy:
 
       <ApplicationsShowcase id="tetbiqler" copy={technology} />
 
-      <section className={styles.cta}>
-        <Image className={styles.ctaMedia} src="/images/technology-cta.webp" fill sizes="100vw" alt={technology.contactAlt} />
-        <div className={styles.ctaShade} />
-        <div className={styles.ctaContent}><h2>{technology.contactTitle}</h2><p>{home.contactDescription}</p><div><a href={phone}>{nav.call}</a><a href={whatsapp}>{technology.whatsapp}</a></div></div>
-      </section>
+      <ContactBanner copy={copy} />
     </main>
 
     <SiteFooter locale={locale} copy={copy} />

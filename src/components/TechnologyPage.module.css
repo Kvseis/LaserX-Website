@@ -352,81 +352,6 @@
   font-weight: 600;
 }
 
-.cta {
-  position: relative;
-  min-height: 460px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  text-align: center;
-  border-bottom: 1px solid rgba(239, 81, 73, .7);
-}
-
-.ctaMedia {
-  object-fit: cover;
-}
-
-.ctaShade {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: rgba(4, 5, 5, .42);
-}
-
-.ctaContent {
-  position: relative;
-  z-index: 2;
-  max-width: 850px;
-  padding: 70px 24px;
-}
-
-.ctaContent h2 {
-  margin: 0;
-  font-size: clamp(44px, 5vw, 74px);
-  line-height: .98;
-  letter-spacing: -.055em;
-  text-shadow: 0 4px 28px rgba(0, 0, 0, .72);
-}
-
-.ctaContent p {
-  margin: 24px 0 0;
-  color: rgba(255, 255, 255, .76);
-  font-size: 14px;
-}
-
-.ctaContent div {
-  margin-top: 34px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.ctaContent a {
-  min-width: 150px;
-  min-height: 48px;
-  padding: 0 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: var(--tech-red);
-  border: 1px solid var(--tech-red);
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 640;
-  transition: transform 240ms ease, background 240ms ease;
-}
-
-.ctaContent a + a {
-  background: rgba(5, 6, 6, .74);
-  border-color: rgba(255, 255, 255, .55);
-  backdrop-filter: blur(12px);
-}
-
-.ctaContent a:hover {
-  color: #fff;
-  transform: translateY(-2px);
-}
 
 @media (max-width: 1000px) {
   .heroShade {
@@ -600,26 +525,11 @@
     font-size: 11px;
   }
 
-  .cta {
-    min-height: 500px;
-  }
 
-  .ctaContent h2 {
-    font-size: 44px;
-  }
-
-  .ctaContent div {
-    flex-direction: column;
-  }
-
-  .ctaContent a {
-    width: 100%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heroMedia,
-  .ctaMedia,
   .processGrid article,
   .applicationGrid article {
     opacity: 1 !important;
