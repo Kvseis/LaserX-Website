@@ -95,8 +95,8 @@ const tr: SiteCopy = {
     },
   },
   home: {
-    headline: ['Daha temiz.', 'Daha hassas.', 'Daha güçlü.'],
-    description: 'Metal, taş ve ahşap yüzeylerden pası, boyayı ve istenmeyen katmanları kontrollü lazerle temizliyoruz.',
+    headline: ["Temiz yüzey", "burada başlar."],
+    description: "Bakü’de metal, taş ve ahşap yüzeylerden pası, boyayı ve istenmeyen katmanları kontrollü lazer teknolojisiyle temizliyoruz.",
     proof: 'Her projeye bir deneme alanıyla başlar, ayarları malzemeye göre seçeriz.',
     tagline: 'Her yüzeye hassas yaklaşım',
     seeResults: 'Farkı görün',

@@ -54,7 +54,7 @@ async function verifyViewport(name, viewport) {
   if ((await page.locator('.results-contact').count()) !== 0) {
     throw new Error(`${name}: Before/After əlaqə düyməsi silinməyib`);
   }
-  if ((await page.locator('.hero-contacts .call-rail').count()) !== 1 || (await page.locator('.hero-contacts .whatsapp-rail').count()) !== 1) {
+  if ((await page.locator('.hero-actions .hero-call').count()) !== 1 || (await page.locator('.hero-actions .hero-book').getAttribute('href')) !== '#sifaris') {
     throw new Error(`${name}: hero əlaqə düymələri natamamdır`);
   }
   const services = page.getByRole('region', { name: 'Lazer təmizləmə xidmətləri' });
@@ -70,7 +70,7 @@ async function verifyViewport(name, viewport) {
   if (scrollRange < 100) {
     throw new Error(`${name}: xidmət kartları üfüqi sürüşmür`);
   }
-  if ((await page.getByRole('heading', { level: 1, name: /Daha təmiz\.\s*Daha dəqiq\.\s*Daha güclü\./ }).count()) !== 1
+  if ((await page.getByRole('heading', { level: 1, name: /Təmiz səth\s*buradan başlayır\./ }).count()) !== 1
     || (await page.locator('footer').getByRole('link', { name: 'Xidmət sifariş et' }).count()) !== 1) {
     throw new Error(`${name}: ilk ekran başlığı və ya WhatsApp düymələri natamamdır`);
   }
@@ -117,7 +117,7 @@ async function verifyViewport(name, viewport) {
   await firstQuestion.press('Space');
   if (await faq.locator('details').first().getAttribute('open') !== null) throw new Error(`${name}: sual klaviatura ilə bağlanmır`);
 
-  if ((await page.locator('img[src*="images.jpg"]').count()) < 3) {
+  if ((await page.locator('img[src*="images.jpg"]').count()) < 2) {
     throw new Error(`${name}: images.jpg WhatsApp loqoları tam inteqrasiya edilməyib`);
   }
 

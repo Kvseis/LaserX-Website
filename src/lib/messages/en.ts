@@ -95,8 +95,8 @@ const en: SiteCopy = {
     },
   },
   home: {
-    headline: ['Cleaner.', 'More precise.', 'More powerful.'],
-    description: 'We use controlled laser cleaning to remove rust, paint and unwanted deposits from metal, stone and wood.',
+    headline: ["A clean surface", "starts here."],
+    description: "Laser cleaning for metal, stone and wood in Baku. We remove rust, paint and unwanted layers with controlled laser technology.",
     proof: 'We begin each project with a test patch and settings suited to the material.',
     tagline: 'Precision for every surface',
     seeResults: 'See the difference',

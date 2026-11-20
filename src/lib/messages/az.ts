@@ -93,8 +93,8 @@ const az = {
     },
   },
   home: {
-    headline: ['Daha təmiz.', 'Daha dəqiq.', 'Daha güclü.'],
-    description: 'Metal, daş və ağac səthlərdən pası, boyanı və arzuolunmaz qatları nəzarətli lazer texnologiyası ilə təmizləyirik.',
+    headline: ["Təmiz səth", "buradan başlayır."],
+    description: "Bakıda metal, daş və ağac səthlərdən pası, boyanı və arzuolunmaz qatları lazerlə təmizləyirik.",
     proof: 'Hər layihə sınaq sahəsi və materiala uyğun parametrlərlə başlayır.',
     tagline: 'Hər səthə dəqiq yanaşma',
     seeResults: 'Fərqi kəşf edin',
