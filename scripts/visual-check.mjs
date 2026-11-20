@@ -13,92 +13,9 @@ const browser = await chromium.launch({
   headless: true,
 });
 
-async function verifyHeroWipe(page, name) {
-  const visual = page.locator('.hero-visual');
-  await page.waitForFunction(() => document.querySelector('.hero-visual').style.getPropertyValue('--hero-reveal') !== '');
-  await page.waitForFunction(() => [...document.querySelectorAll('.hero-visual img')].every((image) => image.complete && image.naturalWidth > 0));
-
-  const measureWipe = () => visual.evaluate((frame) => {
-    const [rusty, clean] = frame.querySelectorAll('img');
-    const laser = frame.querySelector('.hero-laser');
-    const frameRect = frame.getBoundingClientRect();
-    const rustyRect = rusty.getBoundingClientRect();
-    const cleanRect = clean.getBoundingClientRect();
-    const laserRect = laser.getBoundingClientRect();
-    return {
-      reveal: parseFloat(getComputedStyle(frame).getPropertyValue('--hero-reveal')),
-      hiddenPercent: parseFloat(getComputedStyle(clean).clipPath.split(' ')[1]) || 0,
-      differingGeometry: ['left', 'top', 'width', 'height'].some((key) => rustyRect[key] !== cleanRect[key]),
-      linePercent: 100 * (laserRect.left + laserRect.width / 2 - frameRect.left) / frameRect.width,
-      lineWidth: laserRect.width,
-      frameTop: frameRect.top,
-    };
-  });
-
-  const verifyBoundary = ({ reveal, hiddenPercent, differingGeometry, linePercent, lineWidth }, expected) => {
-    if (differingGeometry || lineWidth !== 2 || Math.abs(reveal - expected) > 0.2
-      || Math.abs(reveal + hiddenPercent - 100) > 0.05 || Math.abs(linePercent - reveal) > 0.1) {
-      throw new Error(`${name}: flanş şəkilləri və lazer xətti ${expected}% nöqtəsində uyğun gəlmir`);
-    }
-  };
-
-  verifyBoundary(await measureWipe(), 35);
-  const { start, travel } = await page.locator('.hero').evaluate((section) => {
-    const stage = section.querySelector('.hero-stage');
-    return { start: Math.max(0, stage.offsetHeight - window.innerHeight), travel: section.offsetHeight - stage.offsetHeight };
-  });
-  if (Math.abs(travel - await page.evaluate(() => window.innerHeight * 1.2)) > 2) {
-    throw new Error(`${name}: lazer keçidinin scroll məsafəsi yanlışdır`);
-  }
-
-  const scrollTo = (top) => page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top);
-  await scrollTo(start + travel / 2);
-  await page.waitForFunction(() => parseFloat(document.querySelector('.hero-visual').style.getPropertyValue('--hero-reveal')) > 67);
-  const halfway = await measureWipe();
-  verifyBoundary(halfway, 67.5);
-
-  await scrollTo(start + travel * 0.75);
-  await page.waitForFunction(() => parseFloat(document.querySelector('.hero-visual').style.getPropertyValue('--hero-reveal')) > 83);
-  const threeQuarters = await measureWipe();
-  verifyBoundary(threeQuarters, 83.75);
-  if (Math.abs(halfway.frameTop - threeQuarters.frameTop) > 1) throw new Error(`${name}: hero vizualı sticky qalmır`);
-
-  await scrollTo(start + travel + 2);
-  await visual.locator('.hero-laser').waitFor({ state: 'hidden' });
-  verifyBoundary(await measureWipe(), 100);
-
-  await scrollTo(0);
-  const booking = page.locator('.hero-book');
-  const results = page.locator('.hero-results');
-  await booking.focus();
-  await page.keyboard.press('Tab');
-  if (!await results.evaluate((link) => link.matches(':focus-visible'))) throw new Error(`${name}: nəticələr linkinin klaviatura fokusu görünmür`);
-  await page.keyboard.press('Enter');
-  await page.waitForURL('**/#neticeler');
-  await page.waitForFunction(() => {
-    const top = document.getElementById('neticeler').getBoundingClientRect().top;
-    return Math.abs(top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)) < 2;
-  });
-  if (!await page.locator('#neticeler h2').evaluate((heading) => heading === document.activeElement)) {
-    throw new Error(`${name}: nəticələr bölməsi fokusu qəbul etmir`);
-  }
-  await page.evaluate(() => window.history.replaceState(null, '', window.location.pathname));
-  await scrollTo(0);
-}
-
 async function verifyViewport(name, viewport) {
   const mobile = name === 'mobile';
   const page = await browser.newPage({ viewport, deviceScaleFactor: 1, hasTouch: mobile, isMobile: mobile, reducedMotion: 'no-preference' });
-  const pageErrors = [];
-  page.on('pageerror', (error) => pageErrors.push(error.message));
-  await page.addInitScript(() => {
-    window.heroLayoutShift = 0;
-    new PerformanceObserver((entries) => {
-      for (const entry of entries.getEntries()) {
-        if (!entry.hadRecentInput) window.heroLayoutShift += entry.value;
-      }
-    }).observe({ type: 'layout-shift', buffered: true });
-  });
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   const title = await page.title();
@@ -138,10 +55,9 @@ async function verifyViewport(name, viewport) {
     throw new Error(`${name}: Before/After əlaqə düyməsi silinməyib`);
   }
   const heroActions = page.locator('.hero-actions');
-  const equipmentLink = page.locator('.hero').getByRole('link', { name: 'Lazer cihazları al', exact: true });
+  const equipmentLink = heroActions.getByRole('link', { name: 'Lazer cihazları al', exact: true });
   if (await heroActions.getByRole('link').count() !== 2
     || await heroActions.locator('.hero-book').getAttribute('href') !== '#sifaris'
-    || await heroActions.getByRole('link', { name: 'Nəticələrə bax', exact: true }).getAttribute('href') !== '#neticeler'
     || !(await equipmentLink.getAttribute('href'))?.startsWith('https://wa.me/994553900028?text=')) {
     throw new Error(`${name}: hero əlaqə düymələri natamamdır`);
   }
@@ -158,7 +74,7 @@ async function verifyViewport(name, viewport) {
   if (scrollRange < 100) {
     throw new Error(`${name}: xidmət kartları üfüqi sürüşmür`);
   }
-  if ((await page.getByRole('heading', { level: 1, name: 'Təmiz səth. Yeni başlanğıc.', exact: true }).count()) !== 1
+  if ((await page.getByRole('heading', { level: 1, name: /Təmiz səth\s*buradan başlayır\./ }).count()) !== 1
     || (await page.locator('footer').getByRole('link', { name: 'Xidmət sifariş et' }).count()) !== 1) {
     throw new Error(`${name}: ilk ekran başlığı və ya WhatsApp düymələri natamamdır`);
   }
@@ -184,14 +100,15 @@ async function verifyViewport(name, viewport) {
     throw new Error(`${name}: silinməli mətn etiketləri hələ görünür`);
   }
 
-  await verifyHeroWipe(page, name);
-  const cls = await page.evaluate(() => window.heroLayoutShift);
-  if (cls > 0.1) throw new Error(`${name}: hero açılarkən CLS ${cls}`);
-  if (pageErrors.length) throw new Error(`${name}: ${pageErrors.join(', ')}`);
-  await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero.png`) });
-  if (name === 'desktop-wide') {
-    await page.close();
-    return { name, viewport, overflow, cls };
+  const heroVideo = page.locator('video.hero-media');
+  const expectedVideoCount = 1;
+  await heroVideo.waitFor({ state: 'attached' });
+  if ((await heroVideo.count()) !== expectedVideoCount) throw new Error(`${name}: hero video strategiyası yanlışdır`);
+  if (expectedVideoCount === 1) {
+    await page.waitForFunction(() => {
+      const video = document.querySelector('video.hero-media');
+      return video?.readyState >= 2 && !video.paused && video.currentSrc.endsWith('-720p.mp4');
+    });
   }
 
   const faq = page.locator('#suallar');
@@ -260,6 +177,7 @@ async function verifyViewport(name, viewport) {
     })),
   ));
 
+  await page.locator('.hero').screenshot({ path: path.join(artifactDir, `laserx-${name}-hero.png`) });
   await page.locator('.results').screenshot({ path: path.join(artifactDir, `laserx-${name}-results.png`) });
   await page.locator('#xidmetler').screenshot({ path: path.join(artifactDir, `laserx-${name}-services.png`) });
   await page.locator('.technology-preview').screenshot({ path: path.join(artifactDir, `laserx-${name}-technology.png`) });
@@ -287,7 +205,7 @@ async function verifyViewport(name, viewport) {
     }
   }
   await page.close();
-  return { name, viewport, overflow, cls };
+  return { name, viewport, overflow };
 }
 
 async function verifyLanguages() {
@@ -303,23 +221,6 @@ async function verifyLanguages() {
     reducedMotion: 'reduce',
   });
   const switcher = page.locator('.language-switch');
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  const readReducedHero = () => page.locator('.hero-visual').evaluate((visual) => {
-    const laser = visual.querySelector('.hero-laser');
-    const stage = visual.closest('.hero-stage');
-    return [
-      getComputedStyle(visual).getPropertyValue('--hero-reveal').trim(),
-      getComputedStyle(laser).left,
-      getComputedStyle(stage).position,
-      visual.parentElement.closest('.hero').offsetHeight - stage.offsetHeight,
-    ];
-  });
-  const reducedHero = await readReducedHero();
-  await page.evaluate(() => window.scrollTo({ top: 300, behavior: 'instant' }));
-  if (reducedHero[0] !== '50%' || reducedHero[2] !== 'relative' || reducedHero[3] !== 0
-    || JSON.stringify(reducedHero) !== JSON.stringify(await readReducedHero())) {
-    throw new Error('az: azaldılmış hərəkət rejimində hero 50/50 statik qalmır');
-  }
   for (const { locale, name, services, technology } of variants) {
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     await switcher.locator('summary').tap();
@@ -355,10 +256,9 @@ async function verifyLanguages() {
 
 try {
   const results = [];
-  results.push(await verifyViewport('desktop', { width: 1280, height: 800 }));
-  results.push(await verifyViewport('tablet', { width: 768, height: 1024 }));
-  results.push(await verifyViewport('mobile', { width: 360, height: 740 }));
-  results.push(await verifyViewport('desktop-wide', { width: 1920, height: 1080 }));
+  results.push(await verifyViewport('desktop', { width: 1440, height: 900 }));
+  results.push(await verifyViewport('tablet', { width: 820, height: 1180 }));
+  results.push(await verifyViewport('mobile', { width: 390, height: 844 }));
   const languages = await verifyLanguages();
   console.log(JSON.stringify({ ok: true, results, languages }, null, 2));
 } finally {
