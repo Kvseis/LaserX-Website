@@ -1,6 +1,7 @@
 import SiteFooter from './SiteFooter';
 import FaqSection from './FaqSection';
 import ContactBanner from './ContactBanner';
+import ButtonArrow from './ButtonArrow';
 import Image from 'next/image';
 import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
@@ -80,7 +81,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
           </div>)}
           <div className="comparison-laser-footer" role="presentation">
             <div className="comparison-laser-action">
-              <a className="comparison-contact" href={phone}>{methods.contact} </a>
+              <a className="comparison-contact" href={phone}>{methods.contact}<ButtonArrow /></a>
             </div>
           </div>
         </div>
@@ -97,7 +98,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             <ul>
               {home.technologyPoints.map((point) => <li key={point}><span aria-hidden="true">✓</span>{point}</li>)}
             </ul>
-            <a className="technology-preview-cta" href={technologyPath}><span>{home.technologyLink}</span></a>
+            <a className="technology-preview-cta" href={technologyPath}><span>{home.technologyLink}</span><ButtonArrow /></a>
           </div>
         </div>
       </section>

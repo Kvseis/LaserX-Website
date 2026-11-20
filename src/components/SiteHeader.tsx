@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, type MouseEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { languageNames, locales, sitePath, type Locale, type SitePage } from '@/lib/locales';
@@ -29,6 +29,42 @@ export default function SiteHeader({ locale, page, copy }: {
     [copy.benefits, `${sectionPrefix}#ustunlukler`],
   ];
 
+  useEffect(() => {
+    if (page !== 'home') return;
+    let cancelled = false;
+    let frame = 0;
+    const alignHash = () => {
+      void document.fonts.ready.then(() => {
+        if (cancelled) return;
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          frame = requestAnimationFrame(() => {
+            document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: 'instant', block: 'start' });
+          });
+        });
+      });
+    };
+    alignHash();
+    window.addEventListener('hashchange', alignHash);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+      window.removeEventListener('hashchange', alignHash);
+    };
+  }, [page, locale]);
+
+  function navigateSection(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    setMenuOpen(false);
+    if (!href.startsWith('#') || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = document.getElementById(href.slice(1));
+    if (!target) return;
+    event.preventDefault();
+    if (window.location.hash !== href) window.history.pushState(null, '', href);
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    });
+  }
+
   return (
     <header className="site-header">
       <Link prefetch={false} className="wordmark nav-brand" href={page === 'home' ? '#top' : home} aria-label={copy.home}>
@@ -36,9 +72,9 @@ export default function SiteHeader({ locale, page, copy }: {
         <span>LaserX</span>
       </Link>
       <nav id="main-navigation" className={menuOpen ? 'open' : ''} aria-label={copy.main}>
-        {links.map(([label, href]) => (
-          <Link prefetch={false} key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</Link>
-        ))}
+        {links.map(([label, href]) => href.includes('#')
+          ? <a key={href} href={href} onClick={(event) => navigateSection(event, href)}>{label}</a>
+          : <Link prefetch={false} key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</Link>)}
       </nav>
       <div className="nav-actions">
         <div className="nav-contact" role="group" aria-label={copy.contact}>

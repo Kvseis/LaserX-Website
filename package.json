@@ -12,7 +12,8 @@
     "check:technology": "node scripts/technology-check.mjs",
     "check:about": "node scripts/about-check.mjs",
     "check:comparison": "node scripts/comparison-check.mjs",
-    "check:booking": "node scripts/booking-check.mjs"
+    "check:booking": "node scripts/booking-check.mjs",
+    "check:navigation": "node scripts/navigation-check.mjs"
   },
   "dependencies": {
     "@gsap/react": "latest",

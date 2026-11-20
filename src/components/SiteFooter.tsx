@@ -6,6 +6,7 @@ import { phone, whatsapp } from '@/lib/contact';
 import { PhoneIcon } from './SiteHeader';
 import WhatsAppLogo from './WhatsAppLogo';
 import styles from './SiteFooter.module.css';
+import ButtonArrow from './ButtonArrow';
 
 const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
 
@@ -15,7 +16,7 @@ export default function SiteFooter({ locale, copy }: { locale: Locale; copy: Sit
     <div className={styles.content}>
       <div className={styles.heading}>
         <h2>{copy.footer.title}</h2>
-        <a className={styles.action} href={`${home}#sifaris`}>{copy.footer.booking}</a>
+        <a className={styles.action} href={`${home}#sifaris`}>{copy.footer.booking}<ButtonArrow /></a>
       </div>
       <div className={styles.columns}>
         <div className={styles.identity}>

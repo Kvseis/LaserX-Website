@@ -2,6 +2,7 @@ import { Manrope } from 'next/font/google';
 import type { SiteCopy } from '@/lib/messages/az';
 import { whatsapp } from '@/lib/contact';
 import styles from './FaqSection.module.css';
+import ButtonArrow from './ButtonArrow';
 
 const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
 
@@ -11,7 +12,7 @@ export default function FaqSection({ copy }: { copy: SiteCopy['faq'] }) {
       <div className={styles.intro}>
         <h2 id="faq-title">{copy.title}</h2>
         <p>{copy.intro}</p>
-        <a href={whatsapp}>{copy.contact}</a>
+        <a href={whatsapp}>{copy.contact}<ButtonArrow /></a>
       </div>
       <div className={styles.questions}>
         {copy.items.map(([question, answer]) => <details className={styles.item} key={question}>
