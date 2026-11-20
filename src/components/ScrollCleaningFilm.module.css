@@ -1,20 +1,19 @@
 .section {
   position: relative;
-  height: 250svh;
   color: #18211d;
   background: #f7f4eb;
 }
 
 .stage {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100svh;
-  min-height: 640px;
   overflow: hidden;
   background: #f7f4eb url('/images/laserx-scroll-poster.webp') center / cover no-repeat;
 }
 
-.video {
+.video,
+.woodScene,
+.woodScene video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -23,13 +22,20 @@
   object-position: center;
 }
 
+.woodScene,
+.laserLine,
+.video,
+.scrollCue {
+  display: none;
+}
+
 .content {
   position: relative;
   z-index: 1;
   width: min(1440px, 100% - 8vw);
   height: 100%;
   margin: 0 auto;
-  padding: clamp(150px, 19vh, 220px) 0 110px;
+  padding: clamp(116px, 19svh, 220px) 0 0;
   pointer-events: none;
 }
 
@@ -46,7 +52,6 @@
 .scrollCue {
   width: min(290px, 100%);
   margin-top: 48px;
-  display: grid;
   gap: 13px;
   font-size: 10px;
   font-weight: 680;
@@ -67,27 +72,50 @@
   background: #df342d;
 }
 
-.section[data-static='true'] {
-  height: auto;
+@media (prefers-reduced-motion: no-preference) {
+  .section:not([data-static='true']) { height: 360svh; }
+  .section:not([data-static='true']) .stage { position: sticky; top: 0; isolation: isolate; }
+  .section[data-static='false'] .video,
+  .section[data-static='false'] .woodScene,
+  .section[data-static='false'] .laserLine { display: block; }
+  .section[data-static='false'] .scrollCue { display: grid; }
+
+  .woodScene {
+    z-index: 2;
+    background: #17120e url('/images/laserx-wood-poster.webp') center / cover no-repeat;
+    clip-path: inset(var(--wipe-position, 0%) 0 0);
+    pointer-events: none;
+  }
+
+  .laserLine {
+    position: absolute;
+    z-index: 3;
+    top: var(--wipe-position, 0%);
+    inset-inline: 0;
+    height: 2px;
+    background: #e5231b;
+    box-shadow: 0 0 7px #e5231b9c;
+    opacity: var(--wipe-opacity, 0);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .section[data-static='false'] .content {
+    opacity: var(--title-opacity, 0);
+    transform: translateY(var(--title-offset, 12px));
+  }
 }
 
-.section[data-static='true'] .stage {
-  position: relative;
-}
-
-.section[data-static='true'] .video {
-  display: none;
-}
-
-.section[data-static='true'] .scrollCue {
-  display: none;
+@media (max-aspect-ratio: 4/3) {
+  .woodScene { background-position: 72% center; }
+  .woodScene video { object-position: 72% center; }
 }
 
 @media (max-width: 760px) {
-  .section { height: 235svh; }
-  .stage {
-    min-height: 660px;
-    background-image: none;
+  .stage { background-position: 61% center; }
+  @media (prefers-reduced-motion: no-preference) {
+    .section:not([data-static='true']) { height: 325svh; }
+    .section[data-static='false'] .stage { background-image: none; }
   }
   .video {
     top: 44%;
@@ -97,7 +125,7 @@
   }
   .content {
     width: calc(100% - 36px);
-    padding: 132px 0 0;
+    padding: clamp(84px, 15svh, 132px) 0 0;
   }
   .content h2 {
     max-width: 360px;
@@ -105,12 +133,4 @@
     font-size: clamp(43px, 11vw, 60px);
   }
   .scrollCue { width: 178px; margin-top: 23px; font-size: 9px; }
-  .section[data-static='true'] .stage { background-image: url('/images/laserx-scroll-poster.webp'); background-position: 61% center; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .section { height: auto; }
-  .stage { position: relative; }
-  .video, .scrollCue { display: none; }
-  .stage { background-image: url('/images/laserx-scroll-poster.webp'); }
 }
