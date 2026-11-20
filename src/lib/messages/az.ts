@@ -93,7 +93,7 @@ const az = {
     },
   },
   home: {
-    equipmentCta: 'Lazer cihazları',
+    equipmentCta: 'Lazer cihazları al',
     equipmentInquiry: 'Salam! Satışda olan lazer təmizləmə cihazlarının modelləri və qiymətləri barədə məlumat almaq istəyirəm.',
     headline: ["Təmiz səth", "buradan başlayır."],
     description: "Bakıda metal, daş və ağac səthlərdən pası, boyanı və arzuolunmaz qatları lazerlə təmizləyirik.",

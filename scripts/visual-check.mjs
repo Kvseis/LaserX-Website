@@ -54,7 +54,11 @@ async function verifyViewport(name, viewport) {
   if ((await page.locator('.results-contact').count()) !== 0) {
     throw new Error(`${name}: Before/After əlaqə düyməsi silinməyib`);
   }
-  if ((await page.locator('.hero-actions .hero-call').count()) !== 1 || (await page.locator('.hero-actions .hero-book').getAttribute('href')) !== '#sifaris') {
+  const heroActions = page.locator('.hero-actions');
+  const equipmentLink = heroActions.getByRole('link', { name: 'Lazer cihazları al', exact: true });
+  if (await heroActions.getByRole('link').count() !== 2
+    || await heroActions.locator('.hero-book').getAttribute('href') !== '#sifaris'
+    || !(await equipmentLink.getAttribute('href'))?.startsWith('https://wa.me/994553900028?text=')) {
     throw new Error(`${name}: hero əlaqə düymələri natamamdır`);
   }
   const services = page.getByRole('region', { name: 'Lazer təmizləmə xidmətləri' });

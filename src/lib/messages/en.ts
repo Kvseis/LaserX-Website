@@ -95,7 +95,7 @@ const en: SiteCopy = {
     },
   },
   home: {
-    equipmentCta: 'Laser equipment',
+    equipmentCta: 'Buy laser equipment',
     equipmentInquiry: 'Hello! Could you share the available laser cleaning machines and their prices?',
     headline: ["A clean surface", "starts here."],
     description: "Laser cleaning for metal, stone and wood in Baku. We remove rust, paint and unwanted layers with controlled laser technology.",

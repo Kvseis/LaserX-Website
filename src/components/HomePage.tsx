@@ -7,7 +7,7 @@ import { Onest } from 'next/font/google';
 import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
 import ServicesShowcase from './ServicesShowcase';
-import SiteHeader, { PhoneIcon } from './SiteHeader';
+import SiteHeader from './SiteHeader';
 import { phone, whatsapp } from '@/lib/contact';
 import BeforeAfterCard from './BeforeAfterCard';
 import HeroVideo from './HeroVideo';
@@ -34,7 +34,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             <p>{home.description}</p>
             <div className="hero-actions">
               <a className="hero-book" href="#sifaris">{copy.footer.booking}<ButtonArrow /></a>
-              <a className="hero-call" href={phone}><PhoneIcon />{nav.call}</a>
               <a className="hero-equipment" href={`${whatsapp}?text=${encodeURIComponent(home.equipmentInquiry)}`}>
                 {home.equipmentCta}<ButtonArrow />
               </a>

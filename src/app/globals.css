@@ -160,11 +160,9 @@ main { width: 100%; max-width: 100%; overflow-x: clip; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
 .hero-actions a { display: inline-flex; align-items: center; justify-content: center; gap: 16px; min-height: 56px; padding: 15px 26px; border: 1px solid transparent; border-radius: 8px; font-size: 16px; font-weight: 600; line-height: 1.4; transition: background 180ms ease, border-color 180ms ease, transform 180ms ease; }
 .hero-book { color: #151b1d; background: #f4f2ed; }
-.hero-actions .hero-call { min-width: 150px; color: #fff; background: #0e1418b3; border-color: #ffffff80; }
 .hero-actions .hero-equipment { color: #fff; background: #0e1418b3; border-color: #ffffff80; }
 .hero-book:hover { background: #fff; transform: translateY(-2px); }
-.hero-actions :is(.hero-call, .hero-equipment):hover { background: #ffffff1c; border-color: #fff; transform: translateY(-2px); }
-.hero-call svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.hero-actions .hero-equipment:hover { background: #ffffff1c; border-color: #fff; transform: translateY(-2px); }
 @media (prefers-reduced-motion: reduce) { .hero-actions a, .hero-actions a:hover { transition: none; transform: none; } }
 .button {
   min-height: 52px;
@@ -346,7 +344,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
   .hero h1 { max-width: 100%; font-size: clamp(40px, 10.8vw, 54px); line-height: 1.04; letter-spacing: -.05em; }
   .hero-details > p { max-width: 490px; font-size: 16px; line-height: 1.65; }
   .hero-actions { width: 100%; margin-top: 22px; gap: 12px; }
-  .hero-actions a { flex: 1 1 auto; min-height: 54px; padding: 14px 18px; font-size: 15px; }
+  .hero-actions a { flex: 1 1 auto; min-height: 54px; padding: 14px 12px; gap: 8px; font-size: 15px; }
   .button { width: 100%; min-height: 50px; padding: 0 12px 0 15px; gap: 8px; font-size: 11px; }
   .button > span { width: 22px; height: 22px; }
   .wrap { padding-block: 70px; }
