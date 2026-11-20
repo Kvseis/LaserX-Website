@@ -3,19 +3,19 @@ import FaqSection from './FaqSection';
 import ContactBanner from './ContactBanner';
 import ButtonArrow from './ButtonArrow';
 import Image from 'next/image';
-import { Onest } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
 import ServicesShowcase from './ServicesShowcase';
 import SiteHeader from './SiteHeader';
-import { phone, whatsapp } from '@/lib/contact';
+import { phone } from '@/lib/contact';
 import BeforeAfterCard from './BeforeAfterCard';
-import HeroVideo from './HeroVideo';
+import HomeHero from './HomeHero';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
 import ComparisonIcon from './ComparisonIcon';
 
 const resultIds = ['rust', 'coating', 'mold', 'grease', 'graffiti', 'soot', 'biofilm', 'wood'];
-const onest = Onest({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
 
 export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteCopy }) {
   const { home, methods, nav, results } = copy;
@@ -25,22 +25,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top">
-      <section className={`hero ${onest.className}`}>
-        <HeroVideo />
-        <div className="hero-shade" />
-        <div className="hero-copy">
-          <h1><span>{home.headline[0]}</span>{' '}<em>{home.headline[1]}</em></h1>
-          <div className="hero-details">
-            <p>{home.description}</p>
-            <div className="hero-actions">
-              <a className="hero-book" href="#sifaris">{copy.footer.booking}<ButtonArrow /></a>
-              <a className="hero-equipment" href={`${whatsapp}?text=${encodeURIComponent(home.equipmentInquiry)}`}>
-                {home.equipmentCta}<ButtonArrow />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeHero copy={home} bookingLabel={copy.footer.booking} fontClassName={manrope.className} />
 
       <ScrollCleaningFilm copy={home} />
 
