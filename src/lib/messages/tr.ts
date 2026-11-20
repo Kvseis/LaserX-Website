@@ -64,7 +64,6 @@ const tr: SiteCopy = {
     ],
     "area": "Yaklaşık ölçü",
     "areaPlaceholder": "Örneğin, 12 m²",
-    "date": "Tercih edilen tarih",
     "notes": "Projeniz hakkında",
     "notesPlaceholder": "Ne temizlenmeli? İşin yapılacağı yeri ve diğer ayrıntıları yazın.",
     "optional": "(isteğe bağlı)",

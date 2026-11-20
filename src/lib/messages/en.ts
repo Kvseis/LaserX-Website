@@ -64,7 +64,6 @@ const en: SiteCopy = {
     ],
     "area": "Approximate size",
     "areaPlaceholder": "For example, 12 m²",
-    "date": "Preferred date",
     "notes": "About your project",
     "notesPlaceholder": "What needs cleaning? Include the job location and any other details.",
     "optional": "(optional)",

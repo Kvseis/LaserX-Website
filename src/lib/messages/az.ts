@@ -62,7 +62,6 @@ const az = {
     ],
     "area": "Təxmini ölçü",
     "areaPlaceholder": "Məsələn, 12 m²",
-    "date": "Arzulanan tarix",
     "notes": "Layihə haqqında",
     "notesPlaceholder": "Nə təmizlənməlidir? İşin yerini və əlavə detalları yazın.",
     "optional": "(istəyə bağlı)",

@@ -18,11 +18,11 @@ try {
     if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)) throw new Error(`${name}: horizontal overflow`);
     await form.locator('[name="name"]').fill('Test User');
     if (await form.locator('[name="phone"], input[type="tel"]').count()) throw new Error(`${name}: redundant phone field remains`);
+    if (await form.locator('[name="date"], input[type="date"]').count()) throw new Error(`${name}: redundant date field remains`);
     if (await form.evaluate((element) => element.checkValidity())) throw new Error(`${name}: surface selection is not required`);
     await form.locator('[name="surface"]').selectOption({ index: 1 });
     if (!await form.evaluate((element) => element.checkValidity())) throw new Error(`${name}: optional fields are required`);
     await form.locator('[name="area"]').fill('12 m²');
-    await form.locator('[name="date"]').fill('2027-01-20');
     await form.locator('[name="notes"]').fill('Sınaq: pas & boya\nBakı');
     // Block the external navigation: these test details must never be sent.
     await page.route('https://wa.me/**', (route) => route.abort());
@@ -30,9 +30,9 @@ try {
     await form.getByRole('button').click();
     const url = new URL((await request).url());
     const message = url.searchParams.get('text');
-    if (message?.includes('Telefon nömrəsi:')) throw new Error(`${name}: phone included in draft`);
+    if (message?.includes('Telefon nömrəsi:') || message?.includes('Arzulanan tarix:')) throw new Error(`${name}: redundant field included in draft`);
     if (url.pathname !== '/994553900028') throw new Error(`${name}: wrong WhatsApp destination`);
-    for (const value of ['Test User', '12 m²', '2027-01-20', 'Sınaq: pas & boya\nBakı']) {
+    for (const value of ['Test User', '12 m²', 'Sınaq: pas & boya\nBakı']) {
       if (!message?.includes(value)) throw new Error(`${name}: missing draft field ${value}`);
     }
     await page.close();
@@ -41,6 +41,7 @@ try {
     const page = await browser.newPage();
     await page.goto(`${baseUrl}/${locale}`, { waitUntil: 'networkidle' });
     if (await page.locator('#sifaris form').count() !== 1) throw new Error(`${locale}: translated form missing`);
+    if (await page.locator('#sifaris input[type="date"]').count()) throw new Error(`${locale}: redundant date field remains`);
     await page.close();
   }
   console.log(JSON.stringify({ ok: true, viewports: ['desktop', 'mobile'], languages: ['az', 'ru', 'en', 'tr'], externalNavigationBlocked: true }));
