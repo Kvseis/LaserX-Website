@@ -161,8 +161,9 @@ main { width: 100%; max-width: 100%; overflow-x: clip; }
 .hero-actions a { display: inline-flex; align-items: center; justify-content: center; gap: 16px; min-height: 56px; padding: 15px 26px; border: 1px solid transparent; border-radius: 8px; font-size: 16px; font-weight: 600; line-height: 1.4; transition: background 180ms ease, border-color 180ms ease, transform 180ms ease; }
 .hero-book { color: #151b1d; background: #f4f2ed; }
 .hero-actions .hero-call { min-width: 150px; color: #fff; background: #0e1418b3; border-color: #ffffff80; }
+.hero-actions .hero-equipment { color: #fff; background: #0e1418b3; border-color: #ffffff80; }
 .hero-book:hover { background: #fff; transform: translateY(-2px); }
-.hero-actions .hero-call:hover { background: #ffffff1c; border-color: #fff; transform: translateY(-2px); }
+.hero-actions :is(.hero-call, .hero-equipment):hover { background: #ffffff1c; border-color: #fff; transform: translateY(-2px); }
 .hero-call svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 @media (prefers-reduced-motion: reduce) { .hero-actions a, .hero-actions a:hover { transition: none; transform: none; } }
 .button {

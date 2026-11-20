@@ -95,6 +95,8 @@ const tr: SiteCopy = {
     },
   },
   home: {
+    equipmentCta: 'Lazer cihazları',
+    equipmentInquiry: 'Merhaba! Satıştaki lazer temizleme cihazlarının modelleri ve fiyatları hakkında bilgi almak istiyorum.',
     headline: ["Temiz yüzey", "burada başlar."],
     description: "Bakü’de metal, taş ve ahşap yüzeylerden pası, boyayı ve istenmeyen katmanları kontrollü lazer teknolojisiyle temizliyoruz.",
     proof: 'Her projeye bir deneme alanıyla başlar, ayarları malzemeye göre seçeriz.',

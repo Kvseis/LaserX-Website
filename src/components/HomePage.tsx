@@ -8,7 +8,7 @@ import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
 import ServicesShowcase from './ServicesShowcase';
 import SiteHeader, { PhoneIcon } from './SiteHeader';
-import { phone } from '@/lib/contact';
+import { phone, whatsapp } from '@/lib/contact';
 import BeforeAfterCard from './BeforeAfterCard';
 import HeroVideo from './HeroVideo';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
@@ -35,6 +35,9 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             <div className="hero-actions">
               <a className="hero-book" href="#sifaris">{copy.footer.booking}<ButtonArrow /></a>
               <a className="hero-call" href={phone}><PhoneIcon />{nav.call}</a>
+              <a className="hero-equipment" href={`${whatsapp}?text=${encodeURIComponent(home.equipmentInquiry)}`}>
+                {home.equipmentCta}<ButtonArrow />
+              </a>
             </div>
           </div>
         </div>
