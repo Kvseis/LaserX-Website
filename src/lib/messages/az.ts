@@ -66,7 +66,7 @@ const az = {
     "notes": "Layihə haqqında",
     "notesPlaceholder": "Nə təmizlənməlidir? İşin yerini və əlavə detalları yazın.",
     "optional": "(istəyə bağlı)",
-    "submit": "Sorğunu WhatsApp-da aç",
+    "submit": "Sorğunu göndər",
     "notice": "Məlumatlar WhatsApp-da hazır mesaj kimi açılacaq. Sifariş və vaxt əlaqədən sonra təsdiqlənir.",
     "messageTitle": "LaserX — lazer təmizləmə sorğusu"
   },

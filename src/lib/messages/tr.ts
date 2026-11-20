@@ -68,7 +68,7 @@ const tr: SiteCopy = {
     "notes": "Projeniz hakkında",
     "notesPlaceholder": "Ne temizlenmeli? İşin yapılacağı yeri ve diğer ayrıntıları yazın.",
     "optional": "(isteğe bağlı)",
-    "submit": "Talebi WhatsApp’ta aç",
+    "submit": "Talebi gönder",
     "notice": "Bilgileriniz WhatsApp’ta taslak mesaj olarak açılacak. Talep ve zaman, görüşmeden sonra onaylanır.",
     "messageTitle": "LaserX — lazer temizleme talebi"
   },

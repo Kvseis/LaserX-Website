@@ -68,7 +68,7 @@ const en: SiteCopy = {
     "notes": "About your project",
     "notesPlaceholder": "What needs cleaning? Include the job location and any other details.",
     "optional": "(optional)",
-    "submit": "Open request in WhatsApp",
+    "submit": "Send request",
     "notice": "Your details will open as a draft WhatsApp message. The booking and timing are confirmed after we discuss your request.",
     "messageTitle": "LaserX — laser cleaning request"
   },
