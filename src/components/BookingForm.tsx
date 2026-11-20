@@ -25,7 +25,7 @@ export default function BookingForm({ copy }: { copy: SiteCopy['booking'] }) {
       <label><span className={styles.label}>{copy.date}<span className={styles.optional}>{copy.optional}</span></span><input name="date" type="date" /></label>
       <label className={styles.full}><span className={styles.label}>{copy.notes}<span className={styles.optional}>{copy.optional}</span></span><textarea name="notes" rows={3} maxLength={1500} placeholder={copy.notesPlaceholder} /></label>
     </div>
-    <button className={styles.submit} type="submit"><span>{copy.submit}</span><span aria-hidden="true">↗</span></button>
+    <button className={styles.submit} type="submit"><span>{copy.submit}</span></button>
     <p className={styles.notice}>{copy.notice}</p>
   </form>;
 }

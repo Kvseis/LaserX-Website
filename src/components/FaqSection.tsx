@@ -11,7 +11,7 @@ export default function FaqSection({ copy }: { copy: SiteCopy['faq'] }) {
       <div className={styles.intro}>
         <h2 id="faq-title">{copy.title}</h2>
         <p>{copy.intro}</p>
-        <a href={whatsapp}>{copy.contact}<span aria-hidden="true">↗</span></a>
+        <a href={whatsapp}>{copy.contact}</a>
       </div>
       <div className={styles.questions}>
         {copy.items.map(([question, answer]) => <details className={styles.item} key={question}>
