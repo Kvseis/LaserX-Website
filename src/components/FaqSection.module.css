@@ -4,8 +4,8 @@
 .intro > p { max-width: 340px; margin: 24px 0; color: #55554f; font-size: 17px; line-height: 1.65; }
 .intro a { display: inline-flex; align-items: center; gap: 12px; padding-block: 8px; border-bottom: 1px solid currentColor; font-size: 16px; font-weight: 600; transition: color 180ms ease; }
 .intro a:hover { color: var(--red); }
-.questions { border-top: 1px solid var(--line); }
-.item { border-bottom: 1px solid var(--line); }
+.questions { border-top: 1px solid #8c2825; }
+.item { border-bottom: 1px solid #8c2825; }
 .item summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 88px; padding: 24px 4px; list-style: none; cursor: pointer; font-size: 19px; font-weight: 600; line-height: 1.45; letter-spacing: -.02em; transition: color 180ms ease; }
 .item summary::-webkit-details-marker { display: none; }
 .item summary:hover { color: var(--red); }
