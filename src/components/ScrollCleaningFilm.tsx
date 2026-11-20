@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import type { SiteCopy } from '@/lib/messages/az';
+import { createScrollFilmFrames } from './ScrollFilmFrames';
 import styles from './ScrollCleaningFilm.module.css';
 
 const woodSource = '/videos/laserx-wood-cleaning.mp4';
@@ -24,28 +25,43 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
   const stageRef = useRef<HTMLDivElement>(null);
   const woodRef = useRef<HTMLVideoElement>(null);
   const metalRef = useRef<HTMLVideoElement>(null);
+  const woodCanvasRef = useRef<HTMLCanvasElement>(null);
+  const metalCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     const stage = stageRef.current;
     const wood = woodRef.current;
     const metal = metalRef.current;
-    if (!section || !stage || !wood || !metal) return;
+    const woodCanvas = woodCanvasRef.current;
+    const metalCanvas = metalCanvasRef.current;
+    if (!section || !stage || !wood || !metal || !woodCanvas || !metalCanvas) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const narrowViewport = window.matchMedia('(max-width: 760px)');
     const connection = (navigator as Navigator & {
       connection?: EventTarget & { saveData?: boolean; effectiveType?: string };
     }).connection;
     let frame = 0;
     let isStatic = false;
+    let isNear = false;
+    let mounted = true;
+
+    const scheduleUpdate = () => {
+      if (mounted && !frame) frame = window.requestAnimationFrame(update);
+    };
+
+    const woodFrames = createScrollFilmFrames(woodCanvas, 'wood', 60, scheduleUpdate);
+    const metalFrames = createScrollFilmFrames(metalCanvas, 'metal', 80, scheduleUpdate);
 
     const update = () => {
       frame = 0;
-      if (isStatic) return;
+      if (isStatic || !isNear) return;
 
       const travel = section.offsetHeight - stage.offsetHeight;
       const progress = travel > 0 ? clampProgress(-section.getBoundingClientRect().top / travel) : 0;
       const wipe = clampProgress((progress - woodEnd) / (metalStart - woodEnd));
+      const woodProgress = clampProgress(progress / woodEnd);
       const metalProgress = clampProgress((progress - metalStart) / (1 - metalStart));
       const titleProgress = clampProgress((wipe - 0.4) / 0.6);
 
@@ -55,18 +71,21 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       section.style.setProperty('--title-offset', `${(1 - titleProgress) * 12}px`);
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
 
-      if (wipe < 1) seekVideo(wood, clampProgress(progress / woodEnd));
-      if (wipe > 0) seekVideo(metal, metalProgress);
+      if (narrowViewport.matches) {
+        if (wipe < 1) woodFrames.paint(woodProgress);
+        metalFrames.paint(metalProgress);
+      } else {
+        if (wipe < 1) seekVideo(wood, woodProgress);
+        if (wipe > 0) seekVideo(metal, metalProgress);
+      }
     };
 
-    const scheduleUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    };
-
-    const loadVideo = () => {
-      if (isStatic || wood.src) return;
-      const bounds = section.getBoundingClientRect();
-      if (bounds.top < window.innerHeight * 2 && bounds.bottom > -window.innerHeight) {
+    const loadMedia = () => {
+      if (isStatic || !isNear) return;
+      if (narrowViewport.matches) {
+        woodFrames.preload();
+        metalFrames.preload();
+      } else if (!wood.hasAttribute('src')) {
         wood.preload = 'auto';
         wood.src = woodSource;
         metal.preload = 'auto';
@@ -78,18 +97,21 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       isStatic = reducedMotion.matches || Boolean(connection?.saveData) ||
         ['slow-2g', '2g'].includes(connection?.effectiveType ?? '');
       section.dataset.static = String(isStatic);
+      section.dataset.media = narrowViewport.matches ? 'frames' : 'video';
       if (isStatic) {
         wood.pause();
         metal.pause();
       } else {
-        loadVideo();
+        loadMedia();
         scheduleUpdate();
       }
     };
 
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) loadVideo();
-    }, { rootMargin: '100% 0px' });
+      isNear = entry.isIntersecting;
+      loadMedia();
+      scheduleUpdate();
+    }, { rootMargin: `${window.innerHeight}px 0px` });
 
     syncMode();
     observer.observe(section);
@@ -100,9 +122,11 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       video.addEventListener('seeked', scheduleUpdate);
     }
     reducedMotion.addEventListener('change', syncMode);
+    narrowViewport.addEventListener('change', syncMode);
     connection?.addEventListener('change', syncMode);
 
     return () => {
+      mounted = false;
       observer.disconnect();
       window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', scheduleUpdate);
@@ -112,6 +136,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         video.removeEventListener('seeked', scheduleUpdate);
       }
       reducedMotion.removeEventListener('change', syncMode);
+      narrowViewport.removeEventListener('change', syncMode);
       connection?.removeEventListener('change', syncMode);
     };
   }, []);
@@ -127,8 +152,12 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         playsInline
         aria-hidden="true"
       />
+      <canvas ref={metalCanvasRef} className={styles.video} width={512} height={288} aria-hidden="true" />
       <div className={styles.woodScene} aria-hidden="true">
-        <video ref={woodRef} poster="/images/laserx-wood-poster.webp" preload="none" muted playsInline />
+        <div className={styles.woodMedia}>
+          <video ref={woodRef} poster="/images/laserx-wood-poster.webp" preload="none" muted playsInline />
+          <canvas ref={woodCanvasRef} width={400} height={600} />
+        </div>
       </div>
       <div className={styles.laserLine} aria-hidden="true" />
       <div className={styles.content}>

@@ -134,6 +134,7 @@ img { display: block; }
 .menu-button { display: none; }
 
 main { width: 100%; max-width: 100%; overflow-x: clip; }
+@media (max-width: 760px) { .home-main { overflow: visible; } }
 .hero {
   position: relative;
   min-height: 680px;

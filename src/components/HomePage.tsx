@@ -24,7 +24,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
   return <div>
     <SiteHeader locale={locale} page="home" copy={nav} />
 
-    <main id="top">
+    <main id="top" className="home-main">
       <section className={`hero ${onest.className}`}>
         <HeroVideo />
         <div className="hero-shade" />

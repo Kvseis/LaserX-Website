@@ -1,4 +1,5 @@
 .section {
+  --stage-height: 100svh;
   position: relative;
   color: #18211d;
   background: #f7f4eb;
@@ -6,14 +7,14 @@
 
 .stage {
   position: relative;
-  height: 100svh;
+  height: var(--stage-height);
   overflow: hidden;
   background: #f7f4eb url('/images/laserx-scroll-poster.webp') center / cover no-repeat;
 }
 
 .video,
-.woodScene,
-.woodScene video {
+.woodMedia video,
+.woodMedia canvas {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -25,6 +26,8 @@
 .woodScene,
 .laserLine,
 .video,
+.woodMedia video,
+.woodMedia canvas,
 .scrollCue {
   display: none;
 }
@@ -75,16 +78,25 @@
 @media (prefers-reduced-motion: no-preference) {
   .section:not([data-static='true']) { height: 360svh; }
   .section:not([data-static='true']) .stage { position: sticky; top: 0; isolation: isolate; }
-  .section[data-static='false'] .video,
+  .section[data-static='false'][data-media='video'] video,
+  .section[data-static='false'][data-media='frames'] canvas[data-frame],
   .section[data-static='false'] .woodScene,
   .section[data-static='false'] .laserLine { display: block; }
   .section[data-static='false'] .scrollCue { display: grid; }
 
   .woodScene {
+    position: absolute;
+    inset: var(--wipe-position, 0%) 0 0;
     z-index: 2;
-    background: #17120e url('/images/laserx-wood-poster.webp') center / cover no-repeat;
-    clip-path: inset(var(--wipe-position, 0%) 0 0);
+    overflow: hidden;
     pointer-events: none;
+  }
+
+  .woodMedia {
+    position: relative;
+    height: var(--stage-height);
+    transform: translateY(calc(0% - var(--wipe-position, 0%)));
+    background: #17120e url('/images/laserx-wood-poster.webp') center / cover no-repeat;
   }
 
   .laserLine {
@@ -107,16 +119,22 @@
 }
 
 @media (max-aspect-ratio: 4/3) {
-  .woodScene { background-position: 72% center; }
-  .woodScene video { object-position: 72% center; }
+  .woodMedia { background-position: 69% center; }
+  .woodMedia video { object-position: 69% center; }
 }
 
 @media (max-width: 760px) {
-  .stage { background-position: 61% center; }
-  @media (prefers-reduced-motion: no-preference) {
-    .section:not([data-static='true']) { height: 325svh; }
-    .section[data-static='false'] .stage { background-image: none; }
+  .stage { background-image: none; }
+  .stage::before {
+    position: absolute;
+    inset: 44% 0 0;
+    content: '';
+    background: url('/images/laserx-scroll-poster.webp') 61% center / cover no-repeat;
   }
+  @media (prefers-reduced-motion: no-preference) {
+    .section:not([data-static='true']) { height: 255svh; }
+  }
+  .woodMedia canvas { object-position: 32% center; }
   .video {
     top: 44%;
     bottom: auto;
