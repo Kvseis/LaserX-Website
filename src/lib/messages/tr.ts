@@ -50,7 +50,7 @@ const tr: SiteCopy = {
     ]
   },
   booking: {
-    "title": "Lazer temizleme talep edin.",
+    "title": "Talebinizi iletin.",
     "intro": "Yüzeyiniz hakkında bilgi verin. Projenize uygun yaklaşımı ve zamanı birlikte belirleyelim.",
     "name": "Adınız",
     "namePlaceholder": "Ad ve soyad",

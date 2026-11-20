@@ -10,7 +10,7 @@ const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 
 
 export default function ContactBanner({ copy }: { copy: SiteCopy }) {
   return <section id="sifaris" className={`${styles.banner} ${manrope.className}`} aria-labelledby="booking-title">
-    <Image className={styles.image} src="/images/technology-cta.webp" fill sizes="100vw" alt={copy.technology.contactAlt} />
+    <div className={styles.media}><Image className={styles.image} src="/images/technology-cta.webp" fill sizes="(max-width: 900px) 100vw, 72vw" alt={copy.technology.contactAlt} /></div>
     <div className={styles.shade} />
     <div className={styles.layout}>
       <div className={styles.content}>

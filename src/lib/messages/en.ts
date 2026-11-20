@@ -50,7 +50,7 @@ const en: SiteCopy = {
     ]
   },
   booking: {
-    "title": "Book your laser cleaning.",
+    "title": "Place your request.",
     "intro": "Tell us about your surface. We will discuss the right approach and timing for your project.",
     "name": "Your name",
     "namePlaceholder": "Full name",

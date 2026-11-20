@@ -1,10 +1,13 @@
 'use client';
 
 import type { FormEvent } from 'react';
+import { Onest } from 'next/font/google';
 import type { SiteCopy } from '@/lib/messages/az';
 import { whatsapp } from '@/lib/contact';
 import WhatsAppLogo from './WhatsAppLogo';
 import styles from './ContactBanner.module.css';
+
+const onest = Onest({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
 
 export default function BookingForm({ copy }: { copy: SiteCopy['booking'] }) {
   function submitRequest(event: FormEvent<HTMLFormElement>) {
@@ -15,15 +18,15 @@ export default function BookingForm({ copy }: { copy: SiteCopy['booking'] }) {
     window.location.assign(`${whatsapp}?text=${encodeURIComponent(message)}`);
   }
 
-  return <form className={styles.form} onSubmit={submitRequest} aria-label={copy.title}>
+  return <form className={`${styles.form} ${onest.className}`} onSubmit={submitRequest} aria-label={copy.title}>
     <div className={styles.fields}>
-      <label>{copy.name}<input name="name" autoComplete="name" required maxLength={100} placeholder={copy.namePlaceholder} /></label>
-      <label>{copy.surface}<select name="surface" required defaultValue=""><option value="" disabled>{copy.chooseSurface}</option>{copy.surfaces.map((surface) => <option key={surface}>{surface}</option>)}</select></label>
-      <label>{copy.area}<span className={styles.optional}>{copy.optional}</span><input name="area" maxLength={80} placeholder={copy.areaPlaceholder} /></label>
-      <label>{copy.date}<span className={styles.optional}>{copy.optional}</span><input name="date" type="date" /></label>
-      <label className={styles.full}>{copy.notes}<span className={styles.optional}>{copy.optional}</span><textarea name="notes" rows={3} maxLength={1500} placeholder={copy.notesPlaceholder} /></label>
+      <label><span className={styles.label}>{copy.name}</span><input name="name" autoComplete="name" required maxLength={100} placeholder={copy.namePlaceholder} /></label>
+      <label><span className={styles.label}>{copy.surface}</span><select name="surface" required defaultValue=""><option value="" disabled>{copy.chooseSurface}</option>{copy.surfaces.map((surface) => <option key={surface}>{surface}</option>)}</select></label>
+      <label><span className={styles.label}>{copy.area}<span className={styles.optional}>{copy.optional}</span></span><input name="area" maxLength={80} placeholder={copy.areaPlaceholder} /></label>
+      <label><span className={styles.label}>{copy.date}<span className={styles.optional}>{copy.optional}</span></span><input name="date" type="date" /></label>
+      <label className={styles.full}><span className={styles.label}>{copy.notes}<span className={styles.optional}>{copy.optional}</span></span><textarea name="notes" rows={3} maxLength={1500} placeholder={copy.notesPlaceholder} /></label>
     </div>
-    <button className={styles.submit} type="submit"><WhatsAppLogo />{copy.submit}<span aria-hidden="true">↗</span></button>
+    <button className={styles.submit} type="submit"><WhatsAppLogo /><span>{copy.submit}</span><span aria-hidden="true">↗</span></button>
     <p className={styles.notice}>{copy.notice}</p>
   </form>;
 }

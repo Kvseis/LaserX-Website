@@ -48,7 +48,7 @@ const az = {
     ]
   },
   booking: {
-    "title": "Lazer təmizləmə sifariş edin.",
+    "title": "Sifarişinizi edin.",
     "intro": "Səthiniz barədə məlumat verin. Layihənizə uyğun yanaşmanı və vaxtı birlikdə dəqiqləşdirək.",
     "name": "Adınız",
     "namePlaceholder": "Ad və soyad",

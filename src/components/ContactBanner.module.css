@@ -1,27 +1,37 @@
 .banner { position: relative; isolation: isolate; padding: 88px 4vw; margin: 0; overflow: hidden; color: #fff; background: #151719; }
-.image { z-index: -2; object-fit: cover; object-position: center; }
-.shade { position: absolute; z-index: -1; inset: 0; background: rgba(5, 7, 8, .83); }
+.media { position: absolute; z-index: -2; inset: 0 28% 0 0; }
+.image { object-fit: cover; object-position: right center; }
+.shade { position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, rgba(5,7,8,.42), rgba(5,7,8,.12) 42%, #151719 78%); }
 .layout { max-width: 1440px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); align-items: start; gap: clamp(40px, 7vw, 110px); }
 .content { padding-top: 32px; }
+.content h2, .content > p, .call { text-shadow: 0 2px 16px #0009; }
 .content h2 { max-width: 540px; margin: 0; font-size: clamp(38px, 4.1vw, 62px); font-weight: 650; line-height: 1.08; letter-spacing: -.045em; text-wrap: balance; }
 .content > p { max-width: 440px; margin: 24px 0 32px; color: #d0d2cd; font-size: 18px; line-height: 1.7; }
 .call { display: inline-flex; align-items: center; gap: 12px; padding-block: 10px; color: #fff; font-size: clamp(18px, 2vw, 24px); font-weight: 600; letter-spacing: -.025em; }
 .call:hover { text-decoration: underline; text-underline-offset: 6px; }
 .call svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.form { min-width: 0; margin: 0; padding: 32px; border: 1px solid #ffffff26; border-radius: 12px; color: var(--ink); background: var(--paper); }
-.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 20px; }
-.fields label { min-width: 0; display: flex; flex-wrap: wrap; align-content: start; gap: 8px 6px; font-size: 14px; font-weight: 650; line-height: 1.4; }
-.optional { color: #666761; font-size: 12px; font-weight: 400; }
+.form { color-scheme: dark; min-width: 0; margin: 0; padding: 36px; border: 1px solid #3d444a; border-radius: 16px; color: #f1f4f6; background: #191e22; box-shadow: 0 20px 50px #0003; -webkit-font-smoothing: antialiased; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 26px 24px; }
+.fields label { min-width: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15px; font-weight: 500; line-height: 1.4; }
+.label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; min-height: 22px; color: #e7ebee; }
+.optional { color: #a3adb5; font-size: 12px; font-weight: 400; }
 .full { grid-column: 1 / -1; }
-.fields input, .fields select, .fields textarea { width: 100%; min-width: 0; min-height: 50px; padding: 12px 14px; border: 1px solid #c5c5be; border-radius: 6px; color: #151515; background: #fff; font: inherit; font-size: 16px; font-weight: 450; line-height: 1.5; }
-.fields textarea { resize: vertical; }
-.fields input::placeholder, .fields textarea::placeholder { color: #777971; opacity: 1; }
-.submit { width: 100%; min-height: 54px; margin-top: 24px; padding: 14px 18px; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; border: 1px solid #252923; border-radius: 7px; color: #fff; background: #252923; font: inherit; font-size: 16px; font-weight: 650; transition: background 180ms ease, transform 180ms ease; }
-.submit:hover { background: #3b4238; transform: translateY(-2px); }
+.fields input, .fields select, .fields textarea { width: 100%; min-width: 0; min-height: 56px; padding: 14px 16px; border: 1px solid #485159; border-radius: 8px; color: #f1f4f6; background: #252c31; font: inherit; font-size: 16px; font-weight: 400; line-height: 1.5; transition: border-color 180ms ease, background 180ms ease; }
+.fields input:hover, .fields select:hover, .fields textarea:hover { border-color: #788590; }
+.fields input:focus-visible, .fields select:focus-visible, .fields textarea:focus-visible { outline: 2px solid #ef655c; outline-offset: 3px; border-color: #ef655c; background: #293238; }
+.fields textarea { min-height: 116px; resize: vertical; }
+.fields input::placeholder, .fields textarea::placeholder { color: #aab3ba; opacity: 1; }
+.fields select:has(option:checked[value=""]) { color: #aab3ba; }
+.fields option { color: #f1f4f6; background: #252c31; }
+.submit { width: 100%; min-height: 58px; margin-top: 28px; padding: 16px 20px; display: grid; grid-template-columns: 24px 1fr 20px; align-items: center; gap: 12px; cursor: pointer; border: 1px solid #eef2ef; border-radius: 8px; color: #151b1d; background: #eef2ef; font: inherit; font-size: 16px; font-weight: 600; line-height: 1.4; transition: background 180ms ease, transform 180ms ease; }
+.submit:hover { background: #fff; transform: translateY(-2px); }
 .submit:active { transform: translateY(0); }
-.submit :global(.whatsapp-logo) { width: 22px; height: 22px; }
-.notice { margin: 14px 0 0; color: #62635c; font-size: 13px; line-height: 1.6; }
+.submit :global(.whatsapp-logo) { width: 24px; height: 24px; border-radius: 50%; }
+.submit > span:last-child { font-size: 21px; font-weight: 400; }
+.notice { margin: 18px 0 0; padding-top: 18px; border-top: 1px solid #3d444a; color: #adb6bd; font-size: 13px; font-weight: 400; line-height: 1.7; }
 @media (max-width: 900px) {
+  .media { inset: 0 0 auto; height: 480px; }
+  .shade { background: linear-gradient(180deg, rgba(5,7,8,.32), rgba(5,7,8,.35) 260px, #151719 480px); }
   .banner { padding-block: 64px; }
   .layout { grid-template-columns: 1fr; gap: 32px; }
   .content { padding: 0; }
@@ -31,10 +41,11 @@
 @media (max-width: 500px) {
   .banner { padding: 52px 4vw; }
   .content h2 { font-size: 38px; }
-  .form { padding: 24px 20px; }
-  .fields { grid-template-columns: 1fr; gap: 20px; }
+  .form { padding: 28px 22px; border-radius: 12px; }
+  .fields { grid-template-columns: 1fr; gap: 24px; }
   .submit { font-size: 15px; padding-inline: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .submit, .submit:hover, .submit:active { transition: none; transform: none; }
+  .fields input, .fields select, .fields textarea { transition: none; }
 }
