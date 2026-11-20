@@ -96,8 +96,6 @@ const az = {
     headline: ["Təmiz səth", "buradan başlayır."],
     description: "Bakıda metal, daş və ağac səthlərdən pası, boyanı və arzuolunmaz qatları lazerlə təmizləyirik.",
     proof: 'Hər layihə sınaq sahəsi və materiala uyğun parametrlərlə başlayır.',
-    tagline: 'Hər səthə dəqiq yanaşma',
-    seeResults: 'Fərqi kəşf edin',
     filmTitle: 'Pasdan təmiz metala.',
     filmDescription: 'Aşağı sürüşdürün və lazerlə təmizləmə prosesini addım-addım izləyin.',
     filmScrollCue: 'Aşağı sürüşdürün',

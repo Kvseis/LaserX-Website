@@ -38,7 +38,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             </div>
           </div>
         </div>
-        <div className="hero-bottom"><span>{home.tagline}</span><a href="#proses">{home.seeResults} <span aria-hidden="true">↓</span></a></div>
       </section>
 
       <ScrollCleaningFilm copy={home} />

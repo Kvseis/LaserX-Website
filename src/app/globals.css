@@ -189,7 +189,6 @@ main { width: 100%; max-width: 100%; overflow-x: clip; }
 .button.outline { background: rgba(10,10,10,.32); border-color: rgba(255,255,255,.38); box-shadow: none; backdrop-filter: blur(12px); }
 .button.outline:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.64); box-shadow: none; }
 .button.dark { background: var(--ink); border-color: var(--ink); }
-.hero-bottom { position: absolute; left: 4vw; right: 4vw; bottom: 30px; display: flex; justify-content: space-between; gap: 20px; color: #d2d7d3; font-size: 13px; }
 
 
 .wrap { width: var(--wrap); margin: 0 auto; padding-block: clamp(78px, 8vw, 126px); }
@@ -349,7 +348,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
   .hero-actions a { flex: 1 1 auto; min-height: 54px; padding: 14px 18px; font-size: 15px; }
   .button { width: 100%; min-height: 50px; padding: 0 12px 0 15px; gap: 8px; font-size: 11px; }
   .button > span { width: 22px; height: 22px; }
-  .hero-bottom { left: 18px; right: 18px; bottom: 24px; font-size: 11px; }
   .wrap { padding-block: 70px; }
   .section-head { grid-template-columns: 1fr; }
   .section-head { gap: 25px; margin-bottom: 34px; }

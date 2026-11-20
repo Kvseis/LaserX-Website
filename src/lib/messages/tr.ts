@@ -98,8 +98,6 @@ const tr: SiteCopy = {
     headline: ["Temiz yüzey", "burada başlar."],
     description: "Bakü’de metal, taş ve ahşap yüzeylerden pası, boyayı ve istenmeyen katmanları kontrollü lazer teknolojisiyle temizliyoruz.",
     proof: 'Her projeye bir deneme alanıyla başlar, ayarları malzemeye göre seçeriz.',
-    tagline: 'Her yüzeye hassas yaklaşım',
-    seeResults: 'Farkı görün',
     filmTitle: 'Pastan temiz metale.',
     filmDescription: 'Lazerle temizleme sürecini adım adım görmek için aşağı kaydırın.',
     filmScrollCue: 'Aşağı kaydırın',
