@@ -67,6 +67,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
 
       section.style.setProperty('--wipe-position', `${wipe * 100}%`);
       section.style.setProperty('--wipe-opacity', String(Math.min(wipe * 12, (1 - wipe) * 12, 1)));
+      section.style.setProperty('--wood-title-opacity', String(clampProgress((0.86 - woodProgress) / 0.22)));
       section.style.setProperty('--title-opacity', String(titleProgress));
       section.style.setProperty('--title-offset', `${(1 - titleProgress) * 12}px`);
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
@@ -153,15 +154,18 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         aria-hidden="true"
       />
       <canvas ref={metalCanvasRef} className={styles.video} width={512} height={288} aria-hidden="true" />
-      <div className={styles.woodScene} aria-hidden="true">
-        <div className={styles.woodMedia}>
+      <div className={styles.woodScene}>
+        <div className={styles.woodMedia} aria-hidden="true">
           <video ref={woodRef} poster="/images/laserx-wood-poster.webp" preload="none" muted playsInline />
           <canvas ref={woodCanvasRef} width={400} height={600} />
+        </div>
+        <div className={styles.woodCaption}>
+          <h2 className={styles.heading}>{copy.woodFilmTitle}</h2>
         </div>
       </div>
       <div className={styles.laserLine} aria-hidden="true" />
       <div className={styles.content}>
-        <h2 id="cleaning-film-title">{copy.filmTitle}</h2>
+        <h2 id="cleaning-film-title" className={styles.heading}>{copy.filmTitle}</h2>
         <div className={styles.scrollCue} aria-hidden="true">
           <span className={styles.progressTrack}><span className={styles.progressFill} /></span>
           <span>{copy.filmScrollCue} ↓</span>

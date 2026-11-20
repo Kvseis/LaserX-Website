@@ -99,6 +99,7 @@ const en: SiteCopy = {
     headline: ["A clean surface", "starts here."],
     description: "Laser cleaning for metal, stone and wood in Baku. We remove rust, paint and unwanted layers with controlled laser technology.",
     proof: 'We begin each project with a test patch and settings suited to the material.',
+    woodFilmTitle: 'From oxidation to decoration',
     filmTitle: 'From rust to clean steel.',
     filmDescription: 'Scroll to follow the laser cleaning process, frame by frame.',
     filmScrollCue: 'Scroll to explore',

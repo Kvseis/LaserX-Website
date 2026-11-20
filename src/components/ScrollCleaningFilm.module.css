@@ -42,7 +42,7 @@
   pointer-events: none;
 }
 
-.content h2 {
+.heading {
   max-width: 610px;
   margin-top: 0;
   font-size: clamp(50px, 5.7vw, 82px);
@@ -51,6 +51,17 @@
   line-height: .98;
   text-wrap: balance;
 }
+
+.woodCaption {
+  position: absolute;
+  inset: 0;
+  padding: clamp(116px, 19svh, 220px) max(4vw, (100% - 1440px) / 2) 0;
+  color: #f7f4eb;
+  opacity: var(--wood-title-opacity, 1);
+  background: linear-gradient(90deg, #110e0970, transparent 58%);
+}
+
+.woodCaption .heading { max-width: 13ch; margin: 0; }
 
 .scrollCue {
   width: min(290px, 100%);
@@ -145,10 +156,17 @@
     width: calc(100% - 36px);
     padding: clamp(84px, 15svh, 132px) 0 0;
   }
-  .content h2 {
+  .heading {
     max-width: 360px;
     margin-top: 0;
     font-size: clamp(43px, 11vw, 60px);
   }
+  .woodCaption {
+    display: flex;
+    align-items: end;
+    padding: 0 18px max(34px, env(safe-area-inset-bottom));
+    background: linear-gradient(0deg, #100d09e8, transparent 38%);
+  }
+  .woodCaption .heading { font-size: clamp(32px, 9.4vw, 52px); }
   .scrollCue { width: 178px; margin-top: 23px; font-size: 9px; }
 }
