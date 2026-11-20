@@ -73,7 +73,6 @@ const tr: SiteCopy = {
     "messageTitle": "LaserX — lazer temizleme talebi"
   },
   footer: {
-    illustration: 'Yapay zekâ ile oluşturulmuş temsili görsel.',
     title: 'Yüzeyinize yeni bir başlangıç verin.',
     booking: 'Hizmet talep et',
     description: 'Metal, taş ve ahşap için hassas lazer temizleme. Her yüzeye uygun yaklaşım.',

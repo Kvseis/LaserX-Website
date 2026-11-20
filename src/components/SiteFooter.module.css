@@ -32,7 +32,7 @@
 .contacts a:first-of-type svg { fill: none; stroke: currentColor; stroke-width: 1.6; }
 .scene { position: relative; margin-top: -96px; }
 .scene img { width: 100%; height: auto; mask-image: linear-gradient(to bottom, transparent, #000 48px); }
-.bottom { position: absolute; z-index: 2; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-between; gap: 24px; padding: 18px 4vw; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); font-size: 13px; line-height: 1.5; text-shadow: 0 1px 3px #000; }
+.bottom { position: absolute; z-index: 2; bottom: 0; left: 0; width: 100%; display: flex; justify-content: flex-end; text-align: right; gap: 24px; padding: 18px 4vw; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); font-size: 13px; line-height: 1.5; text-shadow: 0 1px 3px #000; }
 @media (max-width: 1050px) {
   .scene { margin-top: -20px; }
   .columns { grid-template-columns: 1.2fr 1fr 1fr; gap: 32px; }

@@ -73,7 +73,6 @@ const en: SiteCopy = {
     "messageTitle": "LaserX — laser cleaning request"
   },
   footer: {
-    illustration: 'AI-generated illustrative visual.',
     title: 'Give your surface a fresh start.',
     booking: 'Book a service',
     description: 'Precision laser cleaning for metal, stone and wood. An approach tailored to every surface.',

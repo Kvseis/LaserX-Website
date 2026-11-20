@@ -71,7 +71,6 @@ const az = {
     "messageTitle": "LaserX — lazer təmizləmə sorğusu"
   },
   footer: {
-    illustration: 'AI ilə hazırlanmış illüstrativ vizual.',
     title: 'Səthinizə yeni başlanğıc verin.',
     booking: 'Xidmət sifariş et',
     description: 'Metal, daş və ağac üçün dəqiq lazer təmizləmə. Hər səthə uyğun yanaşma.',
