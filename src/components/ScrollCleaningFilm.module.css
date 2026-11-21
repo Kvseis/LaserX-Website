@@ -1,6 +1,6 @@
 .section {
   --stage-height: 100svh;
-  --scroll-travel: 290svh;
+  --scroll-travel: 390svh;
   position: relative;
   color: #18211d;
   background: #17120e;
@@ -144,7 +144,7 @@
 @media (max-width: 760px) {
   .section {
     --stage-height: 100dvh;
-    --scroll-travel: 246svh;
+    --scroll-travel: 336svh;
   }
   .stage { background-image: none; }
   .stage::before {

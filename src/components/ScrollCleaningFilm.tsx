@@ -7,10 +7,11 @@ import styles from './ScrollCleaningFilm.module.css';
 
 const woodSource = '/videos/laserx-wood-cleaning.mp4';
 const metalSource = '/videos/laserx-scroll-cleaning.mp4';
-const metalEnd = 0.40;
-const woodStart = 0.52;
-const dustStart = 0.34;
-const dustEnd = 0.56;
+const metalEnd = 0.396;
+const woodStart = 0.55;
+const dustStart = 0.32;
+const dustEnd = 0.60;
+const scrollResponseMs = 110;
 
 function clampProgress(value: number) {
   return Math.min(1, Math.max(0, value));
@@ -55,6 +56,8 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     let isStatic = false;
     let isNear = false;
     let mounted = true;
+    let displayedProgress: number | undefined;
+    let previousFrameTime = 0;
 
     const scheduleUpdate = () => {
       if (mounted && !frame) frame = window.requestAnimationFrame(update);
@@ -64,12 +67,22 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     const metalFrames = createScrollFilmFrames(metalCanvas, 'metal', 80, scheduleUpdate);
     const dustFrames = createScrollFilmFrames(dustCanvas, 'dust', 40, scheduleUpdate);
 
-    const update = () => {
+    const update = (now: number) => {
       frame = 0;
       if (isStatic || !isNear) return;
 
       const travel = section.offsetHeight - stage.offsetHeight;
-      const progress = travel > 0 ? clampProgress(-section.getBoundingClientRect().top / travel) : 0;
+      const target = travel > 0 ? clampProgress(-section.getBoundingClientRect().top / travel) : 0;
+      const previous = displayedProgress ?? target;
+      const elapsed = Math.min(now - previousFrameTime, 32);
+      const gap = target - previous;
+      // Follow native scrolling without carrying an unfinished scene past either edge.
+      const progress = target === 0 || target === 1 || Math.abs(gap) < 0.001
+        ? target
+        : previous + gap * (1 - Math.exp(-elapsed / scrollResponseMs));
+      displayedProgress = progress;
+      previousFrameTime = now;
+      if (progress !== target) scheduleUpdate();
       const transition = clampProgress((progress - metalEnd) / (woodStart - metalEnd));
       const metalProgress = clampProgress(progress / metalEnd);
       const woodProgress = clampProgress((progress - woodStart) / (1 - woodStart));
@@ -112,6 +125,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     };
 
     const syncMode = () => {
+      displayedProgress = undefined;
       isStatic = reducedMotion.matches || Boolean(connection?.saveData) ||
         ['slow-2g', '2g'].includes(connection?.effectiveType ?? '');
       section.dataset.static = String(isStatic);
@@ -127,6 +141,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
 
     const observer = new IntersectionObserver(([entry]) => {
       isNear = entry.isIntersecting;
+      if (!isNear) displayedProgress = undefined;
       loadMedia();
       scheduleUpdate();
     }, { rootMargin: `${window.innerHeight}px 0px` });

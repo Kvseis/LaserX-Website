@@ -24,7 +24,13 @@ try {
     const mobile = name === 'mobile';
     const page = await browser.newPage({ viewport, hasTouch: mobile, isMobile: mobile, reducedMotion: 'no-preference' });
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
-    await page.locator('#proses[data-static="false"]').waitFor();
+    const film = page.locator('#proses[data-static="false"]');
+    await film.waitFor();
+    const scrollScreens = await film.evaluate((section) => {
+      const height = section.firstElementChild.offsetHeight;
+      return (section.offsetHeight - height) / height;
+    });
+    if (scrollScreens < (mobile ? 3.3 : 3.85)) throw new Error(`${name}: film üçün sürüşdürmə məsafəsi qısadır`);
     const seekTo = async (progress) => {
       await page.evaluate((fraction) => {
         const section = document.getElementById('proses');
@@ -50,6 +56,24 @@ try {
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-scroll-film.png`) });
 
+    await page.waitForFunction(() => {
+      const progress = parseFloat(document.getElementById('proses').style.getPropertyValue('--film-progress'));
+      return Math.abs(progress - .18 / .396 * 100) < .25;
+    });
+    const { before, firstStep } = await film.evaluate(async (section) => {
+      const readProgress = () => parseFloat(section.style.getPropertyValue('--film-progress'));
+      const before = readProgress();
+      const travel = section.offsetHeight - section.firstElementChild.offsetHeight;
+      window.scrollTo({ top: section.offsetTop + travel * .3, behavior: 'instant' });
+      let firstStep = before;
+      for (let i = 0; i < 12 && firstStep <= before; i++) {
+        await new Promise(requestAnimationFrame);
+        firstStep = readProgress();
+      }
+      return { before, firstStep };
+    });
+    if (!(firstStep > before && firstStep < 70)) throw new Error(`${name}: sürətli sürüşdürmədə səhnə birdən atlanır`);
+
     const dustStats = () => page.locator(dustFrames).evaluate((canvas) => {
       const { width, height } = canvas;
       const pixels = canvas.getContext('2d').getImageData(0, 0, width, height).data;
@@ -65,7 +89,7 @@ try {
       }
       return { coverage: dense / (width * height), area: dustPixels / (width * height), centerY: ySum / (dustPixels * height) };
     });
-    await seekTo(.38);
+    await seekTo(.371);
     await waitForFrame(dustFrames, 6, 8);
     if (mobile) await waitForFrame(metalFrames, 73, 77);
     else await waitForTime(metalSelector, 7.3, 7.8);
@@ -75,7 +99,7 @@ try {
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-rise.png`) });
 
-    await seekTo(.46);
+    await seekTo(.473);
     await page.waitForFunction(() => {
       const opacity = Number(document.getElementById('proses').style.getPropertyValue('--wood-opacity'));
       return opacity > .35 && opacity < .65;
@@ -98,7 +122,7 @@ try {
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-film-transition.png`) });
 
-    await seekTo(.54);
+    await seekTo(.575);
     await waitForFrame(dustFrames, 34, 36);
     if (mobile) await waitForFrame(woodFrames, 1, 4);
     else await waitForTime(woodSelector, .15, .4);
@@ -108,7 +132,7 @@ try {
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-clear.png`) });
 
-    await seekTo(.74);
+    await seekTo(.756);
     if (mobile) await waitForFrame(woodFrames, 26, 28);
     else await waitForTime(woodSelector, 2.5, 3);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
@@ -139,11 +163,16 @@ try {
       return results.top >= 0 && results.top < innerHeight && Math.abs(stage.bottom - results.top) <= 1;
     });
 
-    await seekTo(.56);
+    await seekTo(.59);
     if (mobile) await waitForFrame(woodFrames, 4, 6);
     else await waitForTime(woodSelector, .3, .8);
+    await seekTo(.05);
+    if (mobile) await waitForFrame(metalFrames, 8, 11);
+    else await waitForTime(metalSelector, .75, 1.25);
 
     if (mobile && !useWebKit) {
+      await seekTo(.59);
+      await waitForFrame(woodFrames, 4, 6);
       const touch = await page.context().newCDPSession(page);
       const x = viewport.width / 2;
       const y = viewport.height * .72;
@@ -155,10 +184,7 @@ try {
       await waitForFrame(woodFrames, 8, 59);
       await touch.detach();
     }
-    await seekTo(.05);
-    if (mobile) await waitForFrame(metalFrames, 8, 11);
-    else await waitForTime(metalSelector, .75, 1.25);
-    console.log(`${name}: dust rises, covers both scenes during the cut and clears upwards; scroll works in both directions`);
+    console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll with eased progress; dust covers and clears in both directions`);
     await page.close();
   }
 
