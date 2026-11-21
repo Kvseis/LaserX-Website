@@ -9,6 +9,8 @@ const woodSource = '/videos/laserx-wood-cleaning.mp4';
 const metalSource = '/videos/laserx-scroll-cleaning.mp4';
 const metalEnd = 0.40;
 const woodStart = 0.52;
+const dustStart = 0.34;
+const dustEnd = 0.56;
 
 function clampProgress(value: number) {
   return Math.min(1, Math.max(0, value));
@@ -32,6 +34,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
   const metalRef = useRef<HTMLVideoElement>(null);
   const woodCanvasRef = useRef<HTMLCanvasElement>(null);
   const metalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const dustCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -40,7 +43,8 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     const metal = metalRef.current;
     const woodCanvas = woodCanvasRef.current;
     const metalCanvas = metalCanvasRef.current;
-    if (!section || !stage || !wood || !metal || !woodCanvas || !metalCanvas) return;
+    const dustCanvas = dustCanvasRef.current;
+    if (!section || !stage || !wood || !metal || !woodCanvas || !metalCanvas || !dustCanvas) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const narrowViewport = window.matchMedia('(max-width: 760px)');
@@ -58,6 +62,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
 
     const woodFrames = createScrollFilmFrames(woodCanvas, 'wood', 60, scheduleUpdate);
     const metalFrames = createScrollFilmFrames(metalCanvas, 'metal', 80, scheduleUpdate);
+    const dustFrames = createScrollFilmFrames(dustCanvas, 'dust', 40, scheduleUpdate);
 
     const update = () => {
       frame = 0;
@@ -68,18 +73,21 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       const transition = clampProgress((progress - metalEnd) / (woodStart - metalEnd));
       const metalProgress = clampProgress(progress / metalEnd);
       const woodProgress = clampProgress((progress - woodStart) / (1 - woodStart));
-      const shade = 0.96 * easeBetween(transition, 0, 0.48) * (1 - easeBetween(transition, 0.52, 1));
-      const lineOpacity = easeBetween(transition, 0.16, 0.4) * (1 - easeBetween(transition, 0.6, 0.86));
+      const dustProgress = clampProgress((progress - dustStart) / (dustEnd - dustStart));
+      const dustActive = dustProgress > 0 && dustProgress < 1;
+      const dustOriginOffset = (0.4 + 0.6 * easeBetween(dustProgress, 0.03, 0.18)) * (1 - easeBetween(dustProgress, 0.25, 0.5));
+      const veil = 0.88 * easeBetween(transition, 0.16, 0.48) * (1 - easeBetween(transition, 0.52, 0.84));
       const woodTitleOpacity = easeBetween(transition, 0.76, 1) * (1 - easeBetween(woodProgress, 0.73, 0.91));
 
       section.style.setProperty('--wood-opacity', String(easeBetween(transition, 0.46, 0.54)));
-      section.style.setProperty('--transition-shade', String(shade));
-      section.style.setProperty('--laser-position', `${36 + 28 * transition}%`);
-      section.style.setProperty('--laser-opacity', String(lineOpacity));
+      section.style.setProperty('--dust-veil', String(veil));
+      section.style.setProperty('--dust-opacity', dustActive ? '1' : '0');
+      section.style.setProperty('--dust-origin-offset', String(dustOriginOffset));
       section.style.setProperty('--wood-title-opacity', String(woodTitleOpacity));
       section.style.setProperty('--metal-title-opacity', String(1 - easeBetween(transition, 0, 0.42)));
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
 
+      if (dustActive) dustFrames.paint(dustProgress);
       if (narrowViewport.matches) {
         if (transition < 1) metalFrames.paint(metalProgress);
         if (transition > 0) woodFrames.paint(woodProgress);
@@ -100,6 +108,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         wood.preload = 'auto';
         wood.src = woodSource;
       }
+      dustFrames.preload();
     };
 
     const syncMode = () => {
@@ -178,8 +187,8 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
           <h2 className={styles.heading}>{copy.woodFilmTitle}</h2>
         </div>
       </div>
-      <div className={styles.transitionShade} aria-hidden="true" />
-      <div className={styles.laserLine} aria-hidden="true" />
+      <div className={styles.dustVeil} aria-hidden="true" />
+      <canvas ref={dustCanvasRef} className={styles.dustCloud} width={384} height={240} aria-hidden="true" />
     </div>
     <span id="cleaning-film-disclosure" hidden>{copy.filmDisclosure}</span>
   </section>;
