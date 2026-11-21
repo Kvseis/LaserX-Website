@@ -32,30 +32,31 @@ try {
       }, progress);
     };
 
-    await seekTo(.16);
+    await seekTo(.18);
     const waitForFrame = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
       const frame = Number(document.querySelector(selector)?.dataset.frame);
       return frame >= min && frame <= max;
     }, { selector, min, max });
+    const waitForTime = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
+      const video = document.querySelector(selector);
+      return video?.readyState >= 2 && video.currentTime >= min && video.currentTime <= max;
+    }, { selector, min, max });
     if (mobile) {
-      await waitForFrame(woodFrames, 28, 31);
+      await waitForFrame(metalFrames, 34, 38);
       if (await page.locator('#proses video[src]').count()) throw new Error('Mobile transition downloaded video');
     } else {
-      await page.waitForFunction((selector) => {
-        const video = document.querySelector(selector);
-        return video?.readyState >= 2 && video.currentTime > 1;
-      }, woodSelector);
+      await waitForTime(metalSelector, 3.3, 3.9);
     }
-    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
+    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-scroll-film.png`) });
 
-    await seekTo(.4);
+    await seekTo(.46);
     await page.waitForFunction(() => {
       const wipe = parseFloat(document.getElementById('proses').style.getPropertyValue('--wipe-position'));
       return wipe > 48 && wipe < 52;
     });
     if (mobile) {
-      await waitForFrame(woodFrames, 59, 59);
-      await waitForFrame(metalFrames, 0, 0);
+      await waitForFrame(metalFrames, 79, 79);
+      await waitForFrame(woodFrames, 0, 0);
     }
     const stageTop = await page.locator('#proses > div').evaluate((stage) => stage.getBoundingClientRect().top);
     if (Math.abs(stageTop) > 2) throw new Error(`${name}: video paneli sürüşdürmədə sabit qalmır (${stageTop}px)`);
@@ -63,7 +64,7 @@ try {
       color: getComputedStyle(element).backgroundColor,
       height: element.getBoundingClientRect().height,
       middle: element.getBoundingClientRect().top + 1,
-      cut: element.parentElement.querySelector('[class*="woodScene"]').getBoundingClientRect().top,
+      cut: element.parentElement.querySelector('[class*="woodScene"]').getBoundingClientRect().bottom,
     }));
     if (line.color !== 'rgb(229, 35, 27)' || line.height !== 2
       || Math.abs(line.middle - line.cut) > 2) {
@@ -71,21 +72,40 @@ try {
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-film-transition.png`) });
 
-    await seekTo(.75);
-    if (mobile) await waitForFrame(metalFrames, 40, 42);
-    else await page.waitForFunction((selector) => document.querySelector(selector)?.currentTime > 3.5, metalSelector);
-    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-scroll-film.png`) });
+    await seekTo(.74);
+    if (mobile) await waitForFrame(woodFrames, 26, 28);
+    else await waitForTime(woodSelector, 2.5, 3);
+    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
 
     await seekTo(.98);
-    if (mobile) await waitForFrame(metalFrames, 75, 77);
-    else await page.waitForFunction((selector) => document.querySelector(selector)?.currentTime > 7, metalSelector);
+    if (mobile) await waitForFrame(woodFrames, 56, 58);
+    else await waitForTime(woodSelector, 5.5, 6);
 
-    await seekTo(2);
-    await page.waitForFunction(() => document.getElementById('neticeler').getBoundingClientRect().top < innerHeight);
+    if (mobile) {
+      for (const height of [740, viewport.height]) {
+        await page.setViewportSize({ ...viewport, height });
+        await seekTo(.98);
+        await page.waitForFunction(() => {
+          const section = document.getElementById('proses');
+          const stage = section.firstElementChild.getBoundingClientRect();
+          const results = document.getElementById('neticeler').getBoundingClientRect();
+          return Math.abs(stage.top) <= 1
+            && Math.abs(stage.bottom - (visualViewport?.height ?? innerHeight)) <= 1
+            && Math.abs(section.getBoundingClientRect().bottom - results.top) <= 1;
+        });
+      }
+    }
 
-    await seekTo(.05);
-    if (mobile) await waitForFrame(woodFrames, 8, 11);
-    else await page.waitForFunction((selector) => document.querySelector(selector)?.currentTime < 1.5, woodSelector);
+    await seekTo(1.12);
+    await page.waitForFunction(() => {
+      const stage = document.getElementById('proses').firstElementChild.getBoundingClientRect();
+      const results = document.getElementById('neticeler').getBoundingClientRect();
+      return results.top >= 0 && results.top < innerHeight && Math.abs(stage.bottom - results.top) <= 1;
+    });
+
+    await seekTo(.56);
+    if (mobile) await waitForFrame(woodFrames, 4, 6);
+    else await waitForTime(woodSelector, .3, .8);
 
     if (mobile && !useWebKit) {
       const touch = await page.context().newCDPSession(page);
@@ -96,10 +116,13 @@ try {
         await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - distance }] });
       }
       await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-      await waitForFrame(woodFrames, 12, 59);
+      await waitForFrame(woodFrames, 8, 59);
       await touch.detach();
     }
-    console.log(`${name}: red wipe aligned, forward and reverse motion, results reached`);
+    await seekTo(.05);
+    if (mobile) await waitForFrame(metalFrames, 8, 11);
+    else await waitForTime(metalSelector, .75, 1.25);
+    console.log(`${name}: metal first, red wipe aligned, wood moves forward and backward, results reached`);
     await page.close();
   }
 

@@ -7,8 +7,8 @@ import styles from './ScrollCleaningFilm.module.css';
 
 const woodSource = '/videos/laserx-wood-cleaning.mp4';
 const metalSource = '/videos/laserx-scroll-cleaning.mp4';
-const woodEnd = 0.32;
-const metalStart = 0.48;
+const metalEnd = 0.40;
+const woodStart = 0.52;
 
 function clampProgress(value: number) {
   return Math.min(1, Math.max(0, value));
@@ -60,37 +60,36 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
 
       const travel = section.offsetHeight - stage.offsetHeight;
       const progress = travel > 0 ? clampProgress(-section.getBoundingClientRect().top / travel) : 0;
-      const wipe = clampProgress((progress - woodEnd) / (metalStart - woodEnd));
-      const woodProgress = clampProgress(progress / woodEnd);
-      const metalProgress = clampProgress((progress - metalStart) / (1 - metalStart));
-      const titleProgress = clampProgress((wipe - 0.4) / 0.6);
+      const wipe = clampProgress((progress - metalEnd) / (woodStart - metalEnd));
+      const metalProgress = clampProgress(progress / metalEnd);
+      const woodProgress = clampProgress((progress - woodStart) / (1 - woodStart));
+      const woodTitleOpacity = clampProgress((wipe - 0.86) / 0.14) * clampProgress((0.91 - woodProgress) / 0.18);
 
       section.style.setProperty('--wipe-position', `${wipe * 100}%`);
       section.style.setProperty('--wipe-opacity', String(Math.min(wipe * 12, (1 - wipe) * 12, 1)));
-      section.style.setProperty('--wood-title-opacity', String(clampProgress((0.86 - woodProgress) / 0.22)));
-      section.style.setProperty('--title-opacity', String(titleProgress));
-      section.style.setProperty('--title-offset', `${(1 - titleProgress) * 12}px`);
+      section.style.setProperty('--wood-title-opacity', String(woodTitleOpacity));
+      section.style.setProperty('--metal-title-opacity', String(1 - clampProgress(wipe * 3)));
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
 
       if (narrowViewport.matches) {
-        if (wipe < 1) woodFrames.paint(woodProgress);
-        metalFrames.paint(metalProgress);
+        if (wipe < 1) metalFrames.paint(metalProgress);
+        if (wipe > 0) woodFrames.paint(woodProgress);
       } else {
-        if (wipe < 1) seekVideo(wood, woodProgress);
-        if (wipe > 0) seekVideo(metal, metalProgress);
+        if (wipe < 1) seekVideo(metal, metalProgress);
+        if (wipe > 0) seekVideo(wood, woodProgress);
       }
     };
 
     const loadMedia = () => {
       if (isStatic || !isNear) return;
       if (narrowViewport.matches) {
-        woodFrames.preload();
         metalFrames.preload();
+        woodFrames.preload();
       } else if (!wood.hasAttribute('src')) {
-        wood.preload = 'auto';
-        wood.src = woodSource;
         metal.preload = 'auto';
         metal.src = metalSource;
+        wood.preload = 'auto';
+        wood.src = woodSource;
       }
     };
 
@@ -154,6 +153,13 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         aria-hidden="true"
       />
       <canvas ref={metalCanvasRef} className={styles.video} width={512} height={288} aria-hidden="true" />
+      <div className={styles.content}>
+        <h2 id="cleaning-film-title" className={styles.heading}>{copy.filmTitle}</h2>
+        <div className={styles.scrollCue} aria-hidden="true">
+          <span className={styles.progressTrack}><span className={styles.progressFill} /></span>
+          <span>{copy.filmScrollCue} ↓</span>
+        </div>
+      </div>
       <div className={styles.woodScene}>
         <div className={styles.woodMedia} aria-hidden="true">
           <video ref={woodRef} poster="/images/laserx-wood-poster.webp" preload="none" muted playsInline />
@@ -164,13 +170,6 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         </div>
       </div>
       <div className={styles.laserLine} aria-hidden="true" />
-      <div className={styles.content}>
-        <h2 id="cleaning-film-title" className={styles.heading}>{copy.filmTitle}</h2>
-        <div className={styles.scrollCue} aria-hidden="true">
-          <span className={styles.progressTrack}><span className={styles.progressFill} /></span>
-          <span>{copy.filmScrollCue} ↓</span>
-        </div>
-      </div>
     </div>
     <span id="cleaning-film-disclosure" hidden>{copy.filmDisclosure}</span>
   </section>;
