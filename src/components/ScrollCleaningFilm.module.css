@@ -25,6 +25,7 @@
 }
 
 .woodScene,
+.transitionShade,
 .laserLine,
 .video,
 .woodMedia video,
@@ -94,15 +95,15 @@
   .section[data-static='false'][data-media='video'] video,
   .section[data-static='false'][data-media='frames'] canvas[data-frame],
   .section[data-static='false'] .woodScene,
+  .section[data-static='false'] .transitionShade,
   .section[data-static='false'] .laserLine { display: block; }
   .section[data-static='false'] .scrollCue { display: grid; }
 
   .woodScene {
     position: absolute;
-    inset: 0 0 auto;
-    height: var(--wipe-position, 0%);
+    inset: 0;
     z-index: 2;
-    overflow: hidden;
+    opacity: var(--wood-opacity, 0);
     pointer-events: none;
   }
 
@@ -112,16 +113,26 @@
     background: #17120e url('/images/laserx-wood-poster.webp') center / cover no-repeat;
   }
 
+  .transitionShade {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: #110f0e;
+    opacity: var(--transition-shade, 0);
+    pointer-events: none;
+  }
+
   .laserLine {
     position: absolute;
-    z-index: 3;
-    top: var(--wipe-position, 0%);
-    inset-inline: 0;
+    z-index: 4;
+    top: var(--laser-position, 50%);
+    left: 50%;
+    width: min(66%, 560px);
     height: 2px;
-    background: #e5231b;
-    box-shadow: 0 0 7px #e5231b9c;
-    opacity: var(--wipe-opacity, 0);
-    transform: translateY(-50%);
+    background: linear-gradient(90deg, transparent, #b9221c 22%, #fa6b5f 50%, #b9221c 78%, transparent);
+    filter: drop-shadow(0 0 3px #e5231b88);
+    opacity: var(--laser-opacity, 0);
+    transform: translate(-50%, -50%);
     pointer-events: none;
   }
 

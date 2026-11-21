@@ -14,6 +14,11 @@ function clampProgress(value: number) {
   return Math.min(1, Math.max(0, value));
 }
 
+function easeBetween(value: number, start: number, end: number) {
+  const progress = clampProgress((value - start) / (end - start));
+  return progress * progress * (3 - 2 * progress);
+}
+
 function seekVideo(video: HTMLVideoElement, progress: number) {
   if (!Number.isFinite(video.duration) || video.duration <= 0 || video.seeking) return;
   const target = progress * Math.max(0, video.duration - 1 / 24);
@@ -60,23 +65,27 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
 
       const travel = section.offsetHeight - stage.offsetHeight;
       const progress = travel > 0 ? clampProgress(-section.getBoundingClientRect().top / travel) : 0;
-      const wipe = clampProgress((progress - metalEnd) / (woodStart - metalEnd));
+      const transition = clampProgress((progress - metalEnd) / (woodStart - metalEnd));
       const metalProgress = clampProgress(progress / metalEnd);
       const woodProgress = clampProgress((progress - woodStart) / (1 - woodStart));
-      const woodTitleOpacity = clampProgress((wipe - 0.86) / 0.14) * clampProgress((0.91 - woodProgress) / 0.18);
+      const shade = 0.96 * easeBetween(transition, 0, 0.48) * (1 - easeBetween(transition, 0.52, 1));
+      const lineOpacity = easeBetween(transition, 0.16, 0.4) * (1 - easeBetween(transition, 0.6, 0.86));
+      const woodTitleOpacity = easeBetween(transition, 0.76, 1) * (1 - easeBetween(woodProgress, 0.73, 0.91));
 
-      section.style.setProperty('--wipe-position', `${wipe * 100}%`);
-      section.style.setProperty('--wipe-opacity', String(Math.min(wipe * 12, (1 - wipe) * 12, 1)));
+      section.style.setProperty('--wood-opacity', String(easeBetween(transition, 0.46, 0.54)));
+      section.style.setProperty('--transition-shade', String(shade));
+      section.style.setProperty('--laser-position', `${36 + 28 * transition}%`);
+      section.style.setProperty('--laser-opacity', String(lineOpacity));
       section.style.setProperty('--wood-title-opacity', String(woodTitleOpacity));
-      section.style.setProperty('--metal-title-opacity', String(1 - clampProgress(wipe * 3)));
+      section.style.setProperty('--metal-title-opacity', String(1 - easeBetween(transition, 0, 0.42)));
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
 
       if (narrowViewport.matches) {
-        if (wipe < 1) metalFrames.paint(metalProgress);
-        if (wipe > 0) woodFrames.paint(woodProgress);
+        if (transition < 1) metalFrames.paint(metalProgress);
+        if (transition > 0) woodFrames.paint(woodProgress);
       } else {
-        if (wipe < 1) seekVideo(metal, metalProgress);
-        if (wipe > 0) seekVideo(wood, woodProgress);
+        if (transition < 1) seekVideo(metal, metalProgress);
+        if (transition > 0) seekVideo(wood, woodProgress);
       }
     };
 
@@ -169,6 +178,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
           <h2 className={styles.heading}>{copy.woodFilmTitle}</h2>
         </div>
       </div>
+      <div className={styles.transitionShade} aria-hidden="true" />
       <div className={styles.laserLine} aria-hidden="true" />
     </div>
     <span id="cleaning-film-disclosure" hidden>{copy.filmDisclosure}</span>

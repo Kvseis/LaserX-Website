@@ -51,8 +51,8 @@ try {
 
     await seekTo(.46);
     await page.waitForFunction(() => {
-      const wipe = parseFloat(document.getElementById('proses').style.getPropertyValue('--wipe-position'));
-      return wipe > 48 && wipe < 52;
+      const opacity = Number(document.getElementById('proses').style.getPropertyValue('--wood-opacity'));
+      return opacity > .35 && opacity < .65;
     });
     if (mobile) {
       await waitForFrame(metalFrames, 79, 79);
@@ -60,15 +60,19 @@ try {
     }
     const stageTop = await page.locator('#proses > div').evaluate((stage) => stage.getBoundingClientRect().top);
     if (Math.abs(stageTop) > 2) throw new Error(`${name}: video paneli sürüşdürmədə sabit qalmır (${stageTop}px)`);
-    const line = await page.locator('#proses [class*="laserLine"]').evaluate((element) => ({
-      color: getComputedStyle(element).backgroundColor,
-      height: element.getBoundingClientRect().height,
-      middle: element.getBoundingClientRect().top + 1,
-      cut: element.parentElement.querySelector('[class*="woodScene"]').getBoundingClientRect().bottom,
-    }));
-    if (line.color !== 'rgb(229, 35, 27)' || line.height !== 2
-      || Math.abs(line.middle - line.cut) > 2) {
-      throw new Error(`${name}: qırmızı xətt keçid sərhədinə uyğun gəlmir`);
+    const transition = await page.locator('#proses [class*="laserLine"]').evaluate((element) => {
+      const stage = element.parentElement;
+      const line = element.getBoundingClientRect();
+      const wood = stage.querySelector('[class*="woodScene"]').getBoundingClientRect();
+      const shade = stage.querySelector('[class*="transitionShade"]');
+      return { lineHeight: line.height, lineWidth: line.width, lineY: line.top + line.height / 2,
+        stageHeight: stage.offsetHeight, stageWidth: stage.offsetWidth, woodHeight: wood.height,
+        shade: Number(getComputedStyle(shade).opacity) };
+    });
+    if (transition.lineHeight !== 2 || transition.lineWidth >= transition.stageWidth * .7
+      || Math.abs(transition.lineY - transition.stageHeight / 2) > 4
+      || Math.abs(transition.woodHeight - transition.stageHeight) > 1 || transition.shade < .94) {
+      throw new Error(`${name}: qırmızı xətt və kadrların yumşaq keçidi düzgün görünmür`);
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-film-transition.png`) });
 
@@ -122,7 +126,7 @@ try {
     await seekTo(.05);
     if (mobile) await waitForFrame(metalFrames, 8, 11);
     else await waitForTime(metalSelector, .75, 1.25);
-    console.log(`${name}: metal first, red wipe aligned, wood moves forward and backward, results reached`);
+    console.log(`${name}: metal first, red line over full-frame dissolve, wood moves forward and backward, results reached`);
     await page.close();
   }
 
