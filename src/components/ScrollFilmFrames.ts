@@ -1,24 +1,31 @@
-const framesPerSheet = 20;
-const columns = 5;
+type FrameSequence = 'metal-mobile' | 'metal-wide' | 'wood-mobile' | 'wood-wide' | 'dust';
 
-export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: 'wood' | 'metal' | 'dust', frameCount: number, onReady: () => void) {
+export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: FrameSequence, frameCount: number, onReady: () => void) {
   const { width, height } = canvas;
-  const sheets = new Map<number, HTMLImageElement>();
+  const isDust = scene === 'dust';
+  const framesPerSheet = isDust ? 20 : 12;
+  const columns = isDust ? 5 : 4;
+  const sheets = new Map<number, { image: HTMLImageElement; ready: boolean }>();
   let context: CanvasRenderingContext2D | null = null;
   let painted = -1;
 
   const load = (index: number) => {
     if (index < 0 || index * framesPerSheet >= frameCount || sheets.has(index)) return;
     const image = new Image();
-    sheets.set(index, image);
-    image.onload = onReady;
+    const sheet = { image, ready: false };
+    sheets.set(index, sheet);
     image.src = `/images/scroll-film/${scene}-${index}.webp`;
+    void image.decode().then(() => {
+      sheet.ready = true;
+      onReady();
+    }, () => {
+      if (sheets.get(index) === sheet) sheets.delete(index);
+    });
   };
 
   return {
     preload() {
       load(0);
-      if (scene !== 'metal') load(1);
     },
     paint(progress: number) {
       const frame = Math.round(progress * (frameCount - 1));
@@ -27,22 +34,22 @@ export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: 'wood' 
       const sheetIndex = Math.floor(frame / framesPerSheet);
       const tile = frame % framesPerSheet;
       load(sheetIndex);
-      if (tile >= framesPerSheet - 6) load(sheetIndex + 1);
-      if (tile <= 5) load(sheetIndex - 1);
-
-      const sheet = sheets.get(sheetIndex);
-      if (!sheet?.complete || !sheet.naturalWidth) return;
-
-      context ??= canvas.getContext('2d', { alpha: scene === 'dust' });
-      if (!context) return;
-      if (scene === 'dust') context.clearRect(0, 0, width, height);
-      context.drawImage(sheet, (tile % columns) * width, Math.floor(tile / columns) * height, width, height, 0, 0, width, height);
-      canvas.dataset.frame = String(frame);
-      painted = frame;
+      if (tile >= framesPerSheet / 2) load(sheetIndex + 1);
+      else load(sheetIndex - 1);
 
       for (const index of sheets.keys()) {
         if (Math.abs(index - sheetIndex) > 1) sheets.delete(index);
       }
+
+      const sheet = sheets.get(sheetIndex);
+      if (!sheet?.ready) return;
+
+      context ??= canvas.getContext('2d', { alpha: isDust });
+      if (!context) return;
+      if (isDust) context.clearRect(0, 0, width, height);
+      context.drawImage(sheet.image, (tile % columns) * width, Math.floor(tile / columns) * height, width, height, 0, 0, width, height);
+      canvas.dataset.frame = String(frame);
+      painted = frame;
     },
   };
 }

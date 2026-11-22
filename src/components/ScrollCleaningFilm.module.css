@@ -1,6 +1,6 @@
 .section {
   --stage-height: 100svh;
-  --scroll-travel: 520svh;
+  --scroll-travel: 405svh;
   position: relative;
   color: #18211d;
   background: #080909;
@@ -13,8 +13,8 @@
   background: #f7f4eb url('/images/laserx-scroll-poster.webp') center / cover no-repeat;
 }
 
-.video,
-.woodMedia video {
+.metalFrames,
+.woodMedia canvas {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -26,8 +26,8 @@
 .woodScene,
 .dustVeil,
 .dustCloud,
-.video,
-.woodMedia video,
+.metalFrames,
+.woodMedia canvas,
 .scrollCue {
   display: none;
 }
@@ -90,10 +90,9 @@
 @media (prefers-reduced-motion: no-preference) {
   .section:not([data-static='true']) { height: calc(var(--stage-height) + var(--scroll-travel)); }
   .section:not([data-static='true']) .stage { position: sticky; top: 0; isolation: isolate; }
-  .section[data-static='false'] video,
+  .section[data-static='false'] canvas[data-frame],
   .section[data-static='false'] .woodScene,
-  .section[data-static='false'] .dustVeil,
-  .section[data-static='false'] .dustCloud[data-frame] { display: block; }
+  .section[data-static='false'] .dustVeil { display: block; }
   .section[data-static='false'] .scrollCue { display: grid; }
 
   .woodScene {
@@ -148,13 +147,13 @@
 
 @media (max-aspect-ratio: 4/3) {
   .woodMedia { background-position: 69% center; }
-  .woodMedia video { object-position: 69% center; }
+  .woodMedia canvas { object-position: 69% center; }
 }
 
 @media (max-width: 760px) {
   .section {
     --stage-height: 100dvh;
-    --scroll-travel: 535svh;
+    --scroll-travel: 390svh;
   }
   .stage { background-image: none; }
   .stage::before {
@@ -163,14 +162,14 @@
     content: '';
     background: url('/images/laserx-scroll-poster.webp') 61% center / cover no-repeat;
   }
-  .woodMedia,
-  .woodMedia video { background-position: 76% center; object-position: 76% center; }
+  .woodMedia { background-position: 76% center; }
+  .woodMedia canvas { object-position: center; }
   .dustCloud { mask-image: radial-gradient(ellipse 66% 46% at 55% 73%, #000 15%, transparent 90%); }
-  .video {
+  .metalFrames {
     top: 44%;
     bottom: auto;
     height: 56%;
-    object-position: 61% center;
+    object-position: center;
   }
   .content {
     width: calc(100% - 36px);

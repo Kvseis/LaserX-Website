@@ -9,8 +9,8 @@ const browser = useWebKit ? await webkit.launch() : await chromium.launch({
 });
 const artifactDir = path.resolve('artifacts');
 const baseUrl = process.env.LASERX_URL ?? 'http://127.0.0.1:3000';
-const woodSelector = '#proses video[poster*="wood-poster"]';
-const metalSelector = '#proses video[poster*="scroll-poster"]';
+const woodSelector = '#proses [class*="woodMedia"] canvas';
+const metalSelector = '#proses canvas[class*="metalFrames"]';
 const dustFrames = '#proses canvas[class*="dustCloud"]';
 await mkdir(artifactDir, { recursive: true });
 
@@ -28,7 +28,7 @@ try {
       const height = section.firstElementChild.offsetHeight;
       return (section.offsetHeight - height) / height;
     });
-    if (scrollScreens < (mobile ? 5.3 : 5.15)) throw new Error(`${name}: film üçün sürüşdürmə məsafəsi qısadır`);
+    if (scrollScreens < 3.85 || scrollScreens > 4.1) throw new Error(`${name}: unexpected film scroll distance`);
     const seekTo = async (progress) => {
       await page.evaluate((fraction) => {
         const section = document.getElementById('proses');
@@ -39,8 +39,10 @@ try {
 
     await seekTo(.18);
     const waitForTime = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
-      const video = document.querySelector(selector);
-      return video?.readyState >= 2 && video.currentTime >= min && video.currentTime <= max;
+      const canvas = document.querySelector(selector);
+      const frame = Number(canvas?.dataset.frame);
+      const time = selector.includes('woodMedia') ? frame / 71 * 4.833 : frame / 119 * 7.958;
+      return time >= min && time <= max;
     }, { selector, min, max });
     await waitForTime(metalSelector, 3.3, 3.9);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-scroll-film.png`) });
@@ -86,8 +88,9 @@ try {
 
     await seekTo(.756);
     await waitForTime(woodSelector, 2.1, 2.4);
-    const woodHeight = await page.locator(woodSelector).evaluate((video) => video.videoHeight);
-    if (woodHeight < 720) throw new Error(`${name}: expected HD wood video`);
+    const dimensions = await page.locator(woodSelector).evaluate(({ width, height }) => [width, height]);
+    if (dimensions.join('x') !== (mobile ? '432x864' : '1024x576')) throw new Error(`${name}: incorrect frame resolution`);
+    if (await film.locator('video').count()) throw new Error(`${name}: scroll still relies on video seeking`);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
 
     await seekTo(.98);
@@ -134,7 +137,7 @@ try {
       await waitForTime(woodSelector, .85, 4.875);
       await touch.detach();
     }
-    console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll with eased progress; HD video and feathered dissolve verified in both directions`);
+    console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll with responsive frames and feathered transition verified in both directions`);
     await page.close();
   }
 
@@ -142,10 +145,10 @@ try {
   await reduced.goto(baseUrl, { waitUntil: 'networkidle' });
   const fallback = await reduced.locator('#proses').evaluate((section) => ({
     position: getComputedStyle(section.firstElementChild).position,
-    videoLoaded: [...section.querySelectorAll('video')].some((video) => video.hasAttribute('src')),
+    framesLoaded: Boolean(section.querySelector('canvas[data-frame]')),
     dustVisible: getComputedStyle(section.querySelector('[class*="dustCloud"]')).display !== 'none',
   }));
-  if (fallback.position !== 'relative' || fallback.videoLoaded || fallback.dustVisible) {
+  if (fallback.position !== 'relative' || fallback.framesLoaded || fallback.dustVisible) {
     throw new Error(`Reduced-motion fallback failed: ${JSON.stringify(fallback)}`);
   }
   console.log('Reduced-motion fallback: poster visible, video hidden, no sticky scroll');
