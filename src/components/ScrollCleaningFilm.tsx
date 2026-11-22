@@ -2,14 +2,16 @@
 
 import { useEffect, useRef } from 'react';
 import type { SiteCopy } from '@/lib/messages/az';
-import { createDustFrames } from './ScrollFilmFrames';
+import { createScrollFilmFrames } from './ScrollFilmFrames';
 import styles from './ScrollCleaningFilm.module.css';
 
+const woodSource = '/videos/laserx-wood-cleaning.mp4';
+const metalSource = '/videos/laserx-scroll-cleaning.mp4';
 const metalEnd = 0.396;
 const woodStart = 0.55;
 const dustStart = 0.32;
 const dustEnd = 0.60;
-const scrollResponseMs = 125;
+const scrollResponseMs = 110;
 
 function clampProgress(value: number) {
   return Math.min(1, Math.max(0, value));
@@ -20,11 +22,19 @@ function easeBetween(value: number, start: number, end: number) {
   return progress * progress * (3 - 2 * progress);
 }
 
+function seekVideo(video: HTMLVideoElement, progress: number) {
+  if (!Number.isFinite(video.duration) || video.duration <= 0 || video.seeking) return;
+  const target = progress * Math.max(0, video.duration - 1 / 24);
+  if (Math.abs(video.currentTime - target) > 1 / 24) video.currentTime = target;
+}
+
 export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const woodRef = useRef<HTMLVideoElement>(null);
   const metalRef = useRef<HTMLVideoElement>(null);
+  const woodCanvasRef = useRef<HTMLCanvasElement>(null);
+  const metalCanvasRef = useRef<HTMLCanvasElement>(null);
   const dustCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -32,10 +42,13 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     const stage = stageRef.current;
     const wood = woodRef.current;
     const metal = metalRef.current;
+    const woodCanvas = woodCanvasRef.current;
+    const metalCanvas = metalCanvasRef.current;
     const dustCanvas = dustCanvasRef.current;
-    if (!section || !stage || !wood || !metal || !dustCanvas) return;
+    if (!section || !stage || !wood || !metal || !woodCanvas || !metalCanvas || !dustCanvas) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const narrowViewport = window.matchMedia('(max-width: 760px)');
     const connection = (navigator as Navigator & {
       connection?: EventTarget & { saveData?: boolean; effectiveType?: string };
     }).connection;
@@ -45,35 +58,21 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     let mounted = true;
     let displayedProgress: number | undefined;
     let previousFrameTime = 0;
-    let activeVideo: HTMLVideoElement | null = null;
-
-    const setActiveVideo = (video: HTMLVideoElement | null) => {
-      if (video === activeVideo) return;
-      activeVideo?.pause();
-      activeVideo = video;
-      if (video) {
-        // Safari can keep a completed clip at its final frame when it re-enters.
-        if (video.ended || video.duration - video.currentTime < 0.35) video.currentTime = 0;
-        void video.play().catch(() => {});
-      }
-    };
 
     const scheduleUpdate = () => {
       if (mounted && !frame) frame = window.requestAnimationFrame(update);
     };
 
-    const dustFrames = createDustFrames(dustCanvas, scheduleUpdate);
+    const woodFrames = createScrollFilmFrames(woodCanvas, 'wood', 60, scheduleUpdate);
+    const metalFrames = createScrollFilmFrames(metalCanvas, 'metal', 80, scheduleUpdate);
+    const dustFrames = createScrollFilmFrames(dustCanvas, 'dust', 40, scheduleUpdate);
 
     const update = (now: number) => {
       frame = 0;
       if (isStatic || !isNear) return;
 
       const travel = section.offsetHeight - stage.offsetHeight;
-      const sectionTop = section.getBoundingClientRect().top;
-      const stageBounds = stage.getBoundingClientRect();
-      const midpoint = window.innerHeight / 2;
-      const sceneVisible = !document.hidden && stageBounds.top < midpoint && stageBounds.bottom > midpoint;
-      const target = travel > 0 ? clampProgress(-sectionTop / travel) : 0;
+      const target = travel > 0 ? clampProgress(-section.getBoundingClientRect().top / travel) : 0;
       const previous = displayedProgress ?? target;
       const elapsed = Math.min(now - previousFrameTime, 32);
       const gap = target - previous;
@@ -89,28 +88,39 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       const woodProgress = clampProgress((progress - woodStart) / (1 - woodStart));
       const dustProgress = clampProgress((progress - dustStart) / (dustEnd - dustStart));
       const dustActive = dustProgress > 0 && dustProgress < 1;
-      const dustOpacity = 0.36 * easeBetween(dustProgress, 0.06, 0.38) * (1 - easeBetween(dustProgress, 0.57, 0.97));
-      const veil = 0.25 * easeBetween(transition, 0, 0.43) * (1 - easeBetween(transition, 0.57, 1));
+      const dustOriginOffset = (0.4 + 0.6 * easeBetween(dustProgress, 0.03, 0.18)) * (1 - easeBetween(dustProgress, 0.25, 0.5));
+      const veil = 0.88 * easeBetween(transition, 0.16, 0.48) * (1 - easeBetween(transition, 0.52, 0.84));
       const woodTitleOpacity = easeBetween(transition, 0.76, 1) * (1 - easeBetween(woodProgress, 0.73, 0.91));
 
-      section.style.setProperty('--wood-reveal', `${-16 + 132 * easeBetween(transition, 0.08, 0.92)}%`);
+      section.style.setProperty('--wood-opacity', String(easeBetween(transition, 0.46, 0.54)));
       section.style.setProperty('--dust-veil', String(veil));
-      section.style.setProperty('--dust-opacity', String(dustOpacity));
-      section.style.setProperty('--dust-drift', `${30 - dustProgress * 60}%`);
+      section.style.setProperty('--dust-opacity', dustActive ? '1' : '0');
+      section.style.setProperty('--dust-origin-offset', String(dustOriginOffset));
       section.style.setProperty('--wood-title-opacity', String(woodTitleOpacity));
       section.style.setProperty('--metal-title-opacity', String(1 - easeBetween(transition, 0, 0.42)));
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
 
       if (dustActive) dustFrames.paint(dustProgress);
-      if (sectionTop < midpoint && !wood.hasAttribute('src')) {
-        wood.src = '/videos/laserx-wood-cleaning.mp4';
+      if (narrowViewport.matches) {
+        if (transition < 1) metalFrames.paint(metalProgress);
+        if (transition > 0) woodFrames.paint(woodProgress);
+      } else {
+        if (transition < 1) seekVideo(metal, metalProgress);
+        if (transition > 0) seekVideo(wood, woodProgress);
       }
-      setActiveVideo(sceneVisible ? (transition < 0.5 ? metal : wood) : null);
     };
 
     const loadMedia = () => {
       if (isStatic || !isNear) return;
-      if (!metal.hasAttribute('src')) metal.src = '/videos/laserx-scroll-cleaning.mp4';
+      if (narrowViewport.matches) {
+        metalFrames.preload();
+        woodFrames.preload();
+      } else if (!wood.hasAttribute('src')) {
+        metal.preload = 'auto';
+        metal.src = metalSource;
+        wood.preload = 'auto';
+        wood.src = woodSource;
+      }
       dustFrames.preload();
     };
 
@@ -119,25 +129,19 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       isStatic = reducedMotion.matches || Boolean(connection?.saveData) ||
         ['slow-2g', '2g'].includes(connection?.effectiveType ?? '');
       section.dataset.static = String(isStatic);
+      section.dataset.media = narrowViewport.matches ? 'frames' : 'video';
       if (isStatic) {
-        setActiveVideo(null);
+        wood.pause();
+        metal.pause();
       } else {
         loadMedia();
         scheduleUpdate();
       }
     };
 
-    const syncVisibility = () => {
-      if (document.hidden) setActiveVideo(null);
-      else scheduleUpdate();
-    };
-
     const observer = new IntersectionObserver(([entry]) => {
       isNear = entry.isIntersecting;
-      if (!isNear) {
-        displayedProgress = undefined;
-        setActiveVideo(null);
-      }
+      if (!isNear) displayedProgress = undefined;
       loadMedia();
       scheduleUpdate();
     }, { rootMargin: `${window.innerHeight}px 0px` });
@@ -146,8 +150,12 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     observer.observe(section);
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
     window.addEventListener('resize', scheduleUpdate);
-    document.addEventListener('visibilitychange', syncVisibility);
+    for (const video of [wood, metal]) {
+      video.addEventListener('loadedmetadata', scheduleUpdate);
+      video.addEventListener('seeked', scheduleUpdate);
+    }
     reducedMotion.addEventListener('change', syncMode);
+    narrowViewport.addEventListener('change', syncMode);
     connection?.addEventListener('change', syncMode);
 
     return () => {
@@ -156,16 +164,28 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', scheduleUpdate);
       window.removeEventListener('resize', scheduleUpdate);
-      document.removeEventListener('visibilitychange', syncVisibility);
-      setActiveVideo(null);
+      for (const video of [wood, metal]) {
+        video.removeEventListener('loadedmetadata', scheduleUpdate);
+        video.removeEventListener('seeked', scheduleUpdate);
+      }
       reducedMotion.removeEventListener('change', syncMode);
+      narrowViewport.removeEventListener('change', syncMode);
       connection?.removeEventListener('change', syncMode);
     };
   }, []);
 
   return <section ref={sectionRef} id="proses" className={styles.section} aria-labelledby="cleaning-film-title" aria-describedby="cleaning-film-disclosure">
     <div ref={stageRef} className={styles.stage}>
-      <video ref={metalRef} className={styles.metalVideo} poster="/images/laserx-scroll-poster.webp" preload="auto" muted playsInline aria-hidden="true" />
+      <video
+        ref={metalRef}
+        className={styles.video}
+        poster="/images/laserx-scroll-poster.webp"
+        preload="none"
+        muted
+        playsInline
+        aria-hidden="true"
+      />
+      <canvas ref={metalCanvasRef} className={styles.video} width={512} height={288} aria-hidden="true" />
       <div className={styles.content}>
         <h2 id="cleaning-film-title" className={styles.heading}>{copy.filmTitle}</h2>
         <div className={styles.scrollCue} aria-hidden="true">
@@ -175,7 +195,8 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       </div>
       <div className={styles.woodScene}>
         <div className={styles.woodMedia} aria-hidden="true">
-          <video ref={woodRef} poster="/images/laserx-wood-poster.webp" preload="auto" muted playsInline />
+          <video ref={woodRef} poster="/images/laserx-wood-poster.webp" preload="none" muted playsInline />
+          <canvas ref={woodCanvasRef} width={400} height={600} />
         </div>
         <div className={styles.woodCaption}>
           <h2 className={styles.heading}>{copy.woodFilmTitle}</h2>

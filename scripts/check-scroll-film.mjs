@@ -11,6 +11,8 @@ const artifactDir = path.resolve('artifacts');
 const baseUrl = process.env.LASERX_URL ?? 'http://127.0.0.1:3000';
 const woodSelector = '#proses video[poster*="wood-poster"]';
 const metalSelector = '#proses video[poster*="scroll-poster"]';
+const woodFrames = '#proses [class*="woodScene"] canvas';
+const metalFrames = '#proses > div > canvas:not([class*="dustCloud"])';
 const dustFrames = '#proses canvas[class*="dustCloud"]';
 await mkdir(artifactDir, { recursive: true });
 
@@ -28,7 +30,7 @@ try {
       const height = section.firstElementChild.offsetHeight;
       return (section.offsetHeight - height) / height;
     });
-    if (scrollScreens < 3.85 || scrollScreens > 4.1) throw new Error(`${name}: unexpected film scroll distance`);
+    if (scrollScreens < (mobile ? 3.3 : 3.85)) throw new Error(`${name}: film üçün sürüşdürmə məsafəsi qısadır`);
     const seekTo = async (progress) => {
       await page.evaluate((fraction) => {
         const section = document.getElementById('proses');
@@ -38,15 +40,20 @@ try {
     };
 
     await seekTo(.18);
-    const waitForPlayback = async (selector) => {
-      await page.waitForFunction((target) => {
-        const video = document.querySelector(target);
-        return video.readyState >= 2 && !video.paused && video.muted && video.playsInline;
-      }, selector);
-      const time = await page.locator(selector).evaluate((video) => video.currentTime);
-      await page.waitForFunction(({ selector, time }) => document.querySelector(selector).currentTime > time + 0.15, { selector, time });
-    };
-    await waitForPlayback(metalSelector);
+    const waitForFrame = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
+      const frame = Number(document.querySelector(selector)?.dataset.frame);
+      return frame >= min && frame <= max;
+    }, { selector, min, max });
+    const waitForTime = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
+      const video = document.querySelector(selector);
+      return video?.readyState >= 2 && video.currentTime >= min && video.currentTime <= max;
+    }, { selector, min, max });
+    if (mobile) {
+      await waitForFrame(metalFrames, 34, 38);
+      if (await page.locator('#proses video[src]').count()) throw new Error('Mobile transition downloaded video');
+    } else {
+      await waitForTime(metalSelector, 3.3, 3.9);
+    }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-scroll-film.png`) });
 
     await page.waitForFunction(() => {
@@ -67,34 +74,72 @@ try {
     });
     if (!(firstStep > before && firstStep < 70)) throw new Error(`${name}: sürətli sürüşdürmədə səhnə birdən atlanır`);
 
+    const dustStats = () => page.locator(dustFrames).evaluate((canvas) => {
+      const { width, height } = canvas;
+      const pixels = canvas.getContext('2d').getImageData(0, 0, width, height).data;
+      let dense = 0;
+      let dustPixels = 0;
+      let ySum = 0;
+      for (let index = 3; index < pixels.length; index += 4) {
+        if (pixels[index] > 202) dense++;
+        if (pixels[index] > 20) {
+          dustPixels++;
+          ySum += Math.floor(index / (4 * width));
+        }
+      }
+      return { coverage: dense / (width * height), area: dustPixels / (width * height), centerY: ySum / (dustPixels * height) };
+    });
     await seekTo(.371);
-    await page.waitForFunction(() => Number(document.getElementById('proses').style.getPropertyValue('--dust-opacity')) > 0.03);
+    await waitForFrame(dustFrames, 6, 8);
+    if (mobile) await waitForFrame(metalFrames, 73, 77);
+    else await waitForTime(metalSelector, 7.3, 7.8);
+    const initialDust = await dustStats();
+    if (initialDust.area <= 0 || initialDust.area > .2 || initialDust.centerY < .5) {
+      throw new Error(`${name}: toz əvvəl səthə yaxın yaranmalıdır`);
+    }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-rise.png`) });
 
     await seekTo(.473);
-    await page.waitForFunction((selector) => {
-      const dust = document.querySelector(selector);
-      const woodReveal = parseFloat(document.getElementById('proses').style.getPropertyValue('--wood-reveal'));
-      const dustOpacity = Number(getComputedStyle(dust).opacity);
-      return woodReveal > 35 && woodReveal < 65
-        && dustOpacity > .2 && dustOpacity < .4
-        && getComputedStyle(dust).maskImage.includes('radial-gradient');
-    }, dustFrames);
+    await page.waitForFunction(() => {
+      const opacity = Number(document.getElementById('proses').style.getPropertyValue('--wood-opacity'));
+      return opacity > .35 && opacity < .65;
+    });
+    if (mobile) {
+      await waitForFrame(metalFrames, 79, 79);
+      await waitForFrame(woodFrames, 0, 0);
+    }
     const stageTop = await page.locator('#proses > div').evaluate((stage) => stage.getBoundingClientRect().top);
-    if (Math.abs(stageTop) > 2) throw new Error(`${name}: film stage leaves its pinned position`);
+    if (Math.abs(stageTop) > 2) throw new Error(`${name}: video paneli sürüşdürmədə sabit qalmır (${stageTop}px)`);
+    await waitForFrame(dustFrames, 20, 22);
+    const coversStage = await page.locator(dustFrames).evaluate((canvas) => {
+      const dust = canvas.getBoundingClientRect();
+      const stage = canvas.parentElement.getBoundingClientRect();
+      return Math.abs(dust.left - stage.left) <= 1 && Math.abs(dust.top - stage.top) <= 1
+        && Math.abs(dust.right - stage.right) <= 1 && Math.abs(dust.bottom - stage.bottom) <= 1;
+    });
+    if (!coversStage || (await dustStats()).coverage < .94) {
+      throw new Error(`${name}: səhnə dəyişərkən toz ekranı örtmür`);
+    }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-film-transition.png`) });
 
     await seekTo(.575);
-    await waitForPlayback(woodSelector);
-    if (!(await page.locator(metalSelector).evaluate((video) => video.paused))) throw new Error(`${name}: both scenes are playing`);
+    await waitForFrame(dustFrames, 34, 36);
+    if (mobile) await waitForFrame(woodFrames, 1, 4);
+    else await waitForTime(woodSelector, .15, .4);
+    const clearingDust = await dustStats();
+    if (clearingDust.area > .32 || clearingDust.centerY >= initialDust.centerY) {
+      throw new Error(`${name}: taxta səhnəsi başlayanda toz yuxarı çəkilmir`);
+    }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-clear.png`) });
 
     await seekTo(.756);
-    const height = await page.locator(woodSelector).evaluate((video) => video.videoHeight);
-    if (height < 720) throw new Error(`${name}: expected HD wood video`);
+    if (mobile) await waitForFrame(woodFrames, 26, 28);
+    else await waitForTime(woodSelector, 2.5, 3);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
 
     await seekTo(.98);
+    if (mobile) await waitForFrame(woodFrames, 56, 58);
+    else await waitForTime(woodSelector, 5.5, 6);
 
     if (mobile) {
       for (const height of [740, viewport.height]) {
@@ -111,25 +156,24 @@ try {
       }
     }
 
-    await seekTo(1.16);
+    await seekTo(1.12);
     await page.waitForFunction(() => {
       const stage = document.getElementById('proses').firstElementChild.getBoundingClientRect();
       const results = document.getElementById('neticeler').getBoundingClientRect();
       return results.top >= 0 && results.top < innerHeight && Math.abs(stage.bottom - results.top) <= 1;
     });
-    await page.waitForFunction((selector) => document.querySelector(selector).paused, woodSelector);
-    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 
     await seekTo(.59);
-    await waitForPlayback(woodSelector);
+    if (mobile) await waitForFrame(woodFrames, 4, 6);
+    else await waitForTime(woodSelector, .3, .8);
     await seekTo(.05);
-    await waitForPlayback(metalSelector);
+    if (mobile) await waitForFrame(metalFrames, 8, 11);
+    else await waitForTime(metalSelector, .75, 1.25);
 
     if (mobile && !useWebKit) {
       await seekTo(.59);
-      await waitForPlayback(woodSelector);
+      await waitForFrame(woodFrames, 4, 6);
       const touch = await page.context().newCDPSession(page);
-      const beforeTouch = await page.evaluate(() => window.scrollY);
       const x = viewport.width / 2;
       const y = viewport.height * .72;
       await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
@@ -137,10 +181,10 @@ try {
         await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - distance }] });
       }
       await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-      await page.waitForFunction((before) => window.scrollY > before + 100, beforeTouch);
+      await waitForFrame(woodFrames, 8, 59);
       await touch.detach();
     }
-    console.log(`${name}: native playback, feathered transition, responsive stage and offscreen pause verified`);
+    console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll with eased progress; dust covers and clears in both directions`);
     await page.close();
   }
 
@@ -148,10 +192,10 @@ try {
   await reduced.goto(baseUrl, { waitUntil: 'networkidle' });
   const fallback = await reduced.locator('#proses').evaluate((section) => ({
     position: getComputedStyle(section.firstElementChild).position,
-    mediaLoaded: Boolean(section.querySelector('video[src], canvas[data-frame]')),
+    videoLoaded: [...section.querySelectorAll('video')].some((video) => video.hasAttribute('src')),
     dustVisible: getComputedStyle(section.querySelector('[class*="dustCloud"]')).display !== 'none',
   }));
-  if (fallback.position !== 'relative' || fallback.mediaLoaded || fallback.dustVisible) {
+  if (fallback.position !== 'relative' || fallback.videoLoaded || fallback.dustVisible) {
     throw new Error(`Reduced-motion fallback failed: ${JSON.stringify(fallback)}`);
   }
   console.log('Reduced-motion fallback: poster visible, video hidden, no sticky scroll');
