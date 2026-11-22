@@ -134,12 +134,12 @@ try {
 
     await seekTo(.756);
     if (mobile) await waitForFrame(woodFrames, 26, 28);
-    else await waitForTime(woodSelector, 2.5, 3);
+    else await waitForTime(woodSelector, 2.05, 2.4);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
 
     await seekTo(.98);
     if (mobile) await waitForFrame(woodFrames, 56, 58);
-    else await waitForTime(woodSelector, 5.5, 6);
+    else await waitForTime(woodSelector, 4.45, 4.85);
 
     if (mobile) {
       for (const height of [740, viewport.height]) {
