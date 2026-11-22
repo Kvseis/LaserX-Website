@@ -1,10 +1,9 @@
-type FrameSequence = 'metal-mobile' | 'metal-wide' | 'wood-mobile' | 'wood-wide' | 'dust';
+const framesPerSheet = 20;
+const columns = 5;
+const frameCount = 40;
 
-export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: FrameSequence, frameCount: number, onReady: () => void) {
+export function createDustFrames(canvas: HTMLCanvasElement, onReady: () => void) {
   const { width, height } = canvas;
-  const isDust = scene === 'dust';
-  const framesPerSheet = isDust ? 20 : 12;
-  const columns = isDust ? 5 : 4;
   const sheets = new Map<number, { image: HTMLImageElement; ready: boolean }>();
   let context: CanvasRenderingContext2D | null = null;
   let painted = -1;
@@ -14,7 +13,7 @@ export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: FrameSe
     const image = new Image();
     const sheet = { image, ready: false };
     sheets.set(index, sheet);
-    image.src = `/images/scroll-film/${scene}-${index}.webp`;
+    image.src = `/images/scroll-film/dust-${index}.webp`;
     void image.decode().then(() => {
       sheet.ready = true;
       onReady();
@@ -44,9 +43,9 @@ export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: FrameSe
       const sheet = sheets.get(sheetIndex);
       if (!sheet?.ready) return;
 
-      context ??= canvas.getContext('2d', { alpha: isDust });
+      context ??= canvas.getContext('2d');
       if (!context) return;
-      if (isDust) context.clearRect(0, 0, width, height);
+      context.clearRect(0, 0, width, height);
       context.drawImage(sheet.image, (tile % columns) * width, Math.floor(tile / columns) * height, width, height, 0, 0, width, height);
       canvas.dataset.frame = String(frame);
       painted = frame;

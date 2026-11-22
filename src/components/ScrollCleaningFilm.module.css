@@ -13,8 +13,8 @@
   background: #f7f4eb url('/images/laserx-scroll-poster.webp') center / cover no-repeat;
 }
 
-.metalFrames,
-.woodMedia canvas {
+.metalVideo,
+.woodMedia video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -26,8 +26,8 @@
 .woodScene,
 .dustVeil,
 .dustCloud,
-.metalFrames,
-.woodMedia canvas,
+.metalVideo,
+.woodMedia video,
 .scrollCue {
   display: none;
 }
@@ -90,7 +90,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .section:not([data-static='true']) { height: calc(var(--stage-height) + var(--scroll-travel)); }
   .section:not([data-static='true']) .stage { position: sticky; top: 0; isolation: isolate; }
-  .section[data-static='false'] canvas[data-frame],
+  .section[data-static='false'] video[src],
+  .section[data-static='false'] .dustCloud[data-frame],
   .section[data-static='false'] .woodScene,
   .section[data-static='false'] .dustVeil { display: block; }
   .section[data-static='false'] .scrollCue { display: grid; }
@@ -147,7 +148,7 @@
 
 @media (max-aspect-ratio: 4/3) {
   .woodMedia { background-position: 69% center; }
-  .woodMedia canvas { object-position: 69% center; }
+  .woodMedia video { object-position: 69% center; }
 }
 
 @media (max-width: 760px) {
@@ -163,13 +164,13 @@
     background: url('/images/laserx-scroll-poster.webp') 61% center / cover no-repeat;
   }
   .woodMedia { background-position: 76% center; }
-  .woodMedia canvas { object-position: center; }
+  .woodMedia video { object-position: 76% center; }
   .dustCloud { mask-image: radial-gradient(ellipse 66% 46% at 55% 73%, #000 15%, transparent 90%); }
-  .metalFrames {
+  .metalVideo {
     top: 44%;
     bottom: auto;
     height: 56%;
-    object-position: center;
+    object-position: 61% center;
   }
   .content {
     width: calc(100% - 36px);

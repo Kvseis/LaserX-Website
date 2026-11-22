@@ -9,8 +9,8 @@ const browser = useWebKit ? await webkit.launch() : await chromium.launch({
 });
 const artifactDir = path.resolve('artifacts');
 const baseUrl = process.env.LASERX_URL ?? 'http://127.0.0.1:3000';
-const woodSelector = '#proses [class*="woodMedia"] canvas';
-const metalSelector = '#proses canvas[class*="metalFrames"]';
+const woodSelector = '#proses video[poster*="wood-poster"]';
+const metalSelector = '#proses video[poster*="scroll-poster"]';
 const dustFrames = '#proses canvas[class*="dustCloud"]';
 await mkdir(artifactDir, { recursive: true });
 
@@ -38,13 +38,15 @@ try {
     };
 
     await seekTo(.18);
-    const waitForTime = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
-      const canvas = document.querySelector(selector);
-      const frame = Number(canvas?.dataset.frame);
-      const time = selector.includes('woodMedia') ? frame / 71 * 4.833 : frame / 119 * 7.958;
-      return time >= min && time <= max;
-    }, { selector, min, max });
-    await waitForTime(metalSelector, 3.3, 3.9);
+    const waitForPlayback = async (selector) => {
+      await page.waitForFunction((target) => {
+        const video = document.querySelector(target);
+        return video.readyState >= 2 && !video.paused && video.muted && video.playsInline;
+      }, selector);
+      const time = await page.locator(selector).evaluate((video) => video.currentTime);
+      await page.waitForFunction(({ selector, time }) => document.querySelector(selector).currentTime > time + 0.15, { selector, time });
+    };
+    await waitForPlayback(metalSelector);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-scroll-film.png`) });
 
     await page.waitForFunction(() => {
@@ -66,7 +68,7 @@ try {
     if (!(firstStep > before && firstStep < 70)) throw new Error(`${name}: sürətli sürüşdürmədə səhnə birdən atlanır`);
 
     await seekTo(.371);
-    await waitForTime(metalSelector, 7.3, 7.8);
+    await page.waitForFunction(() => Number(document.getElementById('proses').style.getPropertyValue('--dust-opacity')) > 0.03);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-rise.png`) });
 
     await seekTo(.473);
@@ -83,18 +85,16 @@ try {
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-film-transition.png`) });
 
     await seekTo(.575);
-    await waitForTime(woodSelector, .15, .4);
+    await waitForPlayback(woodSelector);
+    if (!(await page.locator(metalSelector).evaluate((video) => video.paused))) throw new Error(`${name}: both scenes are playing`);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-clear.png`) });
 
     await seekTo(.756);
-    await waitForTime(woodSelector, 2.1, 2.4);
-    const dimensions = await page.locator(woodSelector).evaluate(({ width, height }) => [width, height]);
-    if (dimensions.join('x') !== (mobile ? '432x864' : '1024x576')) throw new Error(`${name}: incorrect frame resolution`);
-    if (await film.locator('video').count()) throw new Error(`${name}: scroll still relies on video seeking`);
+    const height = await page.locator(woodSelector).evaluate((video) => video.videoHeight);
+    if (height < 720) throw new Error(`${name}: expected HD wood video`);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
 
     await seekTo(.98);
-    await waitForTime(woodSelector, 4.5, 4.85);
 
     if (mobile) {
       for (const height of [740, viewport.height]) {
@@ -111,22 +111,25 @@ try {
       }
     }
 
-    await seekTo(1.12);
+    await seekTo(1.16);
     await page.waitForFunction(() => {
       const stage = document.getElementById('proses').firstElementChild.getBoundingClientRect();
       const results = document.getElementById('neticeler').getBoundingClientRect();
       return results.top >= 0 && results.top < innerHeight && Math.abs(stage.bottom - results.top) <= 1;
     });
+    await page.waitForFunction((selector) => document.querySelector(selector).paused, woodSelector);
+    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 
     await seekTo(.59);
-    await waitForTime(woodSelector, .3, .8);
+    await waitForPlayback(woodSelector);
     await seekTo(.05);
-    await waitForTime(metalSelector, .75, 1.25);
+    await waitForPlayback(metalSelector);
 
     if (mobile && !useWebKit) {
       await seekTo(.59);
-      await waitForTime(woodSelector, .3, .8);
+      await waitForPlayback(woodSelector);
       const touch = await page.context().newCDPSession(page);
+      const beforeTouch = await page.evaluate(() => window.scrollY);
       const x = viewport.width / 2;
       const y = viewport.height * .72;
       await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
@@ -134,10 +137,10 @@ try {
         await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - distance }] });
       }
       await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-      await waitForTime(woodSelector, .85, 4.875);
+      await page.waitForFunction((before) => window.scrollY > before + 100, beforeTouch);
       await touch.detach();
     }
-    console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll with responsive frames and feathered transition verified in both directions`);
+    console.log(`${name}: native playback, feathered transition, responsive stage and offscreen pause verified`);
     await page.close();
   }
 
@@ -145,10 +148,10 @@ try {
   await reduced.goto(baseUrl, { waitUntil: 'networkidle' });
   const fallback = await reduced.locator('#proses').evaluate((section) => ({
     position: getComputedStyle(section.firstElementChild).position,
-    framesLoaded: Boolean(section.querySelector('canvas[data-frame]')),
+    mediaLoaded: Boolean(section.querySelector('video[src], canvas[data-frame]')),
     dustVisible: getComputedStyle(section.querySelector('[class*="dustCloud"]')).display !== 'none',
   }));
-  if (fallback.position !== 'relative' || fallback.framesLoaded || fallback.dustVisible) {
+  if (fallback.position !== 'relative' || fallback.mediaLoaded || fallback.dustVisible) {
     throw new Error(`Reduced-motion fallback failed: ${JSON.stringify(fallback)}`);
   }
   console.log('Reduced-motion fallback: poster visible, video hidden, no sticky scroll');
