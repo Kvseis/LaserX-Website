@@ -22,15 +22,15 @@ try {
         throw Error(`${locale}: heading or language missing`);
       }
       const heroImage = page.locator('main section').first().locator('img').first();
-      if (!(await heroImage.getAttribute('src')).includes('about-workshop-v2')) throw Error('New hero image missing');
+      if (!(await heroImage.getAttribute('src')).includes('about-hero.webp')) throw Error('Workshop image missing');
       for (const href of ['tel:+994553900028', 'https://wa.me/994553900028']) {
-        if (await page.locator(`main section:first-child a[href="${href}"]`).count() !== 1) throw Error('Hero contact action missing');
+        if (await page.locator(`main section:last-child a[href="${href}"]`).count() !== 1) throw Error('Contact banner action missing');
       }
       const headingLines = await page.locator('h1').evaluate((heading) => heading.clientHeight / parseFloat(getComputedStyle(heading).lineHeight));
       if (headingLines > 3.1) throw Error(`${locale}/${width}: hero heading exceeds three lines`);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
       if (overflow > 1) throw Error(`${locale}/${width}: overflow ${overflow}`);
-      const clippedContent = await page.locator('main h1, main h2, main h3, main p, [class*="materialLine"] > span').evaluateAll((elements) => elements.filter((element) => {
+      const clippedContent = await page.locator('main h1, main h2, main h3, main p').evaluateAll((elements) => elements.filter((element) => {
         const rect = element.getBoundingClientRect();
         return rect.left < -1 || rect.right > innerWidth + 1;
       }).map((element) => element.textContent));
@@ -67,7 +67,7 @@ try {
   const interactionErrors = [];
   interactionPage.on('pageerror', (error) => interactionErrors.push(error.message));
   await interactionPage.goto(`${baseUrl}/about`, { waitUntil: 'networkidle' });
-  await interactionPage.locator('[data-about-text]').scrollIntoViewIfNeeded();
+  await interactionPage.locator('[data-about-text]').evaluate((heading) => heading.scrollIntoView({ block: 'center', behavior: 'instant' }));
   await interactionPage.waitForFunction(() => [...document.querySelectorAll('[data-about-word]')].every((word) => Number(getComputedStyle(word).opacity) > 0.95));
   const surface = interactionPage.locator('[class*="surfaceGrid"] > a').first();
   await surface.scrollIntoViewIfNeeded();

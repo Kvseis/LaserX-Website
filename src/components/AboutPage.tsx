@@ -21,14 +21,10 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
     <AboutReveal>
       <section className={styles.hero} aria-labelledby="about-title">
         <div className={styles.heroFrame}>
-          <Image className={styles.heroImage} src="/images/about-workshop-v2.webp" fill preload sizes="100vw" alt={about.heroAlt} />
+          <Image className={styles.heroImage} src="/images/about-hero.webp" fill preload sizes="100vw" alt={about.heroAlt} />
           <div className={styles.heroContent}>
             <h1 id="about-title">{copy.nav.about}</h1>
             <p>{about.description}</p>
-            <div className={styles.actions}>
-              <a className={styles.primary} href={whatsapp}><WhatsAppLogo />{copy.nav.whatsapp}<ArrowUpRight aria-hidden="true" /></a>
-              <a className={styles.secondary} href={phone}><PhoneIcon />{copy.nav.call}</a>
-            </div>
           </div>
           <div className={styles.heroBottom}>
             <nav className={styles.breadcrumb} aria-label={copy.nav.about}>
@@ -44,7 +40,6 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
           <p className={styles.eyebrow}>{about.missionTitle}</p>
           <h2 className={styles.statement} id="principles-title" data-about-text>
             {about.missionText.split(' ').map((word, index) => <span key={index} data-about-word>{word}{' '}</span>)}
-            <span className={styles.inlineImage} aria-hidden="true"><Image src="/images/about-hero.webp" fill sizes="100px" alt="" /></span>
           </h2>
           <div className={styles.values}>
             {about.values.map((item, index) => {
@@ -62,7 +57,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         <div className={styles.container}>
           <div className={styles.story}>
             <div className={styles.storyImage} data-about-media>
-              <Image src="/images/about-craft-v2.webp" fill sizes="(max-width: 760px) 92vw, 46vw" alt={about.storyAlt} />
+              <Image src="/images/about-restoration.webp" fill sizes="(max-width: 760px) 92vw, 46vw" alt={about.storyAlt} />
             </div>
             <div className={styles.storyCopy}>
               <p className={styles.eyebrow}>{about.storyLabel}</p>
@@ -110,7 +105,6 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
             </a>)}
           </div>
           <a className={styles.textLink} href={`${sitePath(locale)}#xidmetler`}>{about.servicesLink}<ArrowUpRight size={22} aria-hidden="true" /></a>
-          <div className={styles.materialLine} aria-hidden="true">{about.surfaces.map((item) => <span key={item.title}>{item.title}<i /></span>)}</div>
         </div>
       </section>
 
