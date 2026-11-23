@@ -1,4 +1,5 @@
 import { Manrope } from 'next/font/google';
+import Image from 'next/image';
 import type { SiteCopy } from '@/lib/messages/az';
 import { whatsapp } from '@/lib/contact';
 import styles from './FaqSection.module.css';
@@ -12,6 +13,17 @@ export default function FaqSection({ copy }: { copy: SiteCopy['faq'] }) {
       <div className={styles.intro}>
         <h2 id="faq-title">{copy.title}</h2>
         <p>{copy.intro}</p>
+        <div className={styles.visual} aria-hidden="true">
+          <Image
+            src="/images/faq-metal-question.webp"
+            alt=""
+            width={1000}
+            height={667}
+            sizes="(max-width: 760px) 92vw, 38vw"
+            data-source="illustration"
+            data-subject="metal question mark"
+          />
+        </div>
         <a href={whatsapp}>{copy.contact}<ButtonArrow /></a>
       </div>
       <div className={styles.questions}>
