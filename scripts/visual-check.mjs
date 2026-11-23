@@ -109,23 +109,34 @@ async function verifyViewport(name, viewport) {
   }
 
   const faq = page.locator('#suallar');
-  const questions = faq.locator('dl dt:visible');
-  const answers = faq.locator('dl dd:visible');
-  if (await questions.count() !== 6 || await answers.count() !== 6) {
-    throw new Error(`${name}: bütün suallar və cavablar görünməlidir`);
+  const questions = faq.locator('details');
+  const answers = questions.locator('p');
+  if (await questions.count() !== 6 || await faq.locator('details[open]').count() !== 0
+    || await answers.first().isVisible()) {
+    throw new Error(`${name}: altı sual əvvəlcə bağlı olmalıdır`);
   }
-  const firstQuestion = await questions.first().boundingBox();
-  const firstAnswer = await answers.first().boundingBox();
-  if (mobile ? firstAnswer.y <= firstQuestion.y : firstAnswer.x <= firstQuestion.x) {
-    throw new Error(`${name}: sual və cavab düzülüşü yanlışdır`);
+  const summary = questions.first().locator('summary');
+  if (mobile) {
+    await summary.tap();
+  } else {
+    await summary.focus();
+    await summary.press('Enter');
   }
-  const faqImage = faq.locator('img');
-  await faqImage.scrollIntoViewIfNeeded();
-  await faqImage.evaluate((image) => image.decode());
+  await answers.first().waitFor({ state: 'visible' });
+  const answerBelow = await questions.first().evaluate((item) => {
+    const questionBox = item.querySelector('summary').getBoundingClientRect();
+    const answerBox = item.querySelector('p').getBoundingClientRect();
+    return answerBox.top >= questionBox.bottom - 1 && Math.abs(answerBox.left - questionBox.left) <= 1;
+  });
+  if (!answerBelow) {
+    throw new Error(`${name}: cavab sualın altında açılmalıdır`);
+  }
   await faq.screenshot({
     path: path.join(artifactDir, `laserx-${name}-faq.png`),
     style: '.site-header { visibility: hidden; }',
   });
+  await (mobile ? summary.tap() : summary.press('Space'));
+  if (await questions.first().getAttribute('open') !== null) throw new Error(`${name}: sual bağlanmır`);
 
   if ((await page.locator('img[src*="images.jpg"]').count()) < 2) {
     throw new Error(`${name}: images.jpg WhatsApp loqoları tam inteqrasiya edilməyib`);

@@ -31,7 +31,9 @@ Use TypeScript and two-space indentation. Name components with PascalCase and fu
 No unit-test framework or coverage threshold is configured. Before submitting, run type checking, a production build, and the browser smoke test. Manually review generated screenshots in `artifacts/` and test keyboard focus plus reduced-motion behavior when interaction code changes.
 
 ## Commit & Pull Request Guidelines
-Use concise imperative commits, optionally prefixed with `feat:`, `fix:`, or `docs:`. Pull requests should explain the change, report verification commands, link relevant issues, and include desktop/mobile screenshots for visual changes.
+After each completed change, run the relevant checks, commit the changes for the current task, and push the commit to the branch's GitHub upstream before reporting completion. Use `git log` to match the repository's recent commit titles and write a concise English subject that describes the change. Include only the files and hunks for the current task in the commit.
+
+Pull requests should explain the change, report verification commands, link relevant issues, and include desktop/mobile screenshots for visual changes.
 
 ## Security & Configuration
 Keep credentials out of Git. Store secrets in ignored `.env*` files and never expose private values through `NEXT_PUBLIC_` variables.
