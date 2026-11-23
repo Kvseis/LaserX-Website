@@ -10,27 +10,30 @@ const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 
 export default function FaqSection({ copy }: { copy: SiteCopy['faq'] }) {
   return <section id="suallar" className={`${styles.section} ${manrope.className}`} aria-labelledby="faq-title">
     <div className={styles.layout}>
-      <div className={styles.intro}>
-        <h2 id="faq-title">{copy.title}</h2>
-        <p>{copy.intro}</p>
-        <div className={styles.visual} aria-hidden="true">
+      <header className={styles.intro}>
+        <div className={styles.heading}>
+          <h2 id="faq-title">{copy.title}</h2>
           <Image
+            className={styles.visual}
             src="/images/faq-metal-question.webp"
             alt=""
             width={1000}
             height={667}
-            sizes="(max-width: 760px) 92vw, 38vw"
+            sizes="(max-width: 760px) 96px, 160px"
             data-source="illustration"
             data-subject="metal question mark"
           />
         </div>
+        <p>{copy.intro}</p>
+      </header>
+      <dl className={styles.questions}>
+        {copy.items.map(([question, answer]) => <div className={styles.item} key={question}>
+          <dt>{question}</dt>
+          <dd>{answer}</dd>
+        </div>)}
+      </dl>
+      <div className={styles.contact}>
         <a href={whatsapp}>{copy.contact}<ButtonArrow /></a>
-      </div>
-      <div className={styles.questions}>
-        {copy.items.map(([question, answer]) => <details className={styles.item} key={question}>
-          <summary><span>{question}</span><i aria-hidden="true" /></summary>
-          <p>{answer}</p>
-        </details>)}
       </div>
     </div>
   </section>;

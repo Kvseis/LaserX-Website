@@ -109,14 +109,23 @@ async function verifyViewport(name, viewport) {
   }
 
   const faq = page.locator('#suallar');
-  if (await faq.locator('details').count() !== 6) throw new Error(`${name}: suallar bölməsi natamamdır`);
-  const firstQuestion = faq.locator('summary').first();
-  await firstQuestion.focus();
-  await firstQuestion.press('Enter');
-  if (!await faq.locator('details').first().locator('p').isVisible()) throw new Error(`${name}: sual klaviatura ilə açılmır`);
-  await faq.screenshot({ path: path.join(artifactDir, `laserx-${name}-faq.png`) });
-  await firstQuestion.press('Space');
-  if (await faq.locator('details').first().getAttribute('open') !== null) throw new Error(`${name}: sual klaviatura ilə bağlanmır`);
+  const questions = faq.locator('dl dt:visible');
+  const answers = faq.locator('dl dd:visible');
+  if (await questions.count() !== 6 || await answers.count() !== 6) {
+    throw new Error(`${name}: bütün suallar və cavablar görünməlidir`);
+  }
+  const firstQuestion = await questions.first().boundingBox();
+  const firstAnswer = await answers.first().boundingBox();
+  if (mobile ? firstAnswer.y <= firstQuestion.y : firstAnswer.x <= firstQuestion.x) {
+    throw new Error(`${name}: sual və cavab düzülüşü yanlışdır`);
+  }
+  const faqImage = faq.locator('img');
+  await faqImage.scrollIntoViewIfNeeded();
+  await faqImage.evaluate((image) => image.decode());
+  await faq.screenshot({
+    path: path.join(artifactDir, `laserx-${name}-faq.png`),
+    style: '.site-header { visibility: hidden; }',
+  });
 
   if ((await page.locator('img[src*="images.jpg"]').count()) < 2) {
     throw new Error(`${name}: images.jpg WhatsApp loqoları tam inteqrasiya edilməyib`);
