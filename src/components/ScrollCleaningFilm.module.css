@@ -154,7 +154,6 @@
     background: url('/images/laserx-scroll-poster.webp') 61% center / cover no-repeat;
   }
   .woodMedia canvas { object-position: 32% center; }
-  .dustCloud { transform: translate(calc(-14% * var(--dust-origin-offset, 0)), calc(8% * var(--dust-origin-offset, 0))); }
   .video {
     top: 44%;
     bottom: auto;

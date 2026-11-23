@@ -36,7 +36,10 @@ export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: 'wood' 
       context ??= canvas.getContext('2d', { alpha: scene === 'dust' });
       if (!context) return;
       if (scene === 'dust') context.clearRect(0, 0, width, height);
-      context.drawImage(sheet, (tile % columns) * width, Math.floor(tile / columns) * height, width, height, 0, 0, width, height);
+      // Opaque WebP tiles can pick up neighbouring frames along their compressed edges.
+      const inset = scene === 'metal' ? 4 : 0;
+      context.drawImage(sheet, (tile % columns) * width + inset, Math.floor(tile / columns) * height + inset,
+        width - inset * 2, height - inset * 2, 0, 0, width, height);
       canvas.dataset.frame = String(frame);
       painted = frame;
 

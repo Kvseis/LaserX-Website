@@ -88,14 +88,12 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       const woodProgress = clampProgress((progress - woodStart) / (1 - woodStart));
       const dustProgress = clampProgress((progress - dustStart) / (dustEnd - dustStart));
       const dustActive = dustProgress > 0 && dustProgress < 1;
-      const dustOriginOffset = (0.4 + 0.6 * easeBetween(dustProgress, 0.03, 0.18)) * (1 - easeBetween(dustProgress, 0.25, 0.5));
       const veil = 0.88 * easeBetween(transition, 0.16, 0.48) * (1 - easeBetween(transition, 0.52, 0.84));
       const woodTitleOpacity = easeBetween(transition, 0.76, 1) * (1 - easeBetween(woodProgress, 0.73, 0.91));
 
       section.style.setProperty('--wood-opacity', String(easeBetween(transition, 0.46, 0.54)));
       section.style.setProperty('--dust-veil', String(veil));
       section.style.setProperty('--dust-opacity', dustActive ? '1' : '0');
-      section.style.setProperty('--dust-origin-offset', String(dustOriginOffset));
       section.style.setProperty('--wood-title-opacity', String(woodTitleOpacity));
       section.style.setProperty('--metal-title-opacity', String(1 - easeBetween(transition, 0, 0.42)));
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);

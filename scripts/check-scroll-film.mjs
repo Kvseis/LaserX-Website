@@ -85,6 +85,13 @@ try {
     });
     if (!(firstStep > before && firstStep < 70)) throw new Error(`${name}: sürətli sürüşdürmədə səhnə birdən atlanır`);
 
+    if (mobile) {
+      // These metal frames previously showed lines at the top of the image.
+      await seekTo(.26);
+      await waitForFrame(metalFrames, 51, 53);
+      await page.screenshot({ path: path.join(artifactDir, 'laserx-mobile-metal-edge.png') });
+    }
+
     const dustStats = () => page.locator(dustFrames).evaluate((canvas) => {
       const { width, height } = canvas;
       const pixels = canvas.getContext('2d').getImageData(0, 0, width, height).data;
@@ -109,6 +116,21 @@ try {
       throw new Error(`${name}: toz əvvəl səthə yaxın yaranmalıdır`);
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-rise.png`) });
+
+    // The expanding cloud must never expose the rectangular canvas boundary.
+    for (const progress of [.40, .42, .44]) {
+      await seekTo(progress);
+      const frame = Math.round((progress - .32) / (.60 - .32) * 39);
+      await waitForFrame(dustFrames, frame, frame);
+      const coversStage = await page.locator(dustFrames).evaluate((canvas) => {
+        const cloud = canvas.getBoundingClientRect();
+        const stage = canvas.parentElement.getBoundingClientRect();
+        return cloud.left <= stage.left && cloud.top <= stage.top
+          && cloud.right >= stage.right && cloud.bottom >= stage.bottom;
+      });
+      if (!coversStage) throw new Error(`${name}: expanding dust exposes its canvas edge at ${progress}`);
+      await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-expand-${Math.round(progress * 100)}.png`) });
+    }
 
     await seekTo(.473);
     await page.waitForFunction(() => {
