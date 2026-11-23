@@ -39,6 +39,17 @@ try {
       }, progress);
     };
 
+    if (await page.evaluate(() => CSS.supports('animation-timeline: view()') && CSS.supports('animation-range: entry 0% entry 100%'))) {
+      await film.evaluate(section => window.scrollTo({ top: window.scrollY + section.getBoundingClientRect().top - innerHeight / 2, behavior: 'instant' }));
+      await page.waitForFunction(() => {
+        const opacity = Number(getComputedStyle(document.querySelector('#proses > div')).opacity);
+        return opacity > .35 && opacity < .65;
+      });
+      await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-transition.png`) });
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+      await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.hero-copy')).opacity) > .95);
+    }
+
     await seekTo(.18);
     const waitForFrame = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
       const frame = Number(document.querySelector(selector)?.dataset.frame);

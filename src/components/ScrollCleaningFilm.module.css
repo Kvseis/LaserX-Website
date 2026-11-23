@@ -179,3 +179,25 @@
   .woodCaption .heading { font-size: clamp(32px, 9.4vw, 52px); }
   .scrollCue { width: 178px; margin-top: 23px; font-size: 9px; }
 }
+
+
+/* Reveal the first film frame over the sky as the stage enters the viewport. */
+@supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section { z-index: 1; background: transparent; view-timeline-name: --film-entry; }
+    .stage {
+      mask-image: linear-gradient(to bottom, transparent, #000 50%);
+      mask-size: 100% 200%;
+      mask-repeat: no-repeat;
+      animation: filmArrival 1s linear both;
+      animation-timeline: --film-entry;
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@keyframes filmArrival {
+  from { opacity: 0; mask-position: center top; }
+  65% { mask-position: center top; }
+  to { opacity: 1; mask-position: center bottom; }
+}

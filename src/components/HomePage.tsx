@@ -24,24 +24,26 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top" className="home-main">
-      <section className={`hero ${onest.className}`}>
-        <Image className="hero-sky" src="/images/hero-sky.webp" alt="" fill priority sizes="100vw" />
-        <div className="hero-shade" aria-hidden="true" />
-        <div className="hero-copy">
-          <h1><span>{home.headline[0]}</span>{' '}<em>{home.headline[1]}</em></h1>
-          <div className="hero-details">
-            <p>{home.description}</p>
-            <div className="hero-actions">
-              <a className="hero-book" href="#sifaris">{copy.footer.booking}<ButtonArrow /></a>
-              <a className="hero-equipment" href={`${whatsapp}?text=${encodeURIComponent(home.equipmentInquiry)}`}>
-                {home.equipmentCta}<ButtonArrow />
-              </a>
+      <div className="home-opening">
+        <section className={`hero ${onest.className}`}>
+          <Image className="hero-sky" src="/images/hero-sky.webp" alt="" fill priority sizes="100vw" />
+          <div className="hero-shade" aria-hidden="true" />
+          <div className="hero-copy">
+            <h1><span>{home.headline[0]}</span>{' '}<em>{home.headline[1]}</em></h1>
+            <div className="hero-details">
+              <p>{home.description}</p>
+              <div className="hero-actions">
+                <a className="hero-book" href="#sifaris">{copy.footer.booking}<ButtonArrow /></a>
+                <a className="hero-equipment" href={`${whatsapp}?text=${encodeURIComponent(home.equipmentInquiry)}`}>
+                  {home.equipmentCta}<ButtonArrow />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <ScrollCleaningFilm copy={home} />
+        <ScrollCleaningFilm copy={home} />
+      </div>
 
       <section className="results-section" id="neticeler"><div className="results wrap">
         <div className="results-intro">
