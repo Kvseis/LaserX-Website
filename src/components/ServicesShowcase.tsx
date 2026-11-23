@@ -154,7 +154,6 @@ export default function ServicesShowcase({ copy, technologyPath }: {
             <article className={styles.service} key={title}>
               <div className={styles.media}><Image src={serviceImages[index]} alt="" fill sizes="(max-width: 760px) 76vw, 310px" /></div>
               <div className={styles.cardTop}>
-                  <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
                   <div className={styles.icon} aria-hidden="true"><svg viewBox="0 0 48 48">{serviceIcons[index].icon}</svg></div>
               </div>
               <div className={styles.cardContent}>
