@@ -136,7 +136,7 @@ img { display: block; }
 main { width: 100%; max-width: 100%; overflow-x: clip; }
 @media (max-width: 760px) {
   html:has(.home-main) { background: var(--dark); }
-  .home-main { overflow: visible; }
+  .home-main { padding-top: 68px; overflow: visible; }
 }
 .hero {
   position: relative;
@@ -348,8 +348,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 
 @media (max-width: 760px) {
   :root { --wrap: calc(100% - 32px); }
-  .hero { height: calc(100svh - 88px); min-height: 650px; margin: 80px 8px 8px; border-radius: 20px; }
-  .hero-copy { width: calc(100% - 36px); padding: 54px 0 150px; gap: 22px; }
+  .hero { height: auto; min-height: max(500px, calc(100svh - 80px)); margin: 0 0 12px; border-radius: 0 0 20px 20px; }
+  .hero-sky { object-position: 25% bottom; }
+  .hero-copy { height: auto; min-height: inherit; width: calc(100% - 36px); padding: 48px 0; gap: 22px; }
   .hero h1 { max-width: 100%; font-size: clamp(32px, 8.5vw, 54px); line-height: 1.1; letter-spacing: -.05em; }
   .hero-details > p { max-width: 490px; margin-inline: auto; font-size: 15px; line-height: 1.65; }
   .hero-actions { width: 100%; margin-top: 22px; gap: 12px; }
