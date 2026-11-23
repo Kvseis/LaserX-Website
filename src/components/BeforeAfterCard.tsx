@@ -105,7 +105,7 @@ export default function BeforeAfterCard({ id, title, detail, copy }: {
         type="range" min="0" max="100" value={split}
         onChange={(event) => setSplit(Number(event.target.value))}
       />
-      <div className="result-handle" style={{ left: `clamp(var(--handle-half), ${split}%, 100% - var(--handle-half))` }}>
+      <div className="result-handle" style={{ left: `${split}%` }}>
         <button type="button" data-step="-15" aria-label={`${title}: ${copy.moreAfter}`} onClick={() => setSplit((value) => clamp(value - 15))}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6" /></svg>
         </button>
