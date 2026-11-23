@@ -9,11 +9,11 @@ const browser = await chromium.launch({
 await mkdir('artifacts', { recursive: true });
 const results = [];
 try {
-  for (const width of [390, 820, 1440]) {
+  for (const width of [390, 768, 820, 1024, 1440]) {
     const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    for (const locale of ['az', 'en', 'ru', 'tr']) {
+    for (const locale of ([768, 1024].includes(width) ? ['az'] : ['az', 'en', 'ru', 'tr'])) {
       const prefix = locale === 'az' ? '' : `/${locale}`;
       const response = await page.goto(`${baseUrl}${prefix}/about`, { waitUntil: 'load', timeout: 60000 });
       if (response.status() !== 200) throw Error(`${locale}: about route failed`);
@@ -21,8 +21,20 @@ try {
       if (await page.locator('h1').count() !== 1 || await page.locator('html').getAttribute('lang') !== locale) {
         throw Error(`${locale}: heading or language missing`);
       }
+      const heroImage = page.locator('main section').first().locator('img').first();
+      if (!(await heroImage.getAttribute('src')).includes('about-workshop-v2')) throw Error('New hero image missing');
+      for (const href of ['tel:+994553900028', 'https://wa.me/994553900028']) {
+        if (await page.locator(`main section:first-child a[href="${href}"]`).count() !== 1) throw Error('Hero contact action missing');
+      }
+      const headingLines = await page.locator('h1').evaluate((heading) => heading.clientHeight / parseFloat(getComputedStyle(heading).lineHeight));
+      if (headingLines > 3.1) throw Error(`${locale}/${width}: hero heading exceeds three lines`);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
       if (overflow > 1) throw Error(`${locale}/${width}: overflow ${overflow}`);
+      const clippedContent = await page.locator('main h1, main h2, main h3, main p, [class*="materialLine"] > span').evaluateAll((elements) => elements.filter((element) => {
+        const rect = element.getBoundingClientRect();
+        return rect.left < -1 || rect.right > innerWidth + 1;
+      }).map((element) => element.textContent));
+      if (clippedContent.length) throw Error(`${locale}/${width}: clipped content ${clippedContent.join(', ')}`);
       const processCards = page.locator('main section').filter({ has: page.locator('[class*="processGrid"]') }).locator('article');
       if (await processCards.count() !== 4) throw Error(`${locale}: process steps missing`);
       const cardPositions = await processCards.evaluateAll((cards) => cards.map((card) => ({ x: card.getBoundingClientRect().x, y: card.getBoundingClientRect().y })));
@@ -51,6 +63,26 @@ try {
     }
     await page.close();
   }
+  const interactionPage = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' });
+  const interactionErrors = [];
+  interactionPage.on('pageerror', (error) => interactionErrors.push(error.message));
+  await interactionPage.goto(`${baseUrl}/about`, { waitUntil: 'networkidle' });
+  await interactionPage.locator('[data-about-text]').scrollIntoViewIfNeeded();
+  await interactionPage.waitForFunction(() => [...document.querySelectorAll('[data-about-word]')].every((word) => Number(getComputedStyle(word).opacity) > 0.95));
+  const surface = interactionPage.locator('[class*="surfaceGrid"] > a').first();
+  await surface.scrollIntoViewIfNeeded();
+  await surface.focus();
+  await interactionPage.waitForFunction(() => document.activeElement?.matches('a[class*="surface"]'));
+  const focusStyle = await surface.evaluate((link) => ({ width: getComputedStyle(link).outlineWidth, style: getComputedStyle(link).outlineStyle }));
+  if (focusStyle.width === '0px' || focusStyle.style === 'none') throw Error('Surface keyboard focus is not visible');
+  await interactionPage.keyboard.press('Tab');
+  if (!await interactionPage.locator('[class*="surfaceGrid"] > a').nth(1).evaluate((link) => link === document.activeElement)) throw Error('Surface keyboard order is incorrect');
+  await interactionPage.emulateMedia({ reducedMotion: 'reduce' });
+  await interactionPage.waitForFunction(() => [...document.querySelectorAll('[data-about-word]')].every((word) => Number(getComputedStyle(word).opacity) === 1));
+  const mediaTransform = await interactionPage.locator('[data-about-media] img').evaluate((img) => getComputedStyle(img).transform);
+  if (mediaTransform !== 'none') throw Error('Reduced motion does not reset the photo transform');
+  if (interactionErrors.length) throw Error(interactionErrors.join('\n'));
+  await interactionPage.close();
   console.log(JSON.stringify({ ok: true, results }, null, 2));
 } finally {
   await browser.close();

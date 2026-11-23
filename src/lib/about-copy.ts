@@ -12,10 +12,12 @@ export type AboutCopy = {
   reasonsTitle: string; reasons: Item[];
   surfacesTitle: string; surfacesIntro: string; surfaces: Item[];
   disclosure: string;
+  contactTitle: [string, string];
 };
 
 const aboutCopy: Record<Locale, AboutCopy> = {
   az: {
+    contactTitle: ['Layihəniz haqqında', 'danışaq.'],
     breadcrumbHome: 'Ana səhifə',
     storyMuted: 'Hər materiala',
     processLabel: 'Necə işləyirik', processTitle: 'Dörd addımda təmiz səth.',
@@ -59,6 +61,7 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     disclosure: 'Bu səhifədəki vizuallar AI ilə hazırlanmış illüstrasiyalardır, real layihə və ya komanda fotoları deyil.',
   },
   en: {
+    contactTitle: ["Let's talk about", 'your project.'],
     breadcrumbHome: 'Home',
     storyMuted: 'An approach',
     processLabel: 'How we work', processTitle: 'A clean surface in four steps.',
@@ -102,6 +105,7 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     disclosure: 'Images on this page are AI-generated illustrations, not photographs of our projects or team.',
   },
   ru: {
+    contactTitle: ['Обсудим', 'ваш проект.'],
     breadcrumbHome: 'Главная',
     storyMuted: 'Подход',
     processLabel: 'Как мы работаем', processTitle: 'Чистая поверхность за четыре шага.',
@@ -145,6 +149,7 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     disclosure: 'Изображения созданы с помощью ИИ. Это иллюстрации, а не фотографии наших проектов или команды.',
   },
   tr: {
+    contactTitle: ['Projenizi', 'konuşalım.'],
     breadcrumbHome: 'Ana sayfa',
     storyMuted: 'Her malzemeye',
     processLabel: 'Nasıl çalışıyoruz', processTitle: 'Dört adımda temiz yüzey.',

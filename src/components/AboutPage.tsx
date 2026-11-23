@@ -1,134 +1,129 @@
-import SiteFooter from './SiteFooter';
 import Image from 'next/image';
-import { Camera, ScanLine, Zap, ClipboardCheck } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Crosshair, MessagesSquare, ShieldCheck, Camera, ScanLine, Zap, ClipboardCheck } from 'lucide-react';
 import type { SiteCopy } from '@/lib/messages/az';
 import { sitePath, type Locale } from '@/lib/locales';
 import { getAboutCopy } from '@/lib/about-copy';
+import { phone, whatsapp } from '@/lib/contact';
 import SiteHeader, { PhoneIcon } from './SiteHeader';
+import SiteFooter from './SiteFooter';
 import WhatsAppLogo from './WhatsAppLogo';
 import AboutReveal from './AboutReveal';
 import styles from './AboutPage.module.css';
 
-function AboutIcon({ index }: { index: number }) {
-  const paths = [
-    <><path d="m14 3-8 11h6l-2 7 8-12h-6l2-6Z" /></>,
-    <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /><path d="M12 1v4m0 14v4M1 12h4m14 0h4" /></>,
-    <><path d="M20 11a8 8 0 0 1-8 8H5l-3 3V11a9 9 0 0 1 18 0Z" /><path d="M7 10h8m-8 4h5" /></>,
-    <><path d="M8 3h8M10 3v6L4 19a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2L14 9V3M7 15h10M2 2l20 20" /></>,
-    <><path d="M4 6h16M4 12h16M4 18h16" /><circle cx="9" cy="6" r="2" /><circle cx="15" cy="12" r="2" /><circle cx="8" cy="18" r="2" /></>,
-    <><path d="M15 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10v8M7 7h4m-4 4h3" /><circle cx="16" cy="15" r="4" /><path d="m19 18 3 3" /></>,
-    <><path d="M20 3C8 3 3 7 4 14c1 6 8 8 12 4 4-4 4-9 4-15ZM5 20 16 9M9 16v-5m0 5h5" /></>,
-    <><path d="M9 4H5v18h14V4h-4M9 2h6v4H9zM8 11l2 2 5-5M8 17h8" /></>,
-  ];
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[index]}</svg>;
-}
-
 export default function AboutPage({ locale, copy }: { locale: Locale; copy: SiteCopy }) {
   const about = getAboutCopy(locale);
-  const phone = 'tel:+994553900028';
-  const whatsapp = 'https://wa.me/994553900028';
-  const surfaceImages = ['rust-after.webp', 'graffiti-after.webp', 'wood-after.webp'];
-  const reasonIcons = [1, 3, 4, 5, 6, 7];
+  const valueIcons = [Crosshair, ShieldCheck, MessagesSquare];
   const processIcons = [Camera, ScanLine, Zap, ClipboardCheck];
+  const surfaceImages = ['rust-after.webp', 'graffiti-after.webp', 'wood-after.webp'];
 
   return <div className={styles.page} id="top">
     <SiteHeader locale={locale} page="about" copy={copy.nav} />
     <AboutReveal>
-      <section className={styles.hero}>
-        <div className={`${styles.container} ${styles.heroLayout}`}>
-        <div className={styles.heroContent}>
-          <h1>{copy.nav.about}</h1>
-          <nav className={styles.breadcrumb} aria-label={copy.nav.about}>
-            <a href={sitePath(locale)}>{about.breadcrumbHome}</a><span aria-hidden="true">/</span><span aria-current="page">{copy.nav.about}</span>
-          </nav>
-          <p className={styles.lead}>{about.description}</p>
-        </div>
+      <section className={styles.hero} aria-labelledby="about-title">
         <div className={styles.heroFrame}>
-          <Image className={styles.heroImage} src="/images/about-hero.webp" fill preload sizes="100vw" alt={about.heroAlt} />
-        </div>
-        </div>
-      </section>
-
-      <section className={styles.storySection}>
-      <div className={`${styles.container} ${styles.story}`}>
-        <div>
-          <p className={styles.label}>{about.storyLabel}</p>
-          <h2><span className={styles.mutedTitle}>{about.storyMuted}</span>{about.storyTitle.slice(about.storyMuted.length)}</h2>
-          {about.story.map((paragraph) => <p className={styles.body} key={paragraph}>{paragraph}</p>)}
-          <a className={styles.textLink} href={sitePath(locale, 'technology')}>{about.technologyLink}<span aria-hidden="true">→</span></a>
-        </div>
-        <div className={styles.storyImage}>
-          <Image src="/images/about-restoration.webp" width={960} height={1200} sizes="(max-width: 760px) 92vw, 42vw" alt={about.storyAlt} />
-        </div>
-      </div>
-      </section>
-
-      <section className={styles.mission}>
-        <div className={styles.container}>
-          <div className={styles.sectionIntro}>
-            <p className={styles.label}>{about.missionLabel}</p>
-            <h2>{about.missionTitle}</h2>
-            <p className={styles.body}>{about.missionText}</p>
+          <Image className={styles.heroImage} src="/images/about-workshop-v2.webp" fill preload sizes="100vw" alt={about.heroAlt} />
+          <div className={styles.heroContent}>
+            <h1 id="about-title">{copy.nav.about}</h1>
+            <p>{about.description}</p>
+            <div className={styles.actions}>
+              <a className={styles.primary} href={whatsapp}><WhatsAppLogo />{copy.nav.whatsapp}<ArrowUpRight aria-hidden="true" /></a>
+              <a className={styles.secondary} href={phone}><PhoneIcon />{copy.nav.call}</a>
+            </div>
           </div>
+          <div className={styles.heroBottom}>
+            <nav className={styles.breadcrumb} aria-label={copy.nav.about}>
+              <a href={sitePath(locale)}>{about.breadcrumbHome}</a><span aria-hidden="true">/</span><span aria-current="page">{copy.nav.about}</span>
+            </nav>
+            <a className={styles.scrollLink} href="#principles" aria-label={about.missionTitle}><ArrowDown aria-hidden="true" /></a>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.principles} id="principles" aria-labelledby="principles-title">
+        <div className={styles.container}>
+          <p className={styles.eyebrow}>{about.missionTitle}</p>
+          <h2 className={styles.statement} id="principles-title" data-about-text>
+            {about.missionText.split(' ').map((word, index) => <span key={index} data-about-word>{word}{' '}</span>)}
+            <span className={styles.inlineImage} aria-hidden="true"><Image src="/images/about-hero.webp" fill sizes="100px" alt="" /></span>
+          </h2>
           <div className={styles.values}>
-            {about.values.map((item, index) => <article key={item.title}>
-              <span className={styles.icon}><AboutIcon index={index} /></span>
-              <h3>{item.title}</h3><p>{item.text}</p>
-            </article>)}
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.process}>
-        <div className={styles.container}>
-          <div className={styles.processIntro}>
-            <p className={styles.label}>{about.processLabel}</p>
-            <h2>{about.processTitle}</h2>
-            <p className={styles.body}>{about.processText}</p>
-          </div>
-          <div className={styles.processGrid}>
-            {about.process.map((item, index) => {
-              const Icon = processIcons[index];
+            {about.values.map((item, index) => {
+              const Icon = valueIcons[index];
               return <article key={item.title}>
-                <div className={styles.processTop}><span>{String(index + 1).padStart(2, '0')}</span><Icon aria-hidden="true" size={32} strokeWidth={1.5} /></div>
-                <h3>{item.title}</h3><p>{item.text}</p>
+                <span className={styles.valueIcon}><Icon size={24} strokeWidth={1.4} aria-hidden="true" /></span>
+                <div><h3>{item.title}</h3><p>{item.text}</p></div>
               </article>;
             })}
           </div>
         </div>
       </section>
 
-      <section className={styles.reasons}>
+      <section className={styles.storySection} aria-labelledby="story-title">
         <div className={styles.container}>
-        <div className={styles.sectionIntro}><h2 className={styles.label}>{about.reasonsTitle}</h2></div>
-        <div className={styles.reasonGrid}>
-          {about.reasons.map((item, index) => [1, 2, 4].includes(index) ? <article key={item.title}>
-            <span className={styles.icon}><AboutIcon index={reasonIcons[index]} /></span>
-            <div><h3>{item.title}</h3><p>{item.text}</p></div>
-          </article> : null)}
-        </div>
-        </div>
-      </section>
-
-      <section className={styles.surfaces}>
-        <div className={styles.container}>
-          <div className={styles.sectionIntro}><h2 className={styles.label}>{about.surfacesTitle}</h2><p className={styles.body}>{about.surfacesIntro}</p></div>
-          <div className={styles.surfaceGrid}>
-            {about.surfaces.map((item, index) => <article key={item.title}>
-              <div className={styles.surfaceImage}><Image src={`/images/${surfaceImages[index]}`} fill sizes="(max-width: 760px) 92vw, 30vw" alt="" /></div>
-              <div className={styles.surfaceCopy}><h3>{item.title}</h3><p>{item.text}</p></div>
-            </article>)}
+          <div className={styles.story}>
+            <div className={styles.storyImage} data-about-media>
+              <Image src="/images/about-craft-v2.webp" fill sizes="(max-width: 760px) 92vw, 46vw" alt={about.storyAlt} />
+            </div>
+            <div className={styles.storyCopy}>
+              <p className={styles.eyebrow}>{about.storyLabel}</p>
+              <h2 id="story-title"><span>{about.storyMuted}</span>{about.storyTitle.slice(about.storyMuted.length)}</h2>
+              {about.story.map((paragraph) => <p className={styles.body} key={paragraph}>{paragraph}</p>)}
+              <a className={styles.textLink} href={sitePath(locale, 'technology')}>{about.technologyLink}<ArrowUpRight size={22} aria-hidden="true" /></a>
+              <div className={styles.reasons}>
+                <h3>{about.reasonsTitle}</h3>
+                {about.reasons.filter((_, index) => [0, 1, 3].includes(index)).map((item) => <div className={styles.reason} key={item.title}>
+                  <ShieldCheck size={20} strokeWidth={1.4} aria-hidden="true" />
+                  <div><h4>{item.title}</h4><p>{item.text}</p></div>
+                </div>)}
+              </div>
+            </div>
           </div>
-          <a className={styles.secondary} href={`${sitePath(locale)}#xidmetler`}>{about.servicesLink}</a>
+          <div className={styles.process}>
+            <div className={styles.sectionHeading}>
+              <div><p className={styles.eyebrow}>{about.processLabel}</p><h2>{about.processTitle}</h2></div>
+              <p className={styles.body}>{about.processText}</p>
+            </div>
+            <div className={styles.processGrid}>
+              {about.process.map((item, index) => {
+                const Icon = processIcons[index];
+                return <article key={item.title}>
+                  <div className={styles.processTop}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={24} strokeWidth={1.4} aria-hidden="true" /></div>
+                  <h3>{item.title}</h3><p>{item.text}</p>
+                </article>;
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className={`contact ${styles.contactBanner}`}>
-        <Image className={styles.contactImage} src="/images/about-hero.webp" fill sizes="92vw" alt="" />
-        <h2>{copy.home.contactTitle[0]}<br />{copy.home.contactTitle[1]}</h2>
-        <p>{copy.home.contactDescription}</p>
-        <a className="big-phone" href={phone} aria-label={copy.nav.callNumber}>055 390 00 28<PhoneIcon /></a>
-        <a className="button contact-whatsapp" href={whatsapp}><WhatsAppLogo />{copy.nav.whatsapp}</a>
+      <section className={styles.surfaces} aria-labelledby="surfaces-title">
+        <div className={styles.container}>
+          <div className={styles.sectionHeading}>
+            <h2 id="surfaces-title">{about.surfacesTitle}</h2>
+            <p className={styles.body}>{about.surfacesIntro}</p>
+          </div>
+          <div className={styles.surfaceGrid}>
+            {about.surfaces.map((item, index) => <a className={styles.surface} key={item.title} href={`${sitePath(locale)}#xidmetler`}>
+              <Image src={`/images/${surfaceImages[index]}`} fill sizes="(max-width: 760px) 92vw, 45vw" alt="" />
+              <div className={styles.surfaceCopy}><h3>{item.title}</h3><p>{item.text}</p></div>
+              <span className={styles.surfaceArrow}><ArrowUpRight size={22} aria-hidden="true" /></span>
+            </a>)}
+          </div>
+          <a className={styles.textLink} href={`${sitePath(locale)}#xidmetler`}>{about.servicesLink}<ArrowUpRight size={22} aria-hidden="true" /></a>
+          <div className={styles.materialLine} aria-hidden="true">{about.surfaces.map((item) => <span key={item.title}>{item.title}<i /></span>)}</div>
+        </div>
+      </section>
+
+      <section className={styles.contactBanner} aria-labelledby="contact-title">
+        <Image src="/images/technology-cta.webp" fill sizes="100vw" alt="" />
+        <div className={styles.contactContent}>
+          <h2 id="contact-title">{about.contactTitle[0]}<br /><span>{about.contactTitle[1]}</span></h2>
+          <p>{copy.home.contactDescription}</p>
+          <div className={styles.actions}>
+            <a className={styles.primary} href={whatsapp}><WhatsAppLogo />{copy.nav.whatsapp}<ArrowUpRight aria-hidden="true" /></a>
+            <a className={styles.secondary} href={phone} aria-label={copy.nav.callNumber}><PhoneIcon />055 390 00 28</a>
+          </div>
+        </div>
       </section>
     </AboutReveal>
     <p className={styles.disclosure}>{about.disclosure}</p>
