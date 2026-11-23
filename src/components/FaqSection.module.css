@@ -3,14 +3,12 @@
   --chevron-size: 16px;
   --question-gap: 10px;
   --highlight: linear-gradient(100deg, #721c18, #ad392e);
-  max-width: 1472px;
-  margin-inline: auto;
   padding: clamp(7px, 1.3vw, 16px);
   color: var(--ink);
-  background: linear-gradient(125deg, #53302c, #201716 45%, #70443b);
+  background: var(--paper);
 }
 
-.layout { background: var(--paper); }
+.layout { max-width: 1440px; margin-inline: auto; }
 
 .intro {
   display: grid;
