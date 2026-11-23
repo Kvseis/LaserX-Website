@@ -10,7 +10,6 @@ import ServicesShowcase from './ServicesShowcase';
 import SiteHeader from './SiteHeader';
 import { phone, whatsapp } from '@/lib/contact';
 import BeforeAfterCard from './BeforeAfterCard';
-import HeroVideo from './HeroVideo';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
 import ComparisonIcon from './ComparisonIcon';
 
@@ -26,8 +25,8 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
 
     <main id="top" className="home-main">
       <section className={`hero ${onest.className}`}>
-        <HeroVideo />
-        <div className="hero-shade" />
+        <Image className="hero-sky" src="/images/hero-sky.webp" alt="" fill priority sizes="100vw" />
+        <div className="hero-shade" aria-hidden="true" />
         <div className="hero-copy">
           <h1><span>{home.headline[0]}</span>{' '}<em>{home.headline[1]}</em></h1>
           <div className="hero-details">

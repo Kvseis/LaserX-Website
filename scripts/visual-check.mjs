@@ -100,15 +100,12 @@ async function verifyViewport(name, viewport) {
     throw new Error(`${name}: silinməli mətn etiketləri hələ görünür`);
   }
 
-  const heroVideo = page.locator('video.hero-media');
-  const expectedVideoCount = 1;
-  await heroVideo.waitFor({ state: 'attached' });
-  if ((await heroVideo.count()) !== expectedVideoCount) throw new Error(`${name}: hero video strategiyası yanlışdır`);
-  if (expectedVideoCount === 1) {
-    await page.waitForFunction(() => {
-      const video = document.querySelector('video.hero-media');
-      return video?.readyState >= 2 && !video.paused && video.currentSrc.endsWith('-720p.mp4');
-    });
+  const heroSky = page.locator('img.hero-sky');
+  await heroSky.waitFor({ state: 'visible' });
+  if (await page.locator('video.hero-media').count() !== 0
+    || !(await heroSky.getAttribute('src'))?.includes('hero-sky.webp')
+    || !await heroSky.evaluate((image) => image.complete && image.naturalWidth > 0)) {
+    throw new Error(`${name}: yeni hero fonu yüklənməyib`);
   }
 
   const faq = page.locator('#suallar');
