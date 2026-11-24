@@ -62,7 +62,7 @@ function Benefits({ items }: { items: AboutCopy['benefits'] }) {
 }
 
 export default function AboutStory({ about, technologyHref }: {
-  about: Pick<AboutCopy, 'storyLabel' | 'storyTitle' | 'storyMuted' | 'storySubtitle' | 'technologyLink' | 'benefits' | 'comparison'>;
+  about: Pick<AboutCopy, 'storyLabel' | 'storyTitle' | 'storyMuted' | 'storyDescription' | 'technologyLink' | 'benefits' | 'comparison'>;
   technologyHref: string;
 }) {
   return (
@@ -82,7 +82,9 @@ export default function AboutStory({ about, technologyHref }: {
           <p className={styles.eyebrow}>{about.storyLabel}</p>
           <h2 id="story-title"><span>{about.storyMuted}</span>{about.storyTitle.slice(about.storyMuted.length)}</h2>
         </motion.div>
-        <motion.p className={`${styles.body} ${styles.featureReveal}`} variants={aboutReveal}>{about.storySubtitle}</motion.p>
+        <motion.div className={`${styles.storyBody} ${styles.featureReveal}`} variants={aboutReveal}>
+          {about.storyDescription.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </motion.div>
         <motion.a
           className={`${styles.textLink} ${styles.featureReveal}`}
           href={technologyHref}

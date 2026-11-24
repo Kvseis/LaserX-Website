@@ -21,7 +21,11 @@ try {
       if (await page.locator('h1').count() !== 1 || await page.locator('html').getAttribute('lang') !== locale) {
         throw Error(`${locale}: heading or language missing`);
       }
-      const heroImage = page.locator('main section').first().locator('img').first();
+      const hero = page.locator('section[aria-labelledby="about-title"]');
+      const heroImage = hero.locator('img');
+      if (await hero.locator('p').count() || await page.locator('#surfaces-title').count()) {
+        throw Error('The About hero subtitle or retired surfaces section returned');
+      }
       if (!(await heroImage.getAttribute('src')).includes('about-hero.webp')) throw Error('Workshop image missing');
       if (await page.locator('#sifaris form').count() !== 1
         || await page.locator('#sifaris a[href="tel:+994553900028"]').count() !== 1) {
@@ -44,6 +48,9 @@ try {
       }).map((element) => element.textContent));
       if (clippedContent.length) throw Error(`${locale}/${width}: clipped content ${clippedContent.join(', ')}`);
       const story = page.locator('section[aria-labelledby="story-title"]');
+      if (await story.locator('[class*="storyBody"] > p').count() !== 2) {
+        throw Error(`${locale}/${width}: About story description is incomplete`);
+      }
       if (await story.getByRole('slider').count() !== 1 || await story.getByRole('button').count() !== 3
         || await story.getByRole('link').getAttribute('href') !== `${prefix}/technology`) {
         throw Error(`${locale}/${width}: story controls or technology link missing`);
@@ -156,14 +163,6 @@ try {
     }
   }
 
-  const surface = interactionPage.locator('[class*="surfaceGrid"] > a').first();
-  await surface.scrollIntoViewIfNeeded();
-  await surface.focus();
-  await interactionPage.waitForFunction(() => document.activeElement?.matches('a[class*="surface"]'));
-  const focusStyle = await surface.evaluate((link) => ({ width: getComputedStyle(link).outlineWidth, style: getComputedStyle(link).outlineStyle }));
-  if (focusStyle.width === '0px' || focusStyle.style === 'none') throw Error('Surface keyboard focus is not visible');
-  await interactionPage.keyboard.press('Tab');
-  if (!await interactionPage.locator('[class*="surfaceGrid"] > a').nth(1).evaluate((link) => link === document.activeElement)) throw Error('Surface keyboard order is incorrect');
   await interactionPage.emulateMedia({ reducedMotion: 'reduce' });
   await interactionPage.waitForFunction(() => [...document.querySelectorAll('[data-about-word]')].every((word) => Number(getComputedStyle(word).opacity) === 1));
   const mediaTransform = await story.locator('[class*="comparisonImages"]').evaluate((element) => getComputedStyle(element).transform);

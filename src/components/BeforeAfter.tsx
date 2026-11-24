@@ -82,7 +82,6 @@ export default function BeforeAfter({ before, after, copy }: {
       </motion.div>
       <span aria-hidden="true" className={styles.comparisonLabel}>{copy.before}</span>
       <span aria-hidden="true" className={styles.comparisonLabel}>{copy.after}</span>
-      <span className={styles.comparisonDisclosure}>{copy.illustration}</span>
       <span aria-hidden="true" className={styles.comparisonLine} style={{ left: `${position}%` }} />
       <button
         ref={slider}
