@@ -1,6 +1,7 @@
 import SiteFooter from './SiteFooter';
 import ContactBanner from './ContactBanner';
 import Image from 'next/image';
+import { Onest } from 'next/font/google';
 import { type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
 import styles from './TechnologyPage.module.css';
@@ -8,7 +9,9 @@ import ApplicationsShowcase from './ApplicationsShowcase';
 import SiteHeader from './SiteHeader';
 import { whatsapp } from '@/lib/contact';
 import WhatsAppLogo from './WhatsAppLogo';
+import ButtonArrow from './ButtonArrow';
 
+const onest = Onest({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
 
 function BenefitIcon({ index }: { index: number }) {
   const icons = [
@@ -36,22 +39,39 @@ export default function TechnologyPage({ locale, copy }: { locale: Locale; copy:
   return <div className={styles.page}>
     <SiteHeader locale={locale} page="technology" copy={nav} />
 
-    <main>
-      <section className={styles.hero}>
-        <Image className={styles.heroMedia} data-motion-hero-image src="/images/technology-hero.webp" fill priority sizes="100vw" alt={technology.heroAlt} />
-        <div className={styles.heroShade} />
-        <div className={styles.heroContent}>
-          <h1 data-motion-hero><span>{home.technologyTitle[0]} <em>{home.technologyTitle[1]}</em></span></h1>
-          <p data-motion-hero="description">{technology.description}</p>
-          <div className={styles.benefits}>
-            {technology.benefits.map(([title, text], index) => <article key={title}>
-              <span className={styles.benefitIcon}><BenefitIcon index={index} /></span>
-              <h2>{title}</h2><p>{text}</p>
-            </article>)}
+    <main className={styles.main}>
+      <section className={`hero ${styles.hero} ${onest.className}`}>
+        <Image
+          className={`hero-sky ${styles.heroMedia}`}
+          src="/images/technology-hero.webp"
+          alt={technology.heroAlt}
+          fill
+          preload
+          sizes="(max-aspect-ratio: 3/2) 170svh, 100vw"
+        />
+        <div className={`hero-shade ${styles.heroShade}`} aria-hidden="true" />
+        <div className={`hero-copy ${styles.heroCopy}`}>
+          <h1><span>{home.technologyTitle[0]}</span>{' '}<em>{home.technologyTitle[1]}</em></h1>
+          <div className="hero-details">
+            <p>{technology.description}</p>
+            <div className={`hero-actions ${styles.heroActions}`}>
+              <a className="hero-book" href={`${whatsapp}?text=${encodeURIComponent(technology.message)}`}>
+                <WhatsAppLogo />{technology.more}
+              </a>
+              <a className={styles.processLink} href="#proses">
+                {technology.processTitle.join('')}<ButtonArrow />
+              </a>
+            </div>
           </div>
-          <a className={styles.primaryCta} href={`${whatsapp}?text=${encodeURIComponent(technology.message)}`}><WhatsAppLogo /><span>{technology.more}</span></a>
         </div>
       </section>
+
+      <div className={styles.benefits}>
+        {technology.benefits.map(([title, text], index) => <article key={title}>
+          <span className={styles.benefitIcon}><BenefitIcon index={index} /></span>
+          <h2>{title}</h2><p>{text}</p>
+        </article>)}
+      </div>
 
       <section className={styles.process} id="proses">
         <div className={`${styles.sectionIntro} ${styles.processIntro}`} data-motion-reveal><h2>{technology.processTitle[0]}<em>{technology.processTitle[1]}</em>{technology.processTitle[2]}</h2><p>{technology.processDescription}</p></div>
