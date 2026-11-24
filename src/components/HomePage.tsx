@@ -78,9 +78,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.traditional}</small>{traditional}</span></span>
           </div>)}
           <div className="comparison-laser-footer" role="presentation">
-            <div className="comparison-laser-action">
-              <a className="comparison-contact" href={phone}>{methods.contact}<ButtonArrow /></a>
-            </div>
+            <a className="comparison-contact" href={phone}>{methods.contact}<ButtonArrow /></a>
           </div>
         </div>
       </div></section>
