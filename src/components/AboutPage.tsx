@@ -61,7 +61,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
           </section>
 
           <div className={styles.storySection}>
-            <AboutStory about={about} technologyHref={sitePath(locale, 'technology')} />
+            <AboutStory about={about} />
           </div>
           <Steps label={about.processLabel} title={about.processTitle} titles={about.process} />
         </div>

@@ -54,8 +54,8 @@ try {
         throw Error(`${locale}/${width}: About story description is incomplete`);
       }
       if (await story.getByRole('slider').count() !== 1 || await story.getByRole('button').count() !== 3
-        || await story.getByRole('link').getAttribute('href') !== `${prefix}/technology`) {
-        throw Error(`${locale}/${width}: story controls or technology link missing`);
+        || await story.getByRole('link').count() !== 0) {
+        throw Error(`${locale}/${width}: unexpected story controls`);
       }
       const mobileSteps = page.locator('section[aria-labelledby="steps-mobile-title"]');
       const desktopSteps = page.locator('section[aria-labelledby="steps-desktop-title"]');

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, stagger } from 'framer-motion';
-import { ArrowUpRight, Crosshair, FlaskConical, ShieldCheck } from 'lucide-react';
+import { Crosshair, FlaskConical, ShieldCheck } from 'lucide-react';
 import { useId, useState } from 'react';
 import type { AboutCopy } from '@/lib/about-copy';
 import { aboutReveal, aboutViewport } from './about-section-motion';
@@ -61,9 +61,8 @@ function Benefits({ items }: { items: AboutCopy['benefits'] }) {
   );
 }
 
-export default function AboutStory({ about, technologyHref }: {
-  about: Pick<AboutCopy, 'storyLabel' | 'storyTitle' | 'storyMuted' | 'storyDescription' | 'technologyLink' | 'benefits' | 'comparison'>;
-  technologyHref: string;
+export default function AboutStory({ about }: {
+  about: Pick<AboutCopy, 'storyLabel' | 'storyTitle' | 'storyMuted' | 'storyDescription' | 'benefits' | 'comparison'>;
 }) {
   return (
     <motion.section
@@ -76,7 +75,6 @@ export default function AboutStory({ about, technologyHref }: {
     >
       <motion.div className={styles.featureReveal} variants={aboutReveal}>
         <BeforeAfter before="/images/limestone-before.webp" after="/images/limestone-after.webp" copy={about.comparison} />
-        <p className={styles.caption}>{about.comparison.label}</p>
       </motion.div>
       <motion.div className={styles.storyCopy} variants={storyReveal}>
         <motion.div className={styles.featureReveal} variants={aboutReveal}>
@@ -86,13 +84,6 @@ export default function AboutStory({ about, technologyHref }: {
         <motion.div className={`${styles.storyBody} ${styles.featureReveal}`} variants={aboutReveal}>
           {about.storyDescription.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </motion.div>
-        <motion.a
-          className={`${styles.textLink} ${styles.featureReveal}`}
-          href={technologyHref}
-          variants={aboutReveal}
-        >
-          {about.technologyLink}<ArrowUpRight size={22} aria-hidden="true" />
-        </motion.a>
         <Benefits items={about.benefits} />
       </motion.div>
     </motion.section>

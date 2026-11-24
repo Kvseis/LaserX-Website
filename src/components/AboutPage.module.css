@@ -29,12 +29,12 @@
 .editorial h2 { font-size: clamp(38px, 3.9vw, 60px); line-height: 1.06; }
 .editorial h3 { font-size: clamp(24px, 2vw, 32px); line-height: 1.1; }
 .page .eyebrow { margin-bottom: 20px; font-size: 13px; font-weight: 550; }
-.hero { padding-top: 110px; }
+.hero { width: min(1640px, calc(100% - clamp(16px, 4vw, 64px))); padding-top: 110px; }
 .heroFrame {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: clamp(455px, 43vw, 665px);
+  min-height: clamp(510px, 49vw, 770px);
   border-radius: clamp(20px, 2.2vw, 34px);
   background: #cccac5;
 }
@@ -50,7 +50,7 @@
 .breadcrumb { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 500; }
 .breadcrumb a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .breadcrumb span[aria-hidden] { opacity: .5; }
-.hero h1 { max-width: 18ch; margin-top: 22px; font-size: clamp(43px, 5vw, 80px); line-height: 1.03; }
+.hero h1 { max-width: 18ch; margin-top: 22px; font-size: clamp(46px, 5.6vw, 90px); line-height: 1.03; }
 .heroContent > p { max-width: 44ch; margin-top: 16px; font-size: clamp(15px, 1.35vw, 20px); line-height: 1.45; text-wrap: balance; }
 .heroAction {
   display: inline-flex;
@@ -89,9 +89,9 @@
 .values p { max-width: 23ch; font-size: clamp(15px, 1.2vw, 18px); line-height: 1.45; }
 .values article:first-child p { max-width: min(23ch, 58%); }
 .storySection { padding-block: clamp(52px, 6vw, 94px); background: #eae8e2; }
-.story .caption { margin-top: 10px; color: #565753; font-size: 12px; line-height: 1.4; }
 .story, .stepLayout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(40px, 7vw, 100px); align-items: center; }
 .comparisonFrame, .stepImage { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 16px; background: #2a2d29; }
+.story { grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr); }
 .comparisonFrame { cursor: ew-resize; touch-action: pan-y; user-select: none; }
 .comparisonImages { position: absolute; inset: -5% 0; pointer-events: none; }
 .comparisonBefore, .stepSlide { position: absolute; inset: 0; }
@@ -106,11 +106,6 @@
 .storyCopy h2 span { color: #64655f; }
 .storyBody { max-width: 53ch; margin-top: 26px; color: #474943; font-size: 17px; line-height: 1.7; }
 .storyBody p + p { margin-top: 14px; }
-.textLink { position: relative; min-height: 44px; display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; padding: 12px 0; border-bottom: 1px solid #737a72; margin-top: 24px; font-size: 15px; font-weight: 500; }
-.textLink svg { transition: transform 250ms ease; }
-.textLink:hover svg { transform: translate(3px, -3px); }
-.textLink::after { content: ''; position: absolute; inset: auto 0 -1px; height: 1px; background: var(--about-accent); transform: scaleX(0); transform-origin: left; transition: transform 250ms ease; }
-.textLink:hover::after { transform: scaleX(1); }
 .benefits { margin-top: 32px; }
 .benefitList { display: flex; flex-wrap: wrap; gap: 8px; }
 .benefitList button { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 8px 12px; border: 1px solid #c4c3bb; border-radius: 999px; background: #ffffff66; color: inherit; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; }
@@ -153,8 +148,8 @@
 }
 @media (width < 768px) {
   .storySection { padding: 56px 0; }
-  .story { grid-template-columns: 1fr; gap: 28px; }
-  .storyCopy { grid-row: 1; }
+  .story { width: calc(100% - 16px); grid-template-columns: 1fr; gap: 28px; }
+  .storyCopy { grid-row: 1; padding-inline: 8px; }
   .process { padding-block: 64px; }
   .stepsDesktop { display: none; }
   .stepsMobile { display: block; }
@@ -180,8 +175,8 @@
 @media (max-width: 640px) {
   .heroFrame { min-height: 0; background: #cac8c2; }
   .heroFrame picture { inset: auto 0 0; aspect-ratio: 4 / 5; mask-image: linear-gradient(transparent, black 30%); }
-  .heroContent { padding: 35px 18px clamp(220px, 63vw, 370px); }
-  .hero h1 { margin-top: 20px; font-size: clamp(37px, 9vw, 54px); }
+  .heroContent { padding: 42px 18px clamp(255px, 72vw, 420px); }
+  .hero h1 { margin-top: 20px; font-size: clamp(40px, 10vw, 60px); }
   .heroContent > p { max-width: 34ch; margin-top: 12px; }
   .heroAction { margin-top: 18px; }
 }

@@ -8,7 +8,7 @@ import type { AboutCopy } from '@/lib/about-copy';
 import { useAboutReducedMotion } from './about-section-motion';
 import styles from './AboutPage.module.css';
 
-const sizes = '(min-width: 1292px) 540px, (min-width: 1101px) 43vw, (min-width: 768px) 45vw, calc(100vw - 40px)';
+const sizes = '(min-width: 1560px) 775px, (min-width: 768px) 52vw, calc(100vw - 16px)';
 
 export default function BeforeAfter({ before, after, copy }: {
   before: string;
