@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ArrowDown, ArrowUpRight, Crosshair, MessagesSquare, ShieldCheck, Camera, ScanLine, Zap, ClipboardCheck } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Crosshair, MessagesSquare, ShieldCheck } from 'lucide-react';
 import type { SiteCopy } from '@/lib/messages/az';
 import { sitePath, type Locale } from '@/lib/locales';
 import { getAboutCopy } from '@/lib/about-copy';
@@ -8,11 +8,12 @@ import SiteFooter from './SiteFooter';
 import ContactBanner from './ContactBanner';
 import AboutReveal from './AboutReveal';
 import styles from './AboutPage.module.css';
+import AboutStory from './AboutStory';
+import Steps from './Steps';
 
 export default function AboutPage({ locale, copy }: { locale: Locale; copy: SiteCopy }) {
   const about = getAboutCopy(locale);
   const valueIcons = [Crosshair, ShieldCheck, MessagesSquare];
-  const processIcons = [Camera, ScanLine, Zap, ClipboardCheck];
   const surfaceImages = ['rust-after.webp', 'graffiti-after.webp', 'wood-after.webp'];
 
   return <div className={styles.page} id="top">
@@ -53,43 +54,10 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         </div>
       </section>
 
-      <section className={styles.storySection} aria-labelledby="story-title">
-        <div className={styles.container}>
-          <div className={styles.story}>
-            <div className={styles.storyImage} data-about-media>
-              <Image src="/images/about-restoration.webp" fill sizes="(max-width: 760px) 92vw, 46vw" alt={about.storyAlt} />
-            </div>
-            <div className={styles.storyCopy}>
-              <p className={styles.eyebrow}>{about.storyLabel}</p>
-              <h2 id="story-title"><span>{about.storyMuted}</span>{about.storyTitle.slice(about.storyMuted.length)}</h2>
-              {about.story.map((paragraph) => <p className={styles.body} key={paragraph}>{paragraph}</p>)}
-              <a className={styles.textLink} href={sitePath(locale, 'technology')}>{about.technologyLink}<ArrowUpRight size={22} aria-hidden="true" /></a>
-              <div className={styles.reasons}>
-                <h3>{about.reasonsTitle}</h3>
-                {about.reasons.filter((_, index) => [0, 1, 3].includes(index)).map((item) => <div className={styles.reason} key={item.title}>
-                  <ShieldCheck size={20} strokeWidth={1.4} aria-hidden="true" />
-                  <div><h4>{item.title}</h4><p>{item.text}</p></div>
-                </div>)}
-              </div>
-            </div>
-          </div>
-          <div className={styles.process}>
-            <div className={styles.sectionHeading}>
-              <div><p className={styles.eyebrow}>{about.processLabel}</p><h2>{about.processTitle}</h2></div>
-              <p className={styles.body}>{about.processText}</p>
-            </div>
-            <div className={styles.processGrid}>
-              {about.process.map((item, index) => {
-                const Icon = processIcons[index];
-                return <article key={item.title}>
-                  <div className={styles.processTop}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={24} strokeWidth={1.4} aria-hidden="true" /></div>
-                  <h3>{item.title}</h3><p>{item.text}</p>
-                </article>;
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className={styles.storySection}>
+        <AboutStory about={about} technologyHref={sitePath(locale, 'technology')} />
+        <Steps label={about.processLabel} title={about.processTitle} titles={about.process} />
+      </div>
 
       <section className={styles.surfaces} aria-labelledby="surfaces-title">
         <div className={styles.container}>
