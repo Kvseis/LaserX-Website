@@ -434,28 +434,3 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 
 
 .home-opening { display: flow-root; }
-@supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
-  @media (prefers-reduced-motion: no-preference) {
-    .home-opening { timeline-scope: --film-entry; }
-    .home-opening .hero-copy {
-      animation: heroCopyDeparture 1s linear both;
-      animation-timeline: --film-entry;
-      animation-range: entry 0% entry 60%;
-    }
-    .home-opening .hero-copy:focus-within { opacity: 1 !important; }
-    .home-opening > .hero {
-      position: sticky;
-      top: min(106px, calc(100svh - 650px));
-      margin-bottom: 0;
-    }
-  }
-}
-
-@media (max-width: 1100px) and (prefers-reduced-motion: no-preference) {
-  .home-opening > .hero { top: 80px; }
-}
-@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
-  .home-opening > .hero { top: 68px; }
-}
-
-@keyframes heroCopyDeparture { from { opacity: 1; } to { opacity: 0; } }

@@ -39,16 +39,40 @@ try {
       }, progress);
     };
 
-    if (await page.evaluate(() => CSS.supports('animation-timeline: view()') && CSS.supports('animation-range: entry 0% entry 100%'))) {
-      await film.evaluate(section => window.scrollTo({ top: window.scrollY + section.getBoundingClientRect().top - innerHeight / 2, behavior: 'instant' }));
-      await page.waitForFunction(() => {
-        const opacity = Number(getComputedStyle(document.querySelector('#proses > div')).opacity);
-        return opacity > .35 && opacity < .65;
-      });
-      await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-transition.png`) });
-      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
-      await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.hero-copy')).opacity) > .95);
+    const entry = await film.evaluate((section) => {
+      const hero = document.querySelector('.hero');
+      const stage = section.firstElementChild;
+      const heroStart = hero.getBoundingClientRect().top;
+      const scrollStart = window.scrollY;
+      window.scrollTo({ top: scrollStart + section.getBoundingClientRect().top - innerHeight / 2, behavior: 'instant' });
+      const heroBox = hero.getBoundingClientRect();
+      const stageBox = stage.getBoundingClientRect();
+      return {
+        scrollDelta: window.scrollY - scrollStart,
+        heroDelta: heroStart - heroBox.top,
+        gap: stageBox.top - heroBox.bottom,
+        copyOpacity: getComputedStyle(hero.querySelector('.hero-copy')).opacity,
+        stageOpacity: getComputedStyle(stage).opacity,
+        stageMask: getComputedStyle(stage).maskImage,
+      };
+    });
+    if (entry.scrollDelta <= 0 || Math.abs(entry.heroDelta - entry.scrollDelta) > 1
+      || entry.gap < 0 || entry.gap > 16 || entry.copyOpacity !== '1'
+      || entry.stageOpacity !== '1' || entry.stageMask !== 'none') {
+      throw new Error(`${name}: hero and film should scroll into view without overlapping or fading: ${JSON.stringify(entry)}`);
     }
+    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-transition.png`) });
+
+    await page.evaluate(() => window.scrollBy({ top: -innerHeight / 4, behavior: 'instant' }));
+    await page.locator('.hero-equipment').focus();
+    await page.keyboard.press('Shift+Tab');
+    const focusedHeroButton = await page.locator('.hero-book').evaluate((button) => {
+      const { left, top, width, height } = button.getBoundingClientRect();
+      const hit = document.elementFromPoint(left + width / 2, top + height / 2);
+      return button.matches(':focus-visible') && button.contains(hit);
+    });
+    if (!focusedHeroButton) throw new Error(`${name}: keyboard focus did not return to the visible hero booking button`);
+    await page.locator('.hero-book').blur();
 
     await seekTo(.18);
     const waitForFrame = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
