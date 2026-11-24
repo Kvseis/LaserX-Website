@@ -75,7 +75,7 @@ export default function AboutStory({ about, technologyHref }: {
       viewport={aboutViewport}
     >
       <motion.div className={styles.featureReveal} variants={aboutReveal}>
-        <BeforeAfter before="/stone-before.jpg" after="/stone-after.jpg" copy={about.comparison} />
+        <BeforeAfter before="/images/limestone-before.webp" after="/images/limestone-after.webp" copy={about.comparison} />
         <p className={styles.caption}>{about.comparison.label}</p>
       </motion.div>
       <motion.div className={styles.storyCopy} variants={storyReveal}>

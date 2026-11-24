@@ -27,7 +27,7 @@ try {
         throw Error('The About introduction or booking link is missing');
       }
       const heroSource = await heroImage.evaluate((image) => image.currentSrc);
-      const expectedHero = width <= 640 ? 'about-flanges-mobile.webp' : 'about-flanges.webp';
+      const expectedHero = width <= 640 ? 'about-concrete-flanges-mobile.webp' : 'about-concrete-flanges.webp';
       if (!heroSource.includes(expectedHero)) throw Error(`${locale}/${width}: incorrect hero artwork`);
       if (await page.locator('#sifaris form').count() !== 1
         || await page.locator('#sifaris a[href="tel:+994553900028"]').count() !== 1) {

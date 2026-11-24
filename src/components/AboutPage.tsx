@@ -22,8 +22,8 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
           <section className={styles.hero} aria-labelledby="about-title">
             <div className={styles.heroFrame}>
               <picture>
-                <source media="(max-width: 640px)" srcSet="/images/about-flanges-mobile.webp" />
-                <Image className={styles.heroImage} src="/images/about-flanges.webp" fill sizes="100vw"
+                <source media="(max-width: 640px)" srcSet="/images/about-concrete-flanges-mobile.webp" />
+                <Image className={styles.heroImage} src="/images/about-concrete-flanges.webp" fill sizes="100vw"
                   fetchPriority="high" loading="eager" alt={about.heroAlt} />
               </picture>
               <div className={styles.heroContent}>
