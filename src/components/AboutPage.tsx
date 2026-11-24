@@ -3,10 +3,9 @@ import { ArrowDown, ArrowUpRight, Crosshair, MessagesSquare, ShieldCheck, Camera
 import type { SiteCopy } from '@/lib/messages/az';
 import { sitePath, type Locale } from '@/lib/locales';
 import { getAboutCopy } from '@/lib/about-copy';
-import { phone, whatsapp } from '@/lib/contact';
-import SiteHeader, { PhoneIcon } from './SiteHeader';
+import SiteHeader from './SiteHeader';
 import SiteFooter from './SiteFooter';
-import WhatsAppLogo from './WhatsAppLogo';
+import ContactBanner from './ContactBanner';
 import AboutReveal from './AboutReveal';
 import styles from './AboutPage.module.css';
 
@@ -19,6 +18,7 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
   return <div className={styles.page} id="top">
     <SiteHeader locale={locale} page="about" copy={copy.nav} />
     <AboutReveal>
+      <div className={styles.editorial}>
       <section className={styles.hero} aria-labelledby="about-title">
         <div className={styles.heroFrame}>
           <Image className={styles.heroImage} src="/images/about-hero.webp" fill preload sizes="100vw" alt={about.heroAlt} />
@@ -108,19 +108,10 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
         </div>
       </section>
 
-      <section className={styles.contactBanner} aria-labelledby="contact-title">
-        <Image src="/images/technology-cta.webp" fill sizes="100vw" alt="" />
-        <div className={styles.contactContent}>
-          <h2 id="contact-title">{about.contactTitle[0]}<br /><span>{about.contactTitle[1]}</span></h2>
-          <p>{copy.home.contactDescription}</p>
-          <div className={styles.actions}>
-            <a className={styles.primary} href={whatsapp}><WhatsAppLogo />{copy.nav.whatsapp}<ArrowUpRight aria-hidden="true" /></a>
-            <a className={styles.secondary} href={phone} aria-label={copy.nav.callNumber}><PhoneIcon />055 390 00 28</a>
-          </div>
-        </div>
-      </section>
+        <p className={styles.disclosure}>{about.disclosure}</p>
+      </div>
+      <ContactBanner copy={copy} />
     </AboutReveal>
-    <p className={styles.disclosure}>{about.disclosure}</p>
     <SiteFooter locale={locale} copy={copy} />
   </div>;
 }

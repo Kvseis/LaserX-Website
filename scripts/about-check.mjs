@@ -23,9 +23,16 @@ try {
       }
       const heroImage = page.locator('main section').first().locator('img').first();
       if (!(await heroImage.getAttribute('src')).includes('about-hero.webp')) throw Error('Workshop image missing');
-      for (const href of ['tel:+994553900028', 'https://wa.me/994553900028']) {
-        if (await page.locator(`main section:last-child a[href="${href}"]`).count() !== 1) throw Error('Contact banner action missing');
+      if (await page.locator('#sifaris form').count() !== 1
+        || await page.locator('#sifaris a[href="tel:+994553900028"]').count() !== 1) {
+        throw Error('Shared booking section missing');
       }
+      const footerGap = await page.evaluate(() => {
+        const booking = document.querySelector('#sifaris').getBoundingClientRect();
+        const footer = document.querySelector('footer').getBoundingClientRect();
+        return footer.top - booking.bottom;
+      });
+      if (Math.abs(footerGap) > 1) throw Error('Booking section must touch the footer');
       const headingLines = await page.locator('h1').evaluate((heading) => heading.clientHeight / parseFloat(getComputedStyle(heading).lineHeight));
       if (headingLines > 3.1) throw Error(`${locale}/${width}: hero heading exceeds three lines`);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
