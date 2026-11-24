@@ -2,7 +2,7 @@ import type { Locale } from './locales';
 
 type Item = { title: string; text: string };
 export type AboutCopy = {
-  hero: [string, string]; heroAlt: string;
+  heroTitle: string; heroIntro: string; heroCta: string; heroAlt: string;
   technologyLink: string;
   storyLabel: string; storyTitle: string; storyDescription: [string, string];
   storyMuted: string;
@@ -21,8 +21,10 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     storyMuted: 'Hər materiala',
     processLabel: 'Necə işləyirik', processTitle: 'Dörd addımda təmiz səth.',
     process: ['Şəkil göndərin', 'Kiçik sahədə sınaq', 'Lazerlə təmizləmə', 'Son yoxlama'],
-    hero: ['Lazer təmizləmə.', 'Səthə yeni baxış.'],
-    heroAlt: 'Metal detalın lazerlə təmizlənməsini göstərən illüstrativ səhnə',
+    heroTitle: 'Səthə yeni baxış.',
+    heroIntro: 'Bakıda metal və daş səthlərdən pası, köhnə boyanı və hisi lazerlə təmizləyirik. Hər səth üçün rejimi sınaqla seçirik.',
+    heroCta: 'Layihənizi müzakirə edək',
+    heroAlt: 'Metal yonqarları arasında paslı və cilalanmış iki flanşın illüstrasiyası',
     technologyLink: 'Texnologiyanı tanıyın',
     storyLabel: 'Biz kimik', storyTitle: 'Hər materiala uyğun yanaşma.',
     storyDescription: [
@@ -53,8 +55,10 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     storyMuted: 'An approach',
     processLabel: 'How we work', processTitle: 'A clean surface in four steps.',
     process: ['Send a photo', 'Test a small area', 'Laser cleaning', 'Final check'],
-    hero: ['Laser cleaning.', 'A fresh view of surfaces.'],
-    heroAlt: 'Illustrative scene of laser cleaning a metal component',
+    heroTitle: 'Beneath the surface.',
+    heroIntro: 'We laser-clean metal and stone in Baku, adjusting the process to each material to lift away rust, paint and soot.',
+    heroCta: 'Discuss your project',
+    heroAlt: 'Illustration of a rusted flange and a polished flange set among metal shavings',
     technologyLink: 'See the technology',
     storyLabel: 'Who we are', storyTitle: 'An approach for each material.',
     storyDescription: [
@@ -85,8 +89,10 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     storyMuted: 'Подход',
     processLabel: 'Как мы работаем', processTitle: 'Чистая поверхность за четыре шага.',
     process: ['Пришлите фото', 'Проба на небольшом участке', 'Лазерная очистка', 'Проверка результата'],
-    hero: ['Лазерная очистка.', 'Новый взгляд на поверхности.'],
-    heroAlt: 'Иллюстрация лазерной очистки металлической детали',
+    heroTitle: 'Новый взгляд на поверхность.',
+    heroIntro: 'Очищаем металл и камень лазером в Баку. Подбираем режим под материал, чтобы удалить ржавчину, краску и сажу.',
+    heroCta: 'Обсудить проект',
+    heroAlt: 'Иллюстрация ржавого и полированного фланцев среди металлической стружки',
     technologyLink: 'Узнать о технологии',
     storyLabel: 'Кто мы', storyTitle: 'Подход к каждому материалу.',
     storyDescription: [
@@ -117,8 +123,10 @@ const aboutCopy: Record<Locale, AboutCopy> = {
     storyMuted: 'Her malzemeye',
     processLabel: 'Nasıl çalışıyoruz', processTitle: 'Dört adımda temiz yüzey.',
     process: ['Fotoğraf gönderin', 'Küçük alanda deneme', 'Lazerle temizleme', 'Son kontrol'],
-    hero: ['Lazer temizleme.', 'Yüzeylere yeni bir bakış.'],
-    heroAlt: 'Metal bir parçanın lazerle temizlenmesini gösteren temsili görsel',
+    heroTitle: 'Yüzeye yeni bir bakış.',
+    heroIntro: 'Bakü’de metal ve taş yüzeyleri lazerle temizliyoruz. Pası, boyayı ve isi gidermek için her malzemeye uygun ayarı seçiyoruz.',
+    heroCta: 'Projenizi konuşalım',
+    heroAlt: 'Metal talaşları arasında paslı ve parlatılmış iki flanşın temsili görseli',
     technologyLink: 'Teknolojiyi tanıyın',
     storyLabel: 'Biz kimiz', storyTitle: 'Her malzemeye uygun yaklaşım.',
     storyDescription: [

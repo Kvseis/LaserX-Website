@@ -23,10 +23,12 @@ try {
       }
       const hero = page.locator('section[aria-labelledby="about-title"]');
       const heroImage = hero.locator('img');
-      if (await hero.locator('p').count() || await page.locator('#surfaces-title').count()) {
-        throw Error('The About hero subtitle or retired surfaces section returned');
+      if (await hero.locator('p').count() !== 1 || await hero.locator('a[href="#sifaris"]').count() !== 1) {
+        throw Error('The About introduction or booking link is missing');
       }
-      if (!(await heroImage.getAttribute('src')).includes('about-hero.webp')) throw Error('Workshop image missing');
+      const heroSource = await heroImage.evaluate((image) => image.currentSrc);
+      const expectedHero = width <= 640 ? 'about-flanges-mobile.webp' : 'about-flanges.webp';
+      if (!heroSource.includes(expectedHero)) throw Error(`${locale}/${width}: incorrect hero artwork`);
       if (await page.locator('#sifaris form').count() !== 1
         || await page.locator('#sifaris a[href="tel:+994553900028"]').count() !== 1) {
         throw Error('Shared booking section missing');
