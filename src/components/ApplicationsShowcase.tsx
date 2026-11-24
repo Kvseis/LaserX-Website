@@ -26,9 +26,9 @@ export default function ApplicationsShowcase({ id, copy }: {
   copy: SiteCopy['technology'];
 }) {
   return <section className={styles.applications} id={id}>
-    <div className={styles.sectionIntro}><h2>{copy.applicationsTitle[0]}<br /><em>{copy.applicationsTitle[1]}</em></h2><p>{copy.applicationsDescription}</p></div>
+    <div className={styles.sectionIntro} data-motion-reveal><h2>{copy.applicationsTitle[0]}<br /><em>{copy.applicationsTitle[1]}</em></h2><p>{copy.applicationsDescription}</p></div>
     <div className={styles.applicationGrid}>
-      {copy.applications.map((title, index) => <article key={title} data-tech-reveal><span><LineIcon type={applicationIcons[index]} /></span><h3>{title}</h3></article>)}
+      {copy.applications.map((title, index) => <article key={title} data-motion-reveal><span><LineIcon type={applicationIcons[index]} /></span><h3>{title}</h3></article>)}
     </div>
   </section>;
 }

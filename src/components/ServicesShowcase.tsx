@@ -139,7 +139,7 @@ export default function ServicesShowcase({ copy, technologyPath }: {
     <section ref={sectionRef} className={styles.services} id="xidmetler" aria-labelledby="xidmetler-basliq">
       <div ref={stageRef} className={styles.inner}>
         <div className={styles.intro}>
-          <h2 id="xidmetler-basliq">{copy.heading[0]} <span>{copy.heading[1]}</span></h2>
+          <h2 id="xidmetler-basliq" data-motion-reveal>{copy.heading[0]} <span>{copy.heading[1]}</span></h2>
           <a className={styles.link} href={`${technologyPath}#tetbiqler`}>
             {copy.link}
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>

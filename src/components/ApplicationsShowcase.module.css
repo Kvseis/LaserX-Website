@@ -85,6 +85,17 @@
   stroke-linejoin: round;
 }
 
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .applicationGrid article > span {
+    transition: background-color var(--motion-fast) ease, color var(--motion-fast) ease;
+  }
+
+  .applicationGrid article:hover > span {
+    color: #fff;
+    background-color: #852f2a;
+  }
+}
+
 .applicationGrid h3 {
   margin: 19px 0 0;
   font-size: 14px;

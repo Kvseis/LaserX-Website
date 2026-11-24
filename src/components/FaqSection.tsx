@@ -9,7 +9,7 @@ const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 
 export default function FaqSection({ copy }: { copy: SiteCopy['faq'] }) {
   return <section id="suallar" className={`${styles.section} ${manrope.className}`} aria-labelledby="faq-title">
     <div className={styles.layout}>
-      <header className={styles.intro}>
+      <header className={styles.intro} data-motion-reveal>
         <h2 id="faq-title">{copy.title}</h2>
         <p>{copy.intro}</p>
       </header>

@@ -38,11 +38,11 @@ export default function TechnologyPage({ locale, copy }: { locale: Locale; copy:
 
     <main>
       <section className={styles.hero}>
-        <Image className={styles.heroMedia} src="/images/technology-hero.webp" fill priority sizes="100vw" alt={technology.heroAlt} />
+        <Image className={styles.heroMedia} data-motion-hero-image src="/images/technology-hero.webp" fill priority sizes="100vw" alt={technology.heroAlt} />
         <div className={styles.heroShade} />
         <div className={styles.heroContent}>
-          <h1><span>{home.technologyTitle[0]} <em>{home.technologyTitle[1]}</em></span></h1>
-          <p>{technology.description}</p>
+          <h1 data-motion-hero><span>{home.technologyTitle[0]} <em>{home.technologyTitle[1]}</em></span></h1>
+          <p data-motion-hero="description">{technology.description}</p>
           <div className={styles.benefits}>
             {technology.benefits.map(([title, text], index) => <article key={title}>
               <span className={styles.benefitIcon}><BenefitIcon index={index} /></span>
@@ -54,9 +54,9 @@ export default function TechnologyPage({ locale, copy }: { locale: Locale; copy:
       </section>
 
       <section className={styles.process} id="proses">
-        <div className={`${styles.sectionIntro} ${styles.processIntro}`}><h2>{technology.processTitle[0]}<em>{technology.processTitle[1]}</em>{technology.processTitle[2]}</h2><p>{technology.processDescription}</p></div>
+        <div className={`${styles.sectionIntro} ${styles.processIntro}`} data-motion-reveal><h2>{technology.processTitle[0]}<em>{technology.processTitle[1]}</em>{technology.processTitle[2]}</h2><p>{technology.processDescription}</p></div>
         <div className={styles.processGrid}>
-          {technology.process.map(([title, text], index) => <article data-tech-reveal key={title}>
+          {technology.process.map(([title, text], index) => <article data-motion-reveal key={title}>
             <span className={styles.stepNumber}>{index + 1}</span>
             <div className={styles.stepGraphic}><ProcessIcon index={index} /></div>
             <h3>{title}</h3><p>{text}</p>

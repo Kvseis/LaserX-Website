@@ -1,0 +1,145 @@
+:root {
+  --motion-ease: cubic-bezier(.2, .75, .25, 1);
+  --motion-fast: 180ms;
+}
+
+.site-header nav a::after {
+  right: 0;
+  background: #ef5149;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+.site-header nav a:is(:hover, :focus-visible, [aria-current='page'])::after { transform: scaleX(1); }
+.site-header nav a[aria-current='page']::after { height: 2px; }
+
+.language-switch summary,
+.language-switch a,
+.comparison-contact {
+  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.language-switch summary:is(:hover, :focus-visible),
+.language-switch[open] summary {
+  background-color: #262121;
+  border-color: #a95b56;
+}
+
+.menu-button[aria-expanded='true'] span:first-child { transform: translateY(3.5px) rotate(45deg); }
+.menu-button[aria-expanded='true'] span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+
+.comparison-row > :is(.comparison-criterion, .comparison-value) {
+  transition: background-color var(--motion-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .comparison-row:hover .comparison-criterion { background-color: #e0d9d1; }
+  .comparison-row:hover .laser-value { background-color: #2b2d2d; }
+  .comparison-row:hover .traditional-value { background-color: #ece8e1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  ::view-transition-old(root) {
+    animation: motion-route-out 160ms ease both;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(root) {
+    animation: motion-route-in 300ms var(--motion-ease) both;
+    mix-blend-mode: normal;
+  }
+
+  .hero-copy h1 > :is(span, em),
+  .hero-details > p,
+  .hero-actions,
+  .about-motion :is(h1, h1 + p),
+  [data-motion-hero] {
+    animation: motion-heading-in 620ms var(--motion-ease) backwards;
+  }
+
+  .hero-copy h1 > em,
+  .about-motion h1 + p,
+  [data-motion-hero='description'] { animation-delay: 65ms; }
+  .hero-details > p { animation-delay: 130ms; }
+  .hero-actions { animation-delay: 185ms; }
+  .hero-actions:focus-within { animation: none; }
+
+  .hero-sky,
+  .about-motion section:has(h1) img,
+  [data-motion-hero-image] {
+    animation: motion-image-in 1050ms var(--motion-ease) backwards;
+  }
+
+  [data-motion-visible]:not(:focus-within) {
+    animation: motion-reveal 560ms var(--motion-ease) var(--motion-delay, 0ms) backwards;
+  }
+
+  [data-motion-visible]:nth-child(4n + 2) { --motion-delay: 40ms; }
+  [data-motion-visible]:nth-child(4n + 3) { --motion-delay: 80ms; }
+  [data-motion-visible]:nth-child(4n) { --motion-delay: 120ms; }
+
+  .language-switch .language-chevron { transition: transform 220ms var(--motion-ease); }
+  .language-switch[open] ul { animation: motion-menu-in 200ms var(--motion-ease) backwards; }
+  .menu-button span { transition: transform 220ms var(--motion-ease); }
+
+  .button-arrow,
+  .nav-brand img,
+  .result-handle svg { transition: transform var(--motion-fast) var(--motion-ease), color var(--motion-fast) ease; }
+
+  :is(a, button):focus-visible .button-arrow { transform: translateX(3px); }
+  :is(.hero-actions a, .technology-preview-cta):active { transform: translateY(1px) scale(.985); }
+  .result-handle button:active svg { transform: scale(.86); }
+
+  @media (hover: hover) and (pointer: fine) {
+    :is(a, button):hover .button-arrow { transform: translateX(3px); }
+    .nav-brand:hover img { transform: scale(1.05); }
+    .result-handle button:hover:not(:active) svg { transform: scale(1.15); }
+  }
+
+  @supports (animation-timeline: scroll(root block)) {
+    .site-header::after {
+      position: absolute;
+      right: 0;
+      bottom: -1px;
+      left: 0;
+      height: 2px;
+      background: #ef5149;
+      content: '';
+      pointer-events: none;
+      transform-origin: left;
+      animation: motion-scroll-progress linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+
+@keyframes motion-heading-in {
+  from { opacity: .64; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes motion-image-in {
+  from { scale: 1.045; }
+  to { scale: 1; }
+}
+
+@keyframes motion-reveal {
+  from { opacity: .48; translate: 0 16px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes motion-menu-in {
+  from { opacity: 0; translate: 0 -6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes motion-route-out { to { opacity: 0; } }
+@keyframes motion-route-in { from { opacity: 0; } }
+
+@keyframes motion-scroll-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
