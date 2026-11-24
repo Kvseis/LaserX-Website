@@ -31,6 +31,11 @@
 .arrows { display: flex; gap: 8px; }
 .arrows button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #c9c5bd; border-radius: 50%; color: var(--ink); background: transparent; font-size: 19px; cursor: pointer; transition: color 180ms ease, background 180ms ease, border-color 180ms ease; }
 .arrows button:hover:not(:disabled), .arrows button:focus-visible:not(:disabled) { color: #fff; background: var(--dark); border-color: var(--dark); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .arrows button:enabled { transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, scale var(--motion-fast) var(--motion-ease); }
+  .arrows button:enabled:active { scale: .92; }
+}
 .arrows button:disabled { opacity: .35; cursor: default; }
 .services[data-scroll='page'] { position: relative; padding: 0; }
 .services[data-scroll='page'] .inner { position: sticky; top: 92px; padding-block: 20px; }

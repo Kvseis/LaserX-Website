@@ -117,6 +117,25 @@
   .contact { justify-content: flex-start; }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .item[open] p { animation: answerIn 240ms var(--motion-ease) backwards; }
+
+  @supports (interpolate-size: allow-keywords) and selector(details::details-content) {
+    .item { interpolate-size: allow-keywords; }
+    .item::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size 280ms var(--motion-ease), content-visibility 280ms allow-discrete;
+    }
+    .item[open]::details-content { block-size: auto; }
+  }
+}
+
+@keyframes answerIn {
+  from { opacity: .3; }
+  to { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .chevron::after { transition: none; }
 }

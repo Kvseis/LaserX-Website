@@ -33,5 +33,5 @@ export default function AboutReveal({ children }: { children: ReactNode }) {
     return () => media.revert();
   }, { scope: root });
 
-  return <main ref={root}>{children}</main>;
+  return <main ref={root} className="about-motion">{children}</main>;
 }

@@ -15,7 +15,7 @@ export default function SiteFooter({ locale, copy }: { locale: Locale; copy: Sit
   return <footer className={`${styles.footer} ${manrope.className}`}>
     <div className={styles.content}>
       <div className={styles.heading}>
-        <h2>{copy.footer.title}</h2>
+        <h2 data-motion-reveal>{copy.footer.title}</h2>
         <a className={styles.action} href={`${home}#sifaris`}>{copy.footer.booking}<ButtonArrow /></a>
       </div>
       <div className={styles.columns}>

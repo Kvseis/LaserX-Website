@@ -13,7 +13,7 @@ export default function ContactBanner({ copy }: { copy: SiteCopy }) {
     <div className={styles.media}><Image className={styles.image} src="/images/technology-cta.webp" fill sizes="(max-width: 900px) 100vw, 72vw" alt={copy.technology.contactAlt} /></div>
     <div className={styles.shade} />
     <div className={styles.layout}>
-      <div className={styles.content}>
+      <div className={styles.content} data-motion-reveal>
         <h2 id="booking-title">{copy.booking.title}</h2>
         <p>{copy.booking.intro}</p>
         <a className={styles.call} href={phone}><PhoneIcon /><span>+994 55 390 00 28</span></a>

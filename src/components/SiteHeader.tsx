@@ -74,7 +74,13 @@ export default function SiteHeader({ locale, page, copy }: {
       <nav id="main-navigation" className={menuOpen ? 'open' : ''} aria-label={copy.main}>
         {links.map(([label, href]) => href.includes('#')
           ? <a key={href} href={href} onClick={(event) => navigateSection(event, href)}>{label}</a>
-          : <Link prefetch={false} key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</Link>)}
+          : <Link
+            prefetch={false}
+            key={href}
+            href={href}
+            aria-current={href === sitePath(locale, page) ? 'page' : undefined}
+            onClick={() => setMenuOpen(false)}
+          >{label}</Link>)}
       </nav>
       <div className="nav-actions">
         <div className="nav-contact" role="group" aria-label={copy.contact}>
