@@ -43,10 +43,13 @@ try {
     if (scenario.name === 'en-technology' || scenario.name === 'en-mobile') await page.screenshot({ path: `artifacts/benefits-${scenario.name}.png` });
     const brand = page.locator('.site-header .nav-brand');
     for (let click = 0; click < 2; click++) {
-      if (click) await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
+      if (click) {
+        await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
+        if (await page.evaluate(() => window.scrollY) < 300) throw new Error(`${scenario.name}: could not scroll down before repeated logo click`);
+      }
       await brand.click();
       await page.waitForFunction(() => window.scrollY < 3);
-      if (new URL(page.url()).pathname !== scenario.home) throw new Error(`${scenario.name}: logo did not return home`);
+      if (page.url() !== `${baseUrl}${scenario.home}`) throw new Error(`${scenario.name}: logo did not return to the homepage hero`);
     }
     await page.close();
   }

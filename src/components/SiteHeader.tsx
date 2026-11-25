@@ -65,12 +65,17 @@ export default function SiteHeader({ locale, page, copy }: {
     });
   }
 
+  function navigateHome(event: MouseEvent<HTMLAnchorElement>) {
+    setMenuOpen(false);
+    if (page !== 'home' || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (window.location.hash) window.history.replaceState(null, '', home);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
   return (
     <header className="site-header">
-      <Link prefetch={false} className="wordmark nav-brand" href={page === 'home' ? '#top' : home} aria-label={copy.home} onClick={(event) => {
-        if (page === 'home') navigateSection(event, '#top');
-        else setMenuOpen(false);
-      }}>
+      <Link prefetch={false} className="wordmark nav-brand" href={home} aria-label={copy.home} onClick={navigateHome}>
         <Image src="/images/logo-mark-transparent.png" width={42} height={42} alt="" priority />
         <span>LaserX</span>
       </Link>
