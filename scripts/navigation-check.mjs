@@ -41,6 +41,13 @@ try {
     if (!visible) throw new Error(`${scenario.name}: comparison heading is not visible`);
     if (scenario.mobile && await page.locator('.menu-button').getAttribute('aria-expanded') !== 'false') throw new Error(`${scenario.name}: menu stayed open`);
     if (scenario.name === 'en-technology' || scenario.name === 'en-mobile') await page.screenshot({ path: `artifacts/benefits-${scenario.name}.png` });
+    const brand = page.locator('.site-header .nav-brand');
+    for (let click = 0; click < 2; click++) {
+      if (click) await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
+      await brand.click();
+      await page.waitForFunction(() => window.scrollY < 3);
+      if (new URL(page.url()).pathname !== scenario.home) throw new Error(`${scenario.name}: logo did not return home`);
+    }
     await page.close();
   }
   console.log(JSON.stringify({ ok: true, cases: cases.map(({ name }) => name) }));

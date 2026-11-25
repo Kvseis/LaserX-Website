@@ -67,7 +67,10 @@ export default function SiteHeader({ locale, page, copy }: {
 
   return (
     <header className="site-header">
-      <Link prefetch={false} className="wordmark nav-brand" href={page === 'home' ? '#top' : home} aria-label={copy.home}>
+      <Link prefetch={false} className="wordmark nav-brand" href={page === 'home' ? '#top' : home} aria-label={copy.home} onClick={(event) => {
+        if (page === 'home') navigateSection(event, '#top');
+        else setMenuOpen(false);
+      }}>
         <Image src="/images/logo-mark-transparent.png" width={42} height={42} alt="" priority />
         <span>LaserX</span>
       </Link>
