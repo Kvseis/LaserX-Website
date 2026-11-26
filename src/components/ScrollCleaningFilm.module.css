@@ -1,6 +1,7 @@
 .section {
   --stage-height: 100svh;
   --scroll-travel: 390svh;
+  --metal-focus: 50%;
   position: relative;
   color: #18211d;
   background: #17120e;
@@ -10,7 +11,7 @@
   position: relative;
   height: var(--stage-height);
   overflow: hidden;
-  background: #f7f4eb url('/images/laserx-scroll-poster.webp') center / cover no-repeat;
+  background: #f7f4eb url('/images/laserx-scroll-poster.webp') var(--metal-focus) center / cover no-repeat;
 }
 
 .video,
@@ -23,6 +24,8 @@
   object-fit: cover;
   object-position: center;
 }
+
+.video { object-position: var(--metal-focus) center; }
 
 .woodScene,
 .dustVeil,
@@ -137,6 +140,8 @@
 }
 
 @media (max-aspect-ratio: 4/3) {
+  .section { --metal-focus: 86%; }
+  .heading { max-width: 350px; }
   .woodMedia { background-position: 69% center; }
   .woodMedia video { object-position: 69% center; }
 }
@@ -146,19 +151,18 @@
     --stage-height: 100dvh;
     --scroll-travel: 336svh;
   }
-  .stage { background-image: none; }
+  .stage { background: #f0e4de; }
   .stage::before {
     position: absolute;
     inset: 44% 0 0;
     content: '';
-    background: url('/images/laserx-scroll-poster.webp') 61% center / cover no-repeat;
+    background: url('/images/laserx-scroll-poster.webp') var(--metal-focus) center / cover no-repeat;
   }
   .woodMedia canvas { object-position: 32% center; }
   .video {
     top: 44%;
     bottom: auto;
     height: 56%;
-    object-position: 61% center;
   }
   .content {
     width: calc(100% - 36px);
