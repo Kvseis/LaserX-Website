@@ -100,6 +100,7 @@
   .section[data-static='false'] .woodScene,
   .section[data-static='false'] .dustVeil,
   .section[data-static='false'] .dustCloud[data-frame] { display: block; }
+  .section[data-static='false'][data-media='video'] video:not([data-ready]) { opacity: 0; }
   .section[data-static='false'] .scrollCue { display: grid; }
 
   .woodScene {
@@ -150,6 +151,7 @@
   .section {
     --stage-height: 100dvh;
     --scroll-travel: 336svh;
+    background: #f0e4de;
   }
   .stage { background: #f0e4de; }
   .stage::before {
