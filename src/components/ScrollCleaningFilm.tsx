@@ -12,6 +12,7 @@ const dustStart = 0.32;
 const dustEnd = 0.60;
 const woodPreloadStart = 0.14;
 const dustPreloadStart = 0.22;
+const heroPreloadStart = 0.18;
 const scrollResponseMs = 110;
 const metalFraming = [[0, .85], [96, .71], [156, .58], [191, .63]] as const;
 
@@ -88,12 +89,27 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       scheduleUpdate();
     };
 
+    const retryVideoSource = (event: Event) => {
+      const video = event.currentTarget as HTMLVideoElement;
+      if (!video.src.startsWith('blob:')) return;
+      delete video.dataset.ready;
+      video.src = video === metal ? metalSource : woodSource;
+    };
+
     const update = (now: number) => {
       frame = 0;
       if (isStatic || !isNear) return;
 
-      const travel = section.offsetHeight - stage.offsetHeight;
-      const target = travel > 0 ? clampProgress(-section.getBoundingClientRect().top / travel) : 0;
+      const heroScroll = Number.parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll')) || 0;
+      const offset = -section.getBoundingClientRect().top;
+      if (displayedProgress === undefined) {
+        // Leave the initial warmup to the homepage loader while the framed hero is still on screen.
+        if (heroScroll > 0 && offset < heroScroll * heroPreloadStart) return;
+        preloadMetal();
+      }
+
+      const travel = section.offsetHeight - stage.offsetHeight - heroScroll;
+      const target = travel > 0 ? clampProgress((offset - heroScroll) / travel) : 0;
       const previous = displayedProgress ?? target;
       const elapsed = Math.min(now - previousFrameTime, 32);
       const gap = target - previous;
@@ -142,7 +158,6 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     };
 
     const preloadMetal = () => {
-      if (isStatic || !isNear) return;
       if (narrowViewport.matches) metalFrames.preload();
       else if (!metal.hasAttribute('src')) {
         metal.preload = 'auto';
@@ -159,7 +174,6 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         wood.pause();
         metal.pause();
       } else {
-        preloadMetal();
         scheduleUpdate();
       }
     };
@@ -167,7 +181,6 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     const observer = new IntersectionObserver(([entry]) => {
       isNear = entry.isIntersecting;
       if (!isNear) displayedProgress = undefined;
-      preloadMetal();
       scheduleUpdate();
     }, { rootMargin: '0px 0px -64px' });
 
@@ -179,6 +192,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       video.addEventListener('loadedmetadata', scheduleUpdate);
       video.addEventListener('loadeddata', showDecodedVideo);
       video.addEventListener('seeked', scheduleUpdate);
+      video.addEventListener('error', retryVideoSource);
     }
     reducedMotion.addEventListener('change', syncMode);
     narrowViewport.addEventListener('change', syncMode);
@@ -195,6 +209,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         video.removeEventListener('loadedmetadata', scheduleUpdate);
         video.removeEventListener('loadeddata', showDecodedVideo);
         video.removeEventListener('seeked', scheduleUpdate);
+        video.removeEventListener('error', retryVideoSource);
       }
       reducedMotion.removeEventListener('change', syncMode);
       narrowViewport.removeEventListener('change', syncMode);

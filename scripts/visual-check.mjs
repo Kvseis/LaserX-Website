@@ -107,6 +107,8 @@ async function verifyViewport(name, viewport) {
     || !await heroSky.evaluate((image) => image.complete && image.naturalWidth > 0)) {
     throw new Error(`${name}: yeni hero fonu yüklənməyib`);
   }
+  await page.locator('[data-home-loading]').waitFor({ state: 'hidden' });
+  await page.locator('.hero').screenshot({ path: path.join(artifactDir, `laserx-${name}-hero.png`) });
 
   const faq = page.locator('#suallar');
   const questions = faq.locator('details');
@@ -194,7 +196,6 @@ async function verifyViewport(name, viewport) {
     })),
   ));
 
-  await page.locator('.hero').screenshot({ path: path.join(artifactDir, `laserx-${name}-hero.png`) });
   await page.locator('.results').screenshot({ path: path.join(artifactDir, `laserx-${name}-results.png`) });
   await page.locator('#xidmetler').screenshot({ path: path.join(artifactDir, `laserx-${name}-services.png`) });
   await page.locator('.technology-preview').screenshot({ path: path.join(artifactDir, `laserx-${name}-technology.png`) });

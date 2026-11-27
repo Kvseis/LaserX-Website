@@ -26,29 +26,87 @@ try {
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     const film = page.locator('#proses[data-static="false"]');
     await film.waitFor();
-    const scrollScreens = await film.evaluate((section) => {
+    const introTravel = await film.evaluate((section) => parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll')));
+    if (!(introTravel > 0 && introTravel < viewport.height * .6)) throw new Error(`${name}: missing or too long hero transition`);
+    const scrollScreens = await film.evaluate((section, intro) => {
       const height = section.firstElementChild.offsetHeight;
-      return (section.offsetHeight - height) / height;
-    });
+      return (section.offsetHeight - height - intro) / height;
+    }, introTravel);
     if (scrollScreens < (mobile ? 3.3 : 3.85)) throw new Error(`${name}: film üçün sürüşdürmə məsafəsi qısadır`);
     const seekTo = async (progress) => {
       await page.evaluate((fraction) => {
         const section = document.getElementById('proses');
-        const travel = section.offsetHeight - section.firstElementChild.offsetHeight;
-        window.scrollTo({ top: section.offsetTop + travel * fraction, behavior: 'instant' });
+        const intro = parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll'));
+        const travel = section.offsetHeight - section.firstElementChild.offsetHeight - intro;
+        window.scrollTo({ top: section.offsetTop + intro + travel * fraction, behavior: 'instant' });
       }, progress);
     };
 
-    if (await page.evaluate(() => CSS.supports('animation-timeline: view()') && CSS.supports('animation-range: entry 0% entry 100%'))) {
-      await film.evaluate(section => window.scrollTo({ top: window.scrollY + section.getBoundingClientRect().top - innerHeight / 2, behavior: 'instant' }));
-      await page.waitForFunction(() => {
-        const opacity = Number(getComputedStyle(document.querySelector('#proses > div')).opacity);
-        return opacity > .35 && opacity < .65;
-      });
-      await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-transition.png`) });
-      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
-      await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.hero-copy')).opacity) > .95);
+    const seekIntro = async (fraction) => film.evaluate(async (section, progress) => {
+      const intro = parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll'));
+      window.scrollTo({ top: Math.ceil(section.offsetTop + intro * progress), behavior: 'instant' });
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    }, fraction);
+    const readIntro = () => page.locator('.hero').evaluate((hero) => {
+      const sky = hero.querySelector('.hero-sky');
+      const backdrop = sky.closest('picture').parentElement;
+      const frame = backdrop.getBoundingClientRect();
+      const stage = getComputedStyle(hero.parentElement);
+      return {
+        fillsViewport: Math.abs(frame.top) <= 1 && Math.abs(frame.left) <= 1 &&
+          Math.abs(frame.right - document.documentElement.clientWidth) <= 1 && Math.abs(frame.bottom - innerHeight) <= 1,
+        radius: getComputedStyle(backdrop).borderBottomLeftRadius,
+        scale: new DOMMatrix(getComputedStyle(sky).transform).a,
+        copyOpacity: Number(getComputedStyle(hero.querySelector('.hero-copy')).opacity),
+        skyOpacity: Number(stage.opacity),
+        filmProgress: getComputedStyle(document.getElementById('proses')).getPropertyValue('--film-progress').trim(),
+      };
+    });
+
+    await seekIntro(.4);
+    const expanded = await readIntro();
+    if (!expanded.fillsViewport || expanded.radius !== '0px' || expanded.scale <= 1 || expanded.copyOpacity <= 0 || expanded.copyOpacity >= 1 || expanded.skyOpacity !== 1) {
+      throw new Error(`${name}: the hero frame should reach the viewport edges as its copy fades: ${JSON.stringify(expanded)}`);
     }
+    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-expanded.png`) });
+
+    await seekIntro(.76);
+    const blended = await readIntro();
+    if (blended.scale <= expanded.scale || blended.copyOpacity !== 0 || blended.skyOpacity <= 0 || blended.skyOpacity >= 1 || blended.filmProgress !== '0%') {
+      throw new Error(`${name}: the clouds should blend into the first film frame: ${JSON.stringify(blended)}`);
+    }
+    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-transition.png`) });
+
+    await seekIntro(1);
+    const revealed = await readIntro();
+    if (revealed.skyOpacity !== 0 || await page.locator('.hero-book').isVisible()) {
+      throw new Error(`${name}: the hero should clear the film and remove its controls from view`);
+    }
+    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-handoff.png`) });
+
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('.hero-copy')).opacity === '1');
+    const restored = await readIntro();
+    if (restored.fillsViewport || restored.radius === '0px' || restored.scale !== 1 || restored.skyOpacity !== 1) {
+      throw new Error(`${name}: scrolling back should restore the framed hero: ${JSON.stringify(restored)}`);
+    }
+    if (!useWebKit) {
+      await page.locator('.hero-equipment').focus();
+      await page.keyboard.press('Shift+Tab');
+    }
+    const focusedHeroButton = await page.locator('.hero-book').evaluate((button) => {
+      const { left, top, width, height } = button.getBoundingClientRect();
+      const hit = document.elementFromPoint(left + width / 2, top + height / 2);
+      return {
+        focusVisible: button.matches(':focus-visible'),
+        clickable: button.contains(hit),
+      };
+    });
+    // The default WebKit keyboard settings skip links when tabbing.
+    if ((!useWebKit && !focusedHeroButton.focusVisible) || !focusedHeroButton.clickable) {
+      throw new Error(`${name}: keyboard focus did not return to the visible hero booking button: ${JSON.stringify(focusedHeroButton)}`);
+    }
+    await page.locator('.hero-book').blur();
 
     await seekTo(.18);
     const waitForFrame = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
@@ -103,8 +161,9 @@ try {
     const { before, firstStep } = await film.evaluate(async (section) => {
       const readProgress = () => parseFloat(section.style.getPropertyValue('--film-progress'));
       const before = readProgress();
-      const travel = section.offsetHeight - section.firstElementChild.offsetHeight;
-      window.scrollTo({ top: section.offsetTop + travel * .3, behavior: 'instant' });
+      const intro = parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll'));
+      const travel = section.offsetHeight - section.firstElementChild.offsetHeight - intro;
+      window.scrollTo({ top: section.offsetTop + intro + travel * .3, behavior: 'instant' });
       let firstStep = before;
       for (let i = 0; i < 12 && firstStep <= before; i++) {
         await new Promise(requestAnimationFrame);
@@ -256,8 +315,9 @@ try {
     position: getComputedStyle(section.firstElementChild).position,
     videoLoaded: [...section.querySelectorAll('video')].some((video) => video.hasAttribute('src')),
     dustVisible: getComputedStyle(section.querySelector('[class*="dustCloud"]')).display !== 'none',
+    heroTransition: section.parentElement.hasAttribute('data-hero-transition'),
   }));
-  if (fallback.position !== 'relative' || fallback.videoLoaded || fallback.dustVisible) {
+  if (fallback.position !== 'relative' || fallback.videoLoaded || fallback.dustVisible || fallback.heroTransition) {
     throw new Error(`Reduced-motion fallback failed: ${JSON.stringify(fallback)}`);
   }
   console.log('Reduced-motion fallback: poster visible, video hidden, no sticky scroll');
