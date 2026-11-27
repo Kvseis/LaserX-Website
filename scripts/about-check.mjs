@@ -7,15 +7,22 @@ const browser = await chromium.launch({
   headless: true,
 });
 await mkdir('artifacts', { recursive: true });
+const getHeroFrame = (hero) => hero.evaluate((element) => {
+  const { top, left, width, height } = element.getBoundingClientRect();
+  return { top, left, width, height, radius: getComputedStyle(element).borderRadius };
+});
+
 const results = [];
 try {
   for (const width of [390, 768, 820, 1024, 1440]) {
     const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(`${baseUrl}/technology`, { waitUntil: 'load', timeout: 60000 });
+    const technologyFrame = await getHeroFrame(page.locator('main .hero'));
     for (const locale of ([768, 1024].includes(width) ? ['az'] : ['az', 'en', 'ru', 'tr'])) {
       const prefix = locale === 'az' ? '' : `/${locale}`;
-      const response = await page.goto(`${baseUrl}${prefix}/about`, { waitUntil: 'load', timeout: 60000 });
+      const response = await page.goto(`${baseUrl}${prefix}/about`, { waitUntil: 'networkidle', timeout: 60000 });
       if (response.status() !== 200) throw Error(`${locale}: about route failed`);
       await page.evaluate(() => document.fonts.ready);
       if (await page.locator('h1').count() !== 1 || await page.locator('html').getAttribute('lang') !== locale) {
@@ -66,8 +73,11 @@ try {
         rail.children.length === 4 && rail.scrollWidth > rail.clientWidth && getComputedStyle(rail).scrollSnapType === 'x mandatory')) {
         throw Error(`${locale}/${width}: mobile steps must snap horizontally`);
       }
-      const heroGap = await page.evaluate(() => document.querySelector('main section > div').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom);
-      if (Math.abs(heroGap - 16) > 1) throw Error(`${locale}/${width}: hero gap is ${heroGap}`);
+      const aboutFrame = await getHeroFrame(hero);
+      if (aboutFrame.radius !== technologyFrame.radius || ['top', 'left', 'width', 'height'].some((key) =>
+        Math.abs(aboutFrame[key] - technologyFrame[key]) > 1)) {
+        throw Error(`${locale}/${width}: About hero frame differs from Technology`);
+      }
       if (await page.locator('main nav a').getAttribute('href') !== (prefix || '/')) throw Error('Breadcrumb home link loses locale');
       const nav = await page.locator('#main-navigation a').evaluateAll((links) => links.map((link) => ({ text: link.textContent, href: link.getAttribute('href') })));
       if (nav.length !== 5 || nav[0].href !== `${prefix}/about`) throw Error('About navigation missing');

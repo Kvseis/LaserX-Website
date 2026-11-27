@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ArrowDownRight } from 'lucide-react';
+import { Onest } from 'next/font/google';
 import type { SiteCopy } from '@/lib/messages/az';
 import { sitePath, type Locale } from '@/lib/locales';
 import { getAboutCopy } from '@/lib/about-copy';
@@ -9,7 +9,10 @@ import ContactBanner from './ContactBanner';
 import AboutReveal from './AboutReveal';
 import AboutStory from './AboutStory';
 import Steps from './Steps';
+import ButtonArrow from './ButtonArrow';
 import styles from './AboutPage.module.css';
+
+const onest = Onest({ subsets: ['latin'], display: 'swap' });
 
 export default function AboutPage({ locale, copy }: { locale: Locale; copy: SiteCopy }) {
   const about = getAboutCopy(locale);
@@ -18,29 +21,37 @@ export default function AboutPage({ locale, copy }: { locale: Locale; copy: Site
     <div className={styles.page} id="top">
       <SiteHeader locale={locale} page="about" copy={copy.nav} />
       <AboutReveal>
-        <div className={styles.editorial}>
-          <section className={styles.hero} aria-labelledby="about-title">
-            <div className={styles.heroFrame}>
-              <picture>
-                <source media="(max-width: 640px)" srcSet="/images/about-concrete-flanges-mobile.webp" />
-                <Image className={styles.heroImage} src="/images/about-concrete-flanges.webp" fill sizes="100vw"
-                  fetchPriority="high" loading="eager" alt={about.heroAlt} />
-              </picture>
-              <div className={styles.heroContent}>
-                <nav className={styles.breadcrumb} aria-label={copy.nav.about}>
-                  <a href={sitePath(locale)}>{about.breadcrumbHome}</a>
-                  <span aria-hidden="true">/</span>
-                  <span aria-current="page">{copy.nav.about}</span>
-                </nav>
-                <h1 id="about-title">{about.heroTitle}</h1>
-                <p>{about.heroIntro}</p>
-                <a className={styles.heroAction} href="#sifaris">
-                  {about.heroCta}<ArrowDownRight size={16} aria-hidden="true" />
-                </a>
+        <section className={`hero ${styles.hero} ${onest.className}`} aria-labelledby="about-title">
+          <picture>
+            <source media="(max-width: 640px)" srcSet="/images/about-concrete-flanges-mobile.webp" />
+            <Image
+              className={`hero-sky ${styles.heroImage}`}
+              src="/images/about-concrete-flanges.webp"
+              alt={about.heroAlt}
+              fill
+              sizes="(max-aspect-ratio: 3/2) 170svh, 100vw"
+              fetchPriority="high"
+              loading="eager"
+            />
+          </picture>
+          <div className={`hero-shade ${styles.heroShade}`} aria-hidden="true" />
+          <div className="hero-copy">
+            <nav className={styles.breadcrumb} aria-label={copy.nav.about}>
+              <a href={sitePath(locale)}>{about.breadcrumbHome}</a>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page">{copy.nav.about}</span>
+            </nav>
+            <h1 id="about-title">{about.heroTitle}</h1>
+            <div className="hero-details">
+              <p>{about.heroIntro}</p>
+              <div className="hero-actions">
+                <a className="hero-book" href="#sifaris">{about.heroCta}<ButtonArrow /></a>
               </div>
             </div>
-          </section>
+          </div>
+        </section>
 
+        <div className={styles.editorial}>
           <section className={styles.principles} id="principles" aria-labelledby="principles-title">
             <div className={styles.container}>
               <div className={styles.principlesIntro}>
