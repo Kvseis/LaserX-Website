@@ -4,8 +4,15 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { getFilmConnection, usesStaticFilm } from './ScrollFilmAssets';
 import styles from './HomeOpening.module.css';
 
+const responseMs = 100;
+const stickyTailPx = 180;
+
+function clampProgress(value: number) {
+  return Math.max(0, Math.min(1, value));
+}
+
 function easeBetween(value: number, start: number, end: number) {
-  const progress = Math.max(0, Math.min(1, (value - start) / (end - start)));
+  const progress = clampProgress((value - start) / (end - start));
   return progress * progress * (3 - 2 * progress);
 }
 
@@ -16,8 +23,9 @@ export default function HomeOpening({ hero, children }: { hero: ReactNode; child
   useEffect(() => {
     const opening = openingRef.current;
     const stage = stageRef.current;
+    const track = stage?.parentElement;
     const hero = stage?.firstElementChild;
-    if (!opening || !stage || !hero) return;
+    if (!opening || !stage || !track || !hero) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const shortViewport = window.matchMedia('(max-height: 560px)');
@@ -26,20 +34,38 @@ export default function HomeOpening({ hero, children }: { hero: ReactNode; child
     let enabled = false;
     let frame = 0;
     let travel = 0;
-    let previousProgress = -1;
+    let displayedProgress: number | undefined;
+    let previousFrameTime = 0;
 
-    const update = () => {
+    const update = (now: number) => {
       frame = 0;
       if (!enabled) return;
 
-      const progress = Math.max(0, Math.min(1, -opening.getBoundingClientRect().top / travel));
-      if (progress === previousProgress) return;
-      previousProgress = progress;
-      stage.style.setProperty('--hero-expansion', String(easeBetween(progress, 0, .39)));
-      stage.style.setProperty('--hero-cloud', String(easeBetween(progress, .12, .79)));
-      stage.style.setProperty('--hero-copy-opacity', String(1 - easeBetween(progress, .22, .65)));
-      stage.style.setProperty('--hero-scene-opacity', String(1 - easeBetween(progress, .60, 1)));
-      stage.toggleAttribute('data-hero-copy-hidden', progress >= .65);
+      const offset = -opening.getBoundingClientRect().top;
+      // Complete the reveal just before the film begins following the scroll.
+      const target = clampProgress(offset / (travel * .94));
+      const previous = displayedProgress ?? target;
+      const elapsed = Math.min(now - previousFrameTime, 34);
+      const gap = target - previous;
+      const outsideTrack = offset < -stickyTailPx || offset > travel + stickyTailPx;
+      const progress = outsideTrack || Math.abs(gap) < .002
+        ? target
+        : previous + gap * (1 - Math.exp(-elapsed / responseMs));
+      previousFrameTime = now;
+      if (progress !== target) scheduleUpdate();
+      if (progress === displayedProgress) return;
+      displayedProgress = progress;
+
+      const copy = easeBetween(progress, .24, .57);
+      const reveal = clampProgress((progress - .59) / .4);
+      stage.style.setProperty('--hero-expansion', String(easeBetween(progress, 0, .29)));
+      stage.style.setProperty('--hero-cloud', String(easeBetween(progress, .13, .81)));
+      stage.style.setProperty('--hero-mist', String(easeBetween(progress, .29, .68)));
+      stage.style.setProperty('--hero-copy-exit', String(copy));
+      stage.style.setProperty('--hero-reveal', `${10 + reveal * 81}%`);
+      stage.style.setProperty('--hero-scene-opacity', String(1 - easeBetween(progress, .88, 1)));
+      stage.toggleAttribute('data-hero-copy-hidden', copy === 1);
+      stage.toggleAttribute('data-hero-revealing', reveal > 0 && progress < 1);
     };
 
     const scheduleUpdate = () => {
@@ -50,7 +76,8 @@ export default function HomeOpening({ hero, children }: { hero: ReactNode; child
       if (!enabled) return;
       const stageBox = stage.getBoundingClientRect();
       const heroBox = hero.getBoundingClientRect();
-      travel = Math.round(Math.max(280, Math.min(440, document.documentElement.clientHeight * .44)));
+      const spacerHeight = Number.parseFloat(getComputedStyle(track, '::after').height);
+      travel = Math.round(spacerHeight - stickyTailPx);
       opening.style.setProperty('--hero-scroll', `${travel}px`);
       stage.style.setProperty('--hero-top-edge', `${heroBox.top - stageBox.top}px`);
       stage.style.setProperty('--hero-side-edge', `${heroBox.left - stageBox.left}px`);
@@ -63,8 +90,10 @@ export default function HomeOpening({ hero, children }: { hero: ReactNode; child
       opening.toggleAttribute('data-hero-transition', enabled);
       if (!enabled) {
         opening.style.removeProperty('--hero-scroll');
+        displayedProgress = undefined;
         return;
       }
+      opening.style.setProperty('--hero-sticky-tail', `${stickyTailPx}px`);
       measure();
     };
 

@@ -27,7 +27,9 @@ try {
     const film = page.locator('#proses[data-static="false"]');
     await film.waitFor();
     const introTravel = await film.evaluate((section) => parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll')));
-    if (!(introTravel > 0 && introTravel < viewport.height * .6)) throw new Error(`${name}: missing or too long hero transition`);
+    if (!(introTravel > viewport.height * .9 && introTravel < viewport.height)) {
+      throw new Error(`${name}: the opening transition should span nearly one viewport`);
+    }
     const scrollScreens = await film.evaluate((section, intro) => {
       const height = section.firstElementChild.offsetHeight;
       return (section.offsetHeight - height - intro) / height;
@@ -46,6 +48,11 @@ try {
       const intro = parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll'));
       window.scrollTo({ top: Math.ceil(section.offsetTop + intro * progress), behavior: 'instant' });
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const copy = document.querySelector('.hero-copy');
+      return {
+        copyOpacity: Number(getComputedStyle(copy).opacity),
+        masked: getComputedStyle(copy.closest('.hero').parentElement).maskImage !== 'none',
+      };
     }, fraction);
     const readIntro = () => page.locator('.hero').evaluate((hero) => {
       const sky = hero.querySelector('.hero-sky');
@@ -59,25 +66,44 @@ try {
         scale: new DOMMatrix(getComputedStyle(sky).transform).a,
         copyOpacity: Number(getComputedStyle(hero.querySelector('.hero-copy')).opacity),
         skyOpacity: Number(stage.opacity),
+        masked: stage.maskImage !== 'none',
+        revealPosition: parseFloat(stage.getPropertyValue('--hero-reveal')),
         filmProgress: getComputedStyle(document.getElementById('proses')).getPropertyValue('--film-progress').trim(),
       };
     });
 
-    await seekIntro(.4);
+    const firstHeroStep = await seekIntro(.4);
+    if (firstHeroStep.copyOpacity < .8 || firstHeroStep.masked) {
+      throw new Error(`${name}: a large scroll step should ease into the sky transition: ${JSON.stringify(firstHeroStep)}`);
+    }
+    await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.hero-copy')).opacity) < .5);
     const expanded = await readIntro();
     if (!expanded.fillsViewport || expanded.radius !== '0px' || expanded.scale <= 1 || expanded.copyOpacity <= 0 || expanded.copyOpacity >= 1 || expanded.skyOpacity !== 1) {
       throw new Error(`${name}: the hero frame should reach the viewport edges as its copy fades: ${JSON.stringify(expanded)}`);
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-expanded.png`) });
 
-    await seekIntro(.76);
+    await seekIntro(.54);
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('.hero-copy')).opacity === '0');
+    const clouds = await readIntro();
+    if (clouds.masked || clouds.skyOpacity !== 1 || clouds.scale <= expanded.scale) {
+      throw new Error(`${name}: the clouds should cover the stage before the metal reveal: ${JSON.stringify(clouds)}`);
+    }
+    await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-clouds.png`) });
+
+    await seekIntro(.75);
+    await page.waitForFunction(() => {
+      const stage = document.querySelector('.hero').parentElement;
+      return parseFloat(getComputedStyle(stage).getPropertyValue('--hero-reveal')) >= 50;
+    });
     const blended = await readIntro();
-    if (blended.scale <= expanded.scale || blended.copyOpacity !== 0 || blended.skyOpacity <= 0 || blended.skyOpacity >= 1 || blended.filmProgress !== '0%') {
+    if (!blended.masked || blended.revealPosition >= 65 || blended.scale <= clouds.scale || blended.copyOpacity !== 0 || blended.filmProgress !== '0%') {
       throw new Error(`${name}: the clouds should blend into the first film frame: ${JSON.stringify(blended)}`);
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-transition.png`) });
 
     await seekIntro(1);
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('.hero').parentElement).opacity === '0');
     const revealed = await readIntro();
     if (revealed.skyOpacity !== 0 || await page.locator('.hero-book').isVisible()) {
       throw new Error(`${name}: the hero should clear the film and remove its controls from view`);
@@ -85,7 +111,10 @@ try {
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-handoff.png`) });
 
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
-    await page.waitForFunction(() => getComputedStyle(document.querySelector('.hero-copy')).opacity === '1');
+    await page.waitForFunction(() => {
+      const sky = document.querySelector('.hero-sky');
+      return new DOMMatrix(getComputedStyle(sky).transform).a === 1;
+    });
     const restored = await readIntro();
     if (restored.fillsViewport || restored.radius === '0px' || restored.scale !== 1 || restored.skyOpacity !== 1) {
       throw new Error(`${name}: scrolling back should restore the framed hero: ${JSON.stringify(restored)}`);
