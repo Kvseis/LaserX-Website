@@ -80,6 +80,7 @@ export function createScrollFilmFrames(
         width - inset * 2, height - inset * 2, 0, 0, width, height);
       canvas.dataset.frame = String(frame);
       painted = frame;
+      return frame;
     },
   };
 }

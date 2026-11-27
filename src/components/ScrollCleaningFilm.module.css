@@ -153,27 +153,47 @@
     --scroll-travel: 336svh;
     background: #f0e4de;
   }
-  .stage { background: #f0e4de; }
+  .stage {
+    container-type: inline-size;
+    background: #f0e4de;
+  }
+  .stage::before,
+  .video {
+    --metal-image-width: calc(var(--stage-height) * 16 / 9);
+    --metal-offset: clamp(
+      min(0px, 100cqw - var(--metal-image-width)),
+      50cqw - var(--metal-image-width) * var(--metal-subject-x, .85),
+      0px
+    );
+  }
   .stage::before {
     position: absolute;
-    inset: 44% 0 0;
+    inset: 0;
     content: '';
-    background: url('/images/laserx-scroll-poster.webp') var(--metal-focus) center / cover no-repeat;
+    background: url('/images/laserx-scroll-poster.webp') var(--metal-offset) center / cover no-repeat;
   }
+  .video { object-position: var(--metal-offset) center; }
   .woodMedia canvas { object-position: 32% center; }
-  .video {
-    top: 44%;
-    bottom: auto;
-    height: 56%;
-  }
   .content {
     width: calc(100% - 36px);
-    padding: clamp(84px, 15svh, 132px) 0 0;
+    padding: clamp(82px, 12svh, 108px) 0 0;
+  }
+  .content::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0 -18px auto;
+    height: clamp(170px, 28svh, 260px);
+    content: '';
+    background: linear-gradient(180deg, #f0e4deed 24%, #f0e4de00);
+  }
+  @media (orientation: landscape) and (max-height: 480px) {
+    .content .heading { max-width: none; font-size: clamp(30px, 7.5dvh, 40px); }
+    .content .scrollCue { margin-top: 12px; }
   }
   .heading {
     max-width: 360px;
     margin-top: 0;
-    font-size: clamp(43px, 11vw, 60px);
+    font-size: clamp(32px, 10vw, 52px);
   }
   .woodCaption {
     display: flex;

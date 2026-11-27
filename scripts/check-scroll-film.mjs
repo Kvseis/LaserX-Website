@@ -124,8 +124,35 @@ try {
       return video?.readyState >= 2 && video.currentTime >= min && video.currentTime <= max;
     }, { selector, min, max });
     if (mobile) {
+      const readFraming = () => page.locator(metalFrames).evaluate((canvas) => {
+        const frame = canvas.getBoundingClientRect();
+        const stage = canvas.parentElement.getBoundingClientRect();
+        const style = getComputedStyle(canvas);
+        const poster = getComputedStyle(canvas.parentElement, '::before');
+        return {
+          fillsStage: Math.abs(frame.width - stage.width) <= 1 && Math.abs(frame.height - stage.height) <= 1
+            && Math.abs(frame.top - stage.top) <= 1 && Math.abs(frame.left - stage.left) <= 1
+            && style.objectFit === 'cover' && poster.backgroundSize === 'cover',
+          pixelSize: [canvas.width, canvas.height],
+          offset: parseFloat(style.objectPosition),
+          posterOffset: parseFloat(poster.backgroundPositionX),
+        };
+      });
+      await seekTo(0);
+      await waitForFrame(metalFrames, 0, 0);
+      const openingFrame = await readFraming();
+      await seekTo(.18);
       await waitForScene(metalFrames, .18 / .396);
       if (await page.locator('#proses video[src]').count()) throw new Error('Mobile transition downloaded video');
+      const cleaningFrame = await readFraming();
+      if (cleaningFrame.pixelSize[0] !== 960 || cleaningFrame.pixelSize[1] !== 540) {
+        throw new Error('The mobile film must retain 960×540 source frames.');
+      }
+      if (!openingFrame.fillsStage || !cleaningFrame.fillsStage
+        || !(Math.abs(openingFrame.offset - openingFrame.posterOffset) <= 1)
+        || !(cleaningFrame.offset > openingFrame.offset + viewport.width / 4)) {
+        throw new Error(`Mobile framing should fill the stage and follow the laser: ${JSON.stringify({ openingFrame, cleaningFrame })}`);
+      }
     } else {
       await waitForTime(metalSelector, 3.3, 3.9);
     }
