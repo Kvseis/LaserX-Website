@@ -94,6 +94,7 @@ const tr: SiteCopy = {
     },
   },
   home: {
+    loading: { status: 'Yükleniyor…', skip: 'Siteye geç' },
     equipmentCta: 'Lazer cihazı satın al',
     equipmentInquiry: 'Merhaba! Satıştaki lazer temizleme cihazlarının modelleri ve fiyatları hakkında bilgi almak istiyorum.',
     headline: ["Temiz yüzey", "burada başlar."],

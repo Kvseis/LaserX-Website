@@ -92,6 +92,7 @@ const az = {
     },
   },
   home: {
+    loading: { status: 'Yüklənir…', skip: 'Sayta keç' },
     equipmentCta: 'Lazer cihazları al',
     equipmentInquiry: 'Salam! Satışda olan lazer təmizləmə cihazlarının modelləri və qiymətləri barədə məlumat almaq istəyirəm.',
     headline: ["Təmiz səth", "buradan başlayır."],

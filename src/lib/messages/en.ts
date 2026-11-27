@@ -94,6 +94,7 @@ const en: SiteCopy = {
     },
   },
   home: {
+    loading: { status: 'Loading…', skip: 'Enter site' },
     equipmentCta: 'Buy laser equipment',
     equipmentInquiry: 'Hello! Could you share the available laser cleaning machines and their prices?',
     headline: ["A clean surface", "starts here."],
