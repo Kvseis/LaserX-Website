@@ -1,51 +1,85 @@
-const framesPerSheet = 20;
-const columns = 5;
+import { filmSheetPath, filmSheets, type FilmScene } from './ScrollFilmAssets';
 
-export function createScrollFilmFrames(canvas: HTMLCanvasElement, scene: 'wood' | 'metal' | 'dust', frameCount: number, onReady: () => void) {
+type Sheet = { drawable?: HTMLImageElement | ImageBitmap };
+
+function release(sheet: Sheet) {
+  if (sheet.drawable && 'close' in sheet.drawable) sheet.drawable.close();
+}
+
+export function createScrollFilmFrames(
+  canvas: HTMLCanvasElement,
+  scene: FilmScene,
+  onReady: () => void,
+  assetSource: (path: string) => string,
+) {
   const { width, height } = canvas;
-  const sheets = new Map<number, HTMLImageElement>();
+  const { frames, rows, columns, alpha, inset } = filmSheets[scene];
+  const framesPerSheet = rows * columns;
+  const sheets = new Map<number, Sheet>();
   let context: CanvasRenderingContext2D | null = null;
   let painted = -1;
+  let requested = -1;
+  let direction = 1;
+
+  canvas.dataset.frameCount = String(frames);
 
   const load = (index: number) => {
-    if (index < 0 || index * framesPerSheet >= frameCount || sheets.has(index)) return;
+    if (index < 0 || index * framesPerSheet >= frames) return;
+    const existing = sheets.get(index);
+    if (existing) return existing;
+
     const image = new Image();
-    sheets.set(index, image);
-    image.onload = onReady;
-    image.src = `/images/scroll-film/${scene}-${index}.webp`;
+    const sheet: Sheet = {};
+    sheets.set(index, sheet);
+    image.onload = async () => {
+      sheet.drawable = typeof createImageBitmap === 'function'
+        ? await createImageBitmap(image).catch(() => image)
+        : image;
+      if (sheets.get(index) === sheet) onReady();
+      else release(sheet);
+    };
+    image.src = assetSource(filmSheetPath(scene, index));
+    return sheet;
   };
 
   return {
     preload() {
       load(0);
-      if (scene !== 'metal') load(1);
+      load(1);
+    },
+    dispose() {
+      for (const sheet of sheets.values()) release(sheet);
+      sheets.clear();
     },
     paint(progress: number) {
-      const frame = Math.round(progress * (frameCount - 1));
+      const frame = Math.round(progress * (frames - 1));
       if (frame === painted) return;
 
       const sheetIndex = Math.floor(frame / framesPerSheet);
       const tile = frame % framesPerSheet;
-      load(sheetIndex);
-      if (tile >= framesPerSheet - 6) load(sheetIndex + 1);
-      if (tile <= 5) load(sheetIndex - 1);
+      if (frame !== requested) {
+        direction = frame > requested ? 1 : -1;
+        requested = frame;
+        for (const [index, cached] of sheets) {
+          if (Math.abs(index - sheetIndex) <= 2) continue;
+          release(cached);
+          sheets.delete(index);
+        }
+      }
+      const sheet = load(sheetIndex);
+      load(sheetIndex + direction);
+      const remaining = direction === 1 ? framesPerSheet - tile - 1 : tile;
+      if (remaining < framesPerSheet / 2) load(sheetIndex + direction * 2);
+      if (!sheet?.drawable) return;
 
-      const sheet = sheets.get(sheetIndex);
-      if (!sheet?.complete || !sheet.naturalWidth) return;
-
-      context ??= canvas.getContext('2d', { alpha: scene === 'dust' });
+      context ??= canvas.getContext('2d', { alpha });
       if (!context) return;
-      if (scene === 'dust') context.clearRect(0, 0, width, height);
-      // Opaque WebP tiles can pick up neighbouring frames along their compressed edges.
-      const inset = scene === 'metal' ? 4 : 0;
-      context.drawImage(sheet, (tile % columns) * width + inset, Math.floor(tile / columns) * height + inset,
+      if (alpha) context.clearRect(0, 0, width, height);
+      // Crop compressed edges where a neighboring tile could bleed into the frame.
+      context.drawImage(sheet.drawable, (tile % columns) * width + inset, Math.floor(tile / columns) * height + inset,
         width - inset * 2, height - inset * 2, 0, 0, width, height);
       canvas.dataset.frame = String(frame);
       painted = frame;
-
-      for (const index of sheets.keys()) {
-        if (Math.abs(index - sheetIndex) > 1) sheets.delete(index);
-      }
     },
   };
 }

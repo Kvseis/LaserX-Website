@@ -22,8 +22,7 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
   const { home, methods, nav, results } = copy;
   const technologyPath = sitePath(locale, 'technology');
 
-  return <div>
-    <HomeLoadingScreen imageId={heroImageId} copy={home.loading} />
+  return <HomeLoadingScreen imageId={heroImageId} copy={home.loading}>
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top" className="home-main">
@@ -107,5 +106,5 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
     </main>
 
     <SiteFooter locale={locale} copy={copy} />
-  </div>;
+  </HomeLoadingScreen>;
 }

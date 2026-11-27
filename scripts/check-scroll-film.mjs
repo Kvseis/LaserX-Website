@@ -55,12 +55,18 @@ try {
       const frame = Number(document.querySelector(selector)?.dataset.frame);
       return frame >= min && frame <= max;
     }, { selector, min, max });
+    const waitForScene = (selector, progress, tolerance = .018) => page.waitForFunction(({ selector, progress, tolerance }) => {
+      const canvas = document.querySelector(selector);
+      const frame = Number(canvas?.dataset.frame);
+      const lastFrame = Number(canvas?.dataset.frameCount) - 1;
+      return lastFrame > 0 && Math.abs(frame / lastFrame - progress) <= tolerance;
+    }, { selector, progress, tolerance });
     const waitForTime = (selector, min, max) => page.waitForFunction(({ selector, min, max }) => {
       const video = document.querySelector(selector);
       return video?.readyState >= 2 && video.currentTime >= min && video.currentTime <= max;
     }, { selector, min, max });
     if (mobile) {
-      await waitForFrame(metalFrames, 34, 38);
+      await waitForScene(metalFrames, .18 / .396);
       if (await page.locator('#proses video[src]').count()) throw new Error('Mobile transition downloaded video');
     } else {
       await waitForTime(metalSelector, 3.3, 3.9);
@@ -88,7 +94,7 @@ try {
     if (mobile) {
       // These metal frames previously showed lines at the top of the image.
       await seekTo(.26);
-      await waitForFrame(metalFrames, 51, 53);
+      await waitForScene(metalFrames, .26 / .396);
       await page.screenshot({ path: path.join(artifactDir, 'laserx-mobile-metal-edge.png') });
     }
 
@@ -109,7 +115,7 @@ try {
     });
     await seekTo(.371);
     await waitForFrame(dustFrames, 6, 8);
-    if (mobile) await waitForFrame(metalFrames, 73, 77);
+    if (mobile) await waitForScene(metalFrames, .371 / .396);
     else await waitForTime(metalSelector, 7.3, 7.8);
     const initialDust = await dustStats();
     if (initialDust.area <= 0 || initialDust.area > .2 || initialDust.centerY < .5) {
@@ -138,7 +144,7 @@ try {
       return opacity > .35 && opacity < .65;
     });
     if (mobile) {
-      await waitForFrame(metalFrames, 79, 79);
+      await waitForScene(metalFrames, 1, 0);
       await waitForFrame(woodFrames, 0, 0);
     }
     const stageTop = await page.locator('#proses > div').evaluate((stage) => stage.getBoundingClientRect().top);
@@ -157,7 +163,7 @@ try {
 
     await seekTo(.575);
     await waitForFrame(dustFrames, 34, 36);
-    if (mobile) await waitForFrame(woodFrames, 1, 4);
+    if (mobile) await waitForScene(woodFrames, (.575 - .55) / .45);
     else await waitForTime(woodSelector, .15, .4);
     const clearingDust = await dustStats();
     if (clearingDust.area > .32 || clearingDust.centerY >= initialDust.centerY) {
@@ -166,12 +172,12 @@ try {
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-dust-clear.png`) });
 
     await seekTo(.756);
-    if (mobile) await waitForFrame(woodFrames, 26, 28);
+    if (mobile) await waitForScene(woodFrames, (.756 - .55) / .45);
     else await waitForTime(woodSelector, 2.05, 2.4);
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-wood-film.png`) });
 
     await seekTo(.98);
-    if (mobile) await waitForFrame(woodFrames, 56, 58);
+    if (mobile) await waitForScene(woodFrames, (.98 - .55) / .45);
     else await waitForTime(woodSelector, 4.45, 4.85);
 
     if (mobile) {
@@ -197,15 +203,15 @@ try {
     });
 
     await seekTo(.59);
-    if (mobile) await waitForFrame(woodFrames, 4, 6);
+    if (mobile) await waitForScene(woodFrames, (.59 - .55) / .45);
     else await waitForTime(woodSelector, .3, .8);
     await seekTo(.05);
-    if (mobile) await waitForFrame(metalFrames, 8, 11);
+    if (mobile) await waitForScene(metalFrames, .05 / .396);
     else await waitForTime(metalSelector, .75, 1.25);
 
     if (mobile && !useWebKit) {
       await seekTo(.59);
-      await waitForFrame(woodFrames, 4, 6);
+      await waitForScene(woodFrames, (.59 - .55) / .45);
       const touch = await page.context().newCDPSession(page);
       const x = viewport.width / 2;
       const y = viewport.height * .72;
@@ -214,7 +220,7 @@ try {
         await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - distance }] });
       }
       await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-      await waitForFrame(woodFrames, 8, 59);
+      await waitForFrame(woodFrames, 15, 116);
       await touch.detach();
     }
     console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll with eased progress; dust covers and clears in both directions`);
