@@ -41,7 +41,7 @@ export default function HeroVideo() {
     };
   }, [enabled]);
 
-  return enabled ? <video ref={video} className="hero-media" autoPlay muted loop playsInline preload="auto" poster="/images/hero.webp" aria-hidden="true">
+  return enabled ? <video ref={video} className="hero-media" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
     <source src="/videos/laser-cleaning-hero-720p.mp4" type="video/mp4" />
   </video> : null;
 }

@@ -8,7 +8,7 @@
 .link svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .grid { width: 100vw; margin-left: calc((100% - 100vw) / 2); padding: 0 max(4vw, calc((100vw - 1440px) / 2)) 2px; display: grid; grid-auto-flow: column; grid-auto-columns: clamp(250px, 23vw, 310px); gap: 12px; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; scroll-padding-inline: max(4vw, calc((100vw - 1440px) / 2)); }
 .grid::-webkit-scrollbar { display: none; }
-.service, .brandCard { position: relative; height: clamp(420px, 36vw, 490px); min-width: 0; overflow: hidden; border-radius: 9px; scroll-snap-align: start; }
+.service, .brandCard { content-visibility: auto; position: relative; height: clamp(420px, 36vw, 490px); min-width: 0; overflow: hidden; border-radius: 9px; scroll-snap-align: start; }
 .service { display: flex; flex-direction: column; justify-content: end; color: #fff; background: var(--dark); }
 .brandCard { padding: 24px; display: flex; flex-direction: column; color: #f4f2ed; background: #242829; transition: color 550ms ease, background-color 550ms ease; }
 .brandCard > img { width: 54px; height: 54px; object-fit: contain; }

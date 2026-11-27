@@ -7,7 +7,7 @@ import { whatsapp } from '@/lib/contact';
 import styles from './ContactBanner.module.css';
 import ButtonArrow from './ButtonArrow';
 
-const onest = Onest({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+const onest = Onest({ subsets: ['latin'], display: 'swap' });
 
 export default function BookingForm({ copy }: { copy: SiteCopy['booking'] }) {
   function submitRequest(event: FormEvent<HTMLFormElement>) {

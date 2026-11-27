@@ -8,6 +8,7 @@ import { sitePath, type Locale } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
 import ServicesShowcase from './ServicesShowcase';
 import SiteHeader from './SiteHeader';
+import { siteOrigin } from '@/lib/site-urls';
 import { phone, whatsapp } from '@/lib/contact';
 import BeforeAfterCard from './BeforeAfterCard';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
@@ -16,19 +17,32 @@ import HomeLoadingScreen from './HomeLoadingScreen';
 
 const heroImageId = 'home-hero-image';
 const resultIds = ['rust', 'coating', 'mold', 'grease', 'graffiti', 'soot', 'biofilm', 'wood'];
-const onest = Onest({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+const onest = Onest({ subsets: ['latin'], display: 'swap' });
 
 export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteCopy }) {
   const { home, methods, nav, results } = copy;
   const technologyPath = sitePath(locale, 'technology');
 
   return <HomeLoadingScreen imageId={heroImageId} copy={home.loading}>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      '@id': siteOrigin + '/#organization',
+      name: 'LaserX',
+      url: siteOrigin + '/',
+      logo: siteOrigin + '/images/laserx-mark-128.webp',
+      telephone: phone.slice(4),
+      areaServed: { '@type': 'City', name: 'Baku' },
+    }) }} />
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top" className="home-main">
       <div className="home-opening">
         <section className={`hero ${onest.className}`}>
-          <Image id={heroImageId} className="hero-sky" src="/images/hero-sky.webp" alt="" fill preload sizes="100vw" />
+          <picture>
+            <source media="(max-width: 760px)" srcSet="/images/hero-sky-narrow.webp" />
+            <Image id={heroImageId} className="hero-sky" src="/images/hero-sky.webp" alt="" fill unoptimized loading="eager" fetchPriority="high" />
+          </picture>
           <div className="hero-shade" aria-hidden="true" />
           <div className="hero-copy">
             <h1><span>{home.headline[0]}</span>{' '}<em>{home.headline[1]}</em></h1>
@@ -66,20 +80,22 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
         <div className="methods-copy">
           <h2><span>{methods.laser}</span><em>VS</em><span>{methods.traditional}</span></h2>
         </div>
-        <div className="comparison-matrix" role="table" aria-label={methods.label}>
-          <div className="comparison-head" role="row">
-            <span className="comparison-label-head" aria-hidden="true" />
-            <div className="comparison-laser-head" role="columnheader">
-              <span className="comparison-laser-brand"><Image src="/images/logo-mark-transparent.png" width={28} height={28} alt="" loading="eager" />{methods.laser}</span>
+        <div className="comparison-matrix">
+          <div role="table" aria-label={methods.label}>
+            <div className="comparison-head" role="row">
+              <span className="comparison-label-head" aria-hidden="true" />
+              <div className="comparison-laser-head" role="columnheader">
+                <span className="comparison-laser-brand"><Image unoptimized src="/images/laserx-mark-128.webp" width={28} height={28} alt="" />{methods.laser}</span>
+              </div>
+              <b role="columnheader">{methods.traditional}<small>{methods.examples}</small></b>
             </div>
-            <b role="columnheader">{methods.traditional}<small>{methods.examples}</small></b>
+            {methods.rows.map(([laser, traditional], index) => <div className="comparison-row" role="row" key={laser}>
+              <strong className="comparison-criterion" role="rowheader"><ComparisonIcon index={index} />{methods.rowLabels[index]}</strong>
+              <span className="comparison-value laser-value" role="cell"><i className="comparison-mark good" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.laser}</small>{laser}</span></span>
+              <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.traditional}</small>{traditional}</span></span>
+            </div>)}
           </div>
-          {methods.rows.map(([laser, traditional], index) => <div className="comparison-row" role="row" key={laser}>
-            <strong className="comparison-criterion" role="rowheader"><ComparisonIcon index={index} />{methods.rowLabels[index]}</strong>
-            <span className="comparison-value laser-value" role="cell"><i className="comparison-mark good" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.laser}</small>{laser}</span></span>
-            <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.traditional}</small>{traditional}</span></span>
-          </div>)}
-          <div className="comparison-laser-footer" role="presentation">
+          <div className="comparison-laser-footer">
             <a className="comparison-contact" href={phone}>{methods.contact}<ButtonArrow /></a>
           </div>
         </div>

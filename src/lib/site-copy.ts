@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale, type SitePage } from './locales';
+import { absolutePageUrl, alternatePageUrls, siteOrigin } from './site-urls';
 import type { SiteCopy } from './messages/az';
 
 const dictionaries = {
@@ -26,16 +27,32 @@ export async function siteMetadata(locale: Locale, page: SitePage): Promise<Meta
   const copy = await getSiteCopy(locale);
   const { title, description } = copy.meta[page];
 
+  const url = absolutePageUrl(locale, page);
+  const image = {
+    url: new URL('/images/laserx-share.jpg', siteOrigin).href,
+    width: 1200,
+    height: 630,
+    type: 'image/jpeg',
+    alt: copy.home.technologyAlt,
+  };
+
   return {
+    metadataBase: new URL(siteOrigin),
+    alternates: { canonical: url, languages: alternatePageUrls(page) },
+    icons: { icon: '/favicon.ico' },
     title,
     description,
     openGraph: {
       title,
       description,
+      url,
+      images: [image],
       locale: openGraphLocales[locale],
+      alternateLocale: Object.values(openGraphLocales).filter((value) => value !== openGraphLocales[locale]),
       type: 'website',
       siteName: 'LaserX',
     },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
     robots: { index: true, follow: true },
   };
 }

@@ -49,7 +49,7 @@ export async function warmFilmAssets(
     for (const path of queue) {
       if (signal.aborted) return;
       try {
-        const response = await fetch(path, { signal });
+        const response = await fetch(path, { signal, priority: 'low' });
         if (!response.ok) continue;
         const asset = await response.blob();
         if (!signal.aborted) remember(path, asset);
