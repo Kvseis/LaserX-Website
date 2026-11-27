@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useRef } from 'react';
 import type { SiteCopy } from '@/lib/messages/az';
-import { FilmAssetContext, filmFrameRate, getFilmConnection, metalSource, usesStaticFilm, woodSource } from './ScrollFilmAssets';
+import { FilmAssetContext, filmFrameRate, filmSheets, getFilmConnection, metalSource, usesStaticFilm, woodSource } from './ScrollFilmAssets';
 import { createScrollFilmFrames } from './ScrollFilmFrames';
 import styles from './ScrollCleaningFilm.module.css';
 
@@ -228,7 +228,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         playsInline
         aria-hidden="true"
       />
-      <canvas ref={metalCanvasRef} className={styles.video} width={512} height={288} aria-hidden="true" />
+      <canvas ref={metalCanvasRef} className={styles.video} width={filmSheets.metal.width} height={filmSheets.metal.height} aria-hidden="true" />
       <div className={styles.content}>
         <h2 id="cleaning-film-title" className={styles.heading}>{copy.filmTitle}</h2>
         <div className={styles.scrollCue} aria-hidden="true">
@@ -239,14 +239,14 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       <div className={styles.woodScene}>
         <div className={styles.woodMedia} aria-hidden="true">
           <video ref={woodRef} poster="/images/laserx-wood-poster.webp" preload="none" muted playsInline />
-          <canvas ref={woodCanvasRef} width={400} height={600} />
+          <canvas ref={woodCanvasRef} width={filmSheets.wood.width} height={filmSheets.wood.height} />
         </div>
         <div className={styles.woodCaption}>
           <h2 className={styles.heading}>{copy.woodFilmTitle}</h2>
         </div>
       </div>
       <div className={styles.dustVeil} aria-hidden="true" />
-      <canvas ref={dustCanvasRef} className={styles.dustCloud} width={384} height={240} aria-hidden="true" />
+      <canvas ref={dustCanvasRef} className={styles.dustCloud} width={filmSheets.dust.width} height={filmSheets.dust.height} aria-hidden="true" />
     </div>
     <span id="cleaning-film-disclosure" hidden>{copy.filmDisclosure}</span>
   </section>;

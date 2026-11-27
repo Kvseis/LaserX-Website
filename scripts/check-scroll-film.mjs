@@ -133,6 +133,7 @@ try {
           fillsStage: Math.abs(frame.width - stage.width) <= 1 && Math.abs(frame.height - stage.height) <= 1
             && Math.abs(frame.top - stage.top) <= 1 && Math.abs(frame.left - stage.left) <= 1
             && style.objectFit === 'cover' && poster.backgroundSize === 'cover',
+          pixelSize: [canvas.width, canvas.height],
           offset: parseFloat(style.objectPosition),
           posterOffset: parseFloat(poster.backgroundPositionX),
         };
@@ -144,6 +145,9 @@ try {
       await waitForScene(metalFrames, .18 / .396);
       if (await page.locator('#proses video[src]').count()) throw new Error('Mobile transition downloaded video');
       const cleaningFrame = await readFraming();
+      if (cleaningFrame.pixelSize[0] !== 960 || cleaningFrame.pixelSize[1] !== 540) {
+        throw new Error('The mobile film must retain 960×540 source frames.');
+      }
       if (!openingFrame.fillsStage || !cleaningFrame.fillsStage
         || !(Math.abs(openingFrame.offset - openingFrame.posterOffset) <= 1)
         || !(cleaningFrame.offset > openingFrame.offset + viewport.width / 4)) {
