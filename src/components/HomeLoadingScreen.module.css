@@ -13,7 +13,7 @@
 
 .panel {
   display: grid;
-  grid-template-columns: 32px 1fr auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 0 12px;
   width: min(100%, 340px);
@@ -24,11 +24,11 @@
   box-shadow: 0 3px 18px #15151524;
 }
 
-.plate img { width: 32px; height: 32px; }
+
 .labels { display: grid; gap: 2px; font-size: 13px; }
 
-.labels strong { font-weight: 700; }
-.labels span { color: var(--muted); }
+.labels :global(.brand-wordmark) { font-size: 18px; }
+.labels [role="status"] { color: var(--muted); }
 
 .track {
   grid-row: 2;
@@ -51,7 +51,7 @@
 .skip {
   display: block;
   min-height: 44px;
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 1;
   padding: 0 0 0 10px;
   border: 0;

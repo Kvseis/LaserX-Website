@@ -7,6 +7,7 @@ import { PhoneIcon } from './SiteHeader';
 import WhatsAppLogo from './WhatsAppLogo';
 import styles from './SiteFooter.module.css';
 import ButtonArrow from './ButtonArrow';
+import BrandWordmark from './BrandWordmark';
 
 const manrope = Manrope({ preload: false, display: 'swap' });
 
@@ -21,7 +22,7 @@ export default function SiteFooter({ locale, copy }: { locale: Locale; copy: Sit
       <div className={styles.columns}>
         <div className={styles.identity}>
           <a className={styles.brand} href={home} aria-label={copy.nav.home}>
-            <Image unoptimized src="/images/laserx-mark-128.webp" width={48} height={48} alt="" /><span>LaserX</span>
+            <BrandWordmark />
           </a>
           <p>{copy.footer.description}</p>
           <span className={styles.location}>{copy.location}</span>
