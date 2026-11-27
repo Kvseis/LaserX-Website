@@ -14,6 +14,8 @@ import BeforeAfterCard from './BeforeAfterCard';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
 import ComparisonIcon from './ComparisonIcon';
 import HomeLoadingScreen from './HomeLoadingScreen';
+import HomeOpening from './HomeOpening';
+import openingStyles from './HomeOpening.module.css';
 
 const heroImageId = 'home-hero-image';
 const resultIds = ['rust', 'coating', 'mold', 'grease', 'graffiti', 'soot', 'biofilm', 'wood'];
@@ -37,13 +39,15 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top" className="home-main">
-      <div className="home-opening">
+      <HomeOpening hero={
         <section className={`hero ${onest.className}`}>
-          <picture>
-            <source media="(max-width: 760px)" srcSet="/images/hero-sky-narrow.webp" />
-            <Image id={heroImageId} className="hero-sky" src="/images/hero-sky.webp" alt="" fill unoptimized loading="eager" fetchPriority="high" />
-          </picture>
-          <div className="hero-shade" aria-hidden="true" />
+          <div className={openingStyles.backdrop} aria-hidden="true">
+            <picture>
+              <source media="(max-width: 760px)" srcSet="/images/hero-sky-narrow.webp" />
+              <Image id={heroImageId} className="hero-sky" src="/images/hero-sky.webp" alt="" fill unoptimized loading="eager" fetchPriority="high" />
+            </picture>
+            <div className="hero-shade" />
+          </div>
           <div className="hero-copy">
             <h1><span>{home.headline[0]}</span>{' '}<em>{home.headline[1]}</em></h1>
             <div className="hero-details">
@@ -57,9 +61,9 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
             </div>
           </div>
         </section>
-
+      }>
         <ScrollCleaningFilm copy={home} />
-      </div>
+      </HomeOpening>
 
       <section className="results-section" id="neticeler"><div className="results wrap">
         <div className="results-intro">
