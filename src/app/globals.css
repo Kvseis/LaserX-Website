@@ -38,6 +38,13 @@ img { display: block; }
 .nav-brand { display: inline-flex; align-items: center; gap: 10px; width: max-content; color: #fff; font-size: 29px; font-weight: 720; letter-spacing: -.045em; }
 .brand-wordmark { display: inline-flex; align-items: baseline; width: max-content; font-weight: 730; line-height: 1; letter-spacing: -.05em; }
 .brand-wordmark img { align-self: center; width: .95em; height: .95em; object-fit: contain; }
+.nav-brand .brand-wordmark img {
+  filter:
+    drop-shadow(.65px 0 0 #d7dde1)
+    drop-shadow(-.65px 0 0 #d7dde1)
+    drop-shadow(0 .55px 0 #d7dde1)
+    drop-shadow(0 -.55px 0 #d7dde1);
+}
 .brand-logo {
   position: relative;
   display: block;
