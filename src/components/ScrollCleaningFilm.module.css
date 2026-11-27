@@ -151,41 +151,40 @@
   .section {
     --stage-height: 100dvh;
     --scroll-travel: 336svh;
-    --metal-frame-width: min(100%, 92dvh);
     background: #f0e4de;
   }
   .stage {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: center;
-    row-gap: clamp(16px, 4svh, 36px);
-    padding-top: 68px;
+    container-type: inline-size;
     background: #f0e4de;
   }
   .stage::before,
   .video {
-    grid-area: 2 / 1;
-    width: var(--metal-frame-width);
-    aspect-ratio: 16 / 9;
-    justify-self: center;
+    --metal-image-width: calc(var(--stage-height) * 16 / 9);
+    --metal-offset: clamp(
+      min(0px, 100cqw - var(--metal-image-width)),
+      50cqw - var(--metal-image-width) * var(--metal-subject-x, .85),
+      0px
+    );
   }
   .stage::before {
+    position: absolute;
+    inset: 0;
     content: '';
-    background: url('/images/laserx-scroll-poster.webp') center / contain no-repeat;
+    background: url('/images/laserx-scroll-poster.webp') var(--metal-offset) center / cover no-repeat;
   }
+  .video { object-position: var(--metal-offset) center; }
   .woodMedia canvas { object-position: 32% center; }
-  .video {
-    position: relative;
-    inset: auto;
-    height: auto;
-    object-fit: contain;
-    object-position: center;
-  }
   .content {
-    grid-area: 1 / 1;
     width: calc(100% - 36px);
-    height: auto;
-    padding: 0;
+    padding: clamp(82px, 12svh, 108px) 0 0;
+  }
+  .content::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0 -18px auto;
+    height: clamp(170px, 28svh, 260px);
+    content: '';
+    background: linear-gradient(180deg, #f0e4deed 24%, #f0e4de00);
   }
   @media (orientation: landscape) and (max-height: 480px) {
     .content .heading { max-width: none; font-size: clamp(30px, 7.5dvh, 40px); }
@@ -194,7 +193,7 @@
   .heading {
     max-width: 360px;
     margin-top: 0;
-    font-size: clamp(43px, 11vw, 60px);
+    font-size: clamp(32px, 10vw, 52px);
   }
   .woodCaption {
     display: flex;

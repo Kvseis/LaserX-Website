@@ -13,6 +13,7 @@ const dustEnd = 0.60;
 const woodPreloadStart = 0.14;
 const dustPreloadStart = 0.22;
 const scrollResponseMs = 110;
+const metalFraming = [[0, .85], [96, .71], [156, .58], [191, .63]] as const;
 
 function clampProgress(value: number) {
   return Math.min(1, Math.max(0, value));
@@ -21,6 +22,17 @@ function clampProgress(value: number) {
 function easeBetween(value: number, start: number, end: number) {
   const progress = clampProgress((value - start) / (end - start));
   return progress * progress * (3 - 2 * progress);
+}
+
+function metalSubjectX(frame: number) {
+  // Follow the laser tip, then settle on the cleaned edge as the tool lifts away.
+  for (let index = 1; index < metalFraming.length; index++) {
+    const [endFrame, endX] = metalFraming[index];
+    if (frame > endFrame) continue;
+    const [startFrame, startX] = metalFraming[index - 1];
+    return startX + (endX - startX) * (frame - startFrame) / (endFrame - startFrame);
+  }
+  return metalFraming[metalFraming.length - 1][1];
 }
 
 function seekVideo(video: HTMLVideoElement, progress: number) {
@@ -114,7 +126,10 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       if (dustActive) dustFrames.paint(dustProgress);
       if (narrowViewport.matches) {
         if (target >= woodPreloadStart && transition === 0) woodFrames.preload();
-        if (transition < 1) metalFrames.paint(metalProgress);
+        if (transition < 1) {
+          const paintedFrame = metalFrames.paint(metalProgress);
+          if (paintedFrame !== undefined) metalCanvas.style.setProperty('--metal-subject-x', String(metalSubjectX(paintedFrame)));
+        }
         if (transition > 0) woodFrames.paint(woodProgress);
       } else {
         if (target >= woodPreloadStart && !wood.hasAttribute('src')) {
