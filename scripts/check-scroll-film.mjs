@@ -68,6 +68,16 @@ try {
     if (mobile) {
       await waitForScene(metalFrames, .18 / .396);
       if (await page.locator('#proses video[src]').count()) throw new Error('Mobile transition downloaded video');
+      const fullFrame = await page.locator(metalFrames).evaluate((canvas) => {
+        const frame = canvas.getBoundingClientRect();
+        const stage = canvas.parentElement.getBoundingClientRect();
+        const style = getComputedStyle(canvas);
+        const poster = getComputedStyle(canvas.parentElement, '::before');
+        return Math.abs(frame.height - frame.width * canvas.height / canvas.width) <= 1
+          && Math.abs(frame.width - stage.width) <= 1 && frame.top >= stage.top && frame.bottom <= stage.bottom
+          && style.objectFit === 'contain' && poster.backgroundSize === 'contain';
+      });
+      if (!fullFrame) throw new Error('Mobile metal frame or poster crops the source image');
     } else {
       await waitForTime(metalSelector, 3.3, 3.9);
     }
