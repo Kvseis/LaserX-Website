@@ -8,7 +8,7 @@ import WhatsAppLogo from './WhatsAppLogo';
 import styles from './SiteFooter.module.css';
 import ButtonArrow from './ButtonArrow';
 
-const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+const manrope = Manrope({ preload: false, display: 'swap' });
 
 export default function SiteFooter({ locale, copy }: { locale: Locale; copy: SiteCopy }) {
   const home = sitePath(locale);
@@ -21,7 +21,7 @@ export default function SiteFooter({ locale, copy }: { locale: Locale; copy: Sit
       <div className={styles.columns}>
         <div className={styles.identity}>
           <a className={styles.brand} href={home} aria-label={copy.nav.home}>
-            <Image src="/images/logo-mark-transparent.png" width={48} height={48} alt="" /><span>LaserX</span>
+            <Image unoptimized src="/images/laserx-mark-128.webp" width={48} height={48} alt="" /><span>LaserX</span>
           </a>
           <p>{copy.footer.description}</p>
           <span className={styles.location}>{copy.location}</span>
@@ -39,7 +39,7 @@ export default function SiteFooter({ locale, copy }: { locale: Locale; copy: Sit
         </nav>
         <div className={styles.contacts}>
           <p>{copy.footer.contact}</p>
-          <a href={phone} aria-label={copy.nav.callNumber}><PhoneIcon /><span>+994 55 390 00 28</span></a>
+          <a href={phone}><PhoneIcon /><span>+994 55 390 00 28</span></a>
           <a href={whatsapp}><WhatsAppLogo /><span>{copy.nav.whatsapp}</span></a>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { whatsapp } from '@/lib/contact';
 import styles from './FaqSection.module.css';
 import ButtonArrow from './ButtonArrow';
 
-const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+const manrope = Manrope({ preload: false, display: 'swap' });
 
 export default function FaqSection({ copy }: { copy: SiteCopy['faq'] }) {
   return <section id="suallar" className={`${styles.section} ${manrope.className}`} aria-labelledby="faq-title">

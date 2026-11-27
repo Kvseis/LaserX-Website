@@ -11,7 +11,7 @@ import { whatsapp } from '@/lib/contact';
 import WhatsAppLogo from './WhatsAppLogo';
 import ButtonArrow from './ButtonArrow';
 
-const onest = Onest({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+const onest = Onest({ subsets: ['latin'], display: 'swap' });
 
 function BenefitIcon({ index }: { index: number }) {
   const icons = [
@@ -46,7 +46,8 @@ export default function TechnologyPage({ locale, copy }: { locale: Locale; copy:
           src="/images/technology-hero.webp"
           alt={technology.heroAlt}
           fill
-          preload
+          loading="eager"
+          fetchPriority="high"
           sizes="(max-aspect-ratio: 3/2) 170svh, 100vw"
         />
         <div className={`hero-shade ${styles.heroShade}`} aria-hidden="true" />

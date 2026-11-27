@@ -147,7 +147,7 @@ export default function ServicesShowcase({ copy, technologyPath }: {
         </div>
         <div className={styles.grid} ref={railRef} onScroll={updateProgress}>
           <div className={styles.brandCard}>
-            <Image src="/images/logo-mark-transparent.png" width={54} height={54} alt="LaserX" />
+            <Image unoptimized src="/images/laserx-mark-128.webp" width={54} height={54} alt="LaserX" />
             <div className={styles.brandMessage}><p>{copy.statement}</p></div>
           </div>
           {copy.items.map(([title, description], index) => (

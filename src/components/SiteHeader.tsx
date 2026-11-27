@@ -76,7 +76,7 @@ export default function SiteHeader({ locale, page, copy }: {
   return (
     <header className="site-header">
       <Link prefetch={false} className="wordmark nav-brand" href={home} aria-label={copy.home} onClick={navigateHome}>
-        <Image src="/images/logo-mark-transparent.png" width={42} height={42} alt="" priority />
+        <Image unoptimized src="/images/laserx-mark-128.webp" width={42} height={42} alt="" loading="eager" />
         <span>LaserX</span>
       </Link>
       <nav id="main-navigation" className={menuOpen ? 'open' : ''} aria-label={copy.main}>
@@ -111,7 +111,7 @@ export default function SiteHeader({ locale, page, copy }: {
             }
           }}
         >
-          <summary aria-label={`${copy.language}: ${languageNames[locale]}`}>
+          <summary aria-label={`${locale.toUpperCase()} · ${copy.language}: ${languageNames[locale]}`}>
             <LanguageFlag locale={locale} />
             {locale.toUpperCase()}
             <svg className="language-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>

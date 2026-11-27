@@ -3,42 +3,38 @@
   inset: 0;
   z-index: 110;
   display: grid;
-  place-items: center;
-  padding: 24px;
+  align-items: end;
+  justify-items: center;
+  padding: 16px 16px max(16px, env(safe-area-inset-bottom));
   overflow: auto;
-  background: var(--paper);
   color: var(--ink);
   animation: appear 160ms ease-out both;
 }
 
 .panel {
-  width: min(100%, 192px);
-}
-
-.plate {
   display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 3;
-  border: 1px solid #282b2c;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #25282a, #111314 68%);
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: 0 12px;
+  width: min(100%, 340px);
+  padding: 6px 14px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: 0 3px 18px #15151524;
 }
 
-.labels {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  margin-top: 16px;
-  font-size: 13px;
-}
+.plate img { width: 32px; height: 32px; }
+.labels { display: grid; gap: 2px; font-size: 13px; }
 
 .labels strong { font-weight: 700; }
 .labels span { color: var(--muted); }
 
 .track {
+  grid-row: 2;
+  grid-column: 1 / -1;
   height: 2px;
-  margin-top: 10px;
+  margin-top: 4px;
   overflow: hidden;
   background: var(--line);
 }
@@ -55,7 +51,8 @@
 .skip {
   display: block;
   min-height: 44px;
-  margin: 8px 0 0 auto;
+  grid-column: 3;
+  grid-row: 1;
   padding: 0 0 0 10px;
   border: 0;
   background: transparent;

@@ -5,7 +5,7 @@ import SiteMotion from './SiteMotion';
 import '@/app/globals.css';
 import '@/app/motion.css';
 
-const geist = Geist({ subsets: ['latin', 'latin-ext'] });
+const geist = Geist({ subsets: ['latin'] });
 
 export default function SiteDocument({ children, locale }: { children: ReactNode; locale: Locale }) {
   return <html lang={locale} data-scroll-behavior="smooth"><body className={geist.className}>

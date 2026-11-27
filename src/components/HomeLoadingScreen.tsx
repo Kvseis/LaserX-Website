@@ -6,7 +6,7 @@ import type { SiteCopy } from '@/lib/messages/az';
 import { FilmAssetContext, getFilmConnection, usesStaticFilm, warmFilmAssets } from './ScrollFilmAssets';
 import styles from './HomeLoadingScreen.module.css';
 
-const showAfterMs = 180;
+const showAfterMs = 350;
 const timeoutMs = 2400;
 
 export default function HomeLoadingScreen({
@@ -62,6 +62,7 @@ export default function HomeLoadingScreen({
 
     function markImageReady() {
       imageReady = true;
+      startFilmLoad();
       finishIfReady();
     }
 
@@ -76,7 +77,10 @@ export default function HomeLoadingScreen({
       if (event.key === 'Escape') finish();
     }, { signal });
 
-    if (!filmReady) {
+    let filmStarted = false;
+    function startFilmLoad() {
+      if (filmStarted || filmReady || signal.aborted) return;
+      filmStarted = true;
       const narrowViewport = window.matchMedia('(max-width: 760px)').matches;
       void warmFilmAssets(narrowViewport, signal, (path, asset) => {
         sources.set(path, URL.createObjectURL(asset));
@@ -85,6 +89,8 @@ export default function HomeLoadingScreen({
         finishIfReady();
       });
     }
+
+    if (imageReady) startFilmLoad();
 
     return () => {
       cleanup();
@@ -97,7 +103,7 @@ export default function HomeLoadingScreen({
     {visible && <div ref={screenRef} className={styles.screen} data-home-loading>
       <div className={styles.panel}>
         <div className={styles.plate} aria-hidden="true">
-          <Image src="/images/logo-mark-transparent.png" width={42} height={42} alt="" loading="eager" />
+          <Image unoptimized src="/images/laserx-mark-128.webp" width={42} height={42} alt="" loading="eager" />
         </div>
         <div className={styles.labels}>
           <strong>LaserX</strong>

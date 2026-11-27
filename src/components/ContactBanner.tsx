@@ -6,7 +6,7 @@ import { PhoneIcon } from './SiteHeader';
 import BookingForm from './BookingForm';
 import styles from './ContactBanner.module.css';
 
-const manrope = Manrope({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
+const manrope = Manrope({ preload: false, display: 'swap' });
 
 export default function ContactBanner({ copy }: { copy: SiteCopy }) {
   return <section id="sifaris" className={`${styles.banner} ${manrope.className}`} aria-labelledby="booking-title">
