@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import BrandWordmark from './BrandWordmark';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { SiteCopy } from '@/lib/messages/az';
 import { FilmAssetContext, getFilmConnection, usesStaticFilm, warmFilmAssets } from './ScrollFilmAssets';
@@ -102,11 +102,8 @@ export default function HomeLoadingScreen({
   return <FilmAssetContext value={assetSource}>
     {visible && <div ref={screenRef} className={styles.screen} data-home-loading>
       <div className={styles.panel}>
-        <div className={styles.plate} aria-hidden="true">
-          <Image unoptimized src="/images/laserx-mark-128.webp" width={42} height={42} alt="" loading="eager" />
-        </div>
         <div className={styles.labels}>
-          <strong>LaserX</strong>
+          <BrandWordmark />
           <span role="status">{copy.status}</span>
         </div>
         <div className={styles.track} aria-hidden="true" />

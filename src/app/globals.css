@@ -35,8 +35,9 @@ img { display: block; }
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
 }
 .wordmark, .footer-brand { justify-self: start; }
-.nav-brand { display: inline-flex; align-items: center; gap: 10px; width: max-content; color: #fff; font-size: 15px; font-weight: 720; letter-spacing: -.02em; }
-.nav-brand img { width: 42px; height: 42px; object-fit: contain; }
+.nav-brand { display: inline-flex; align-items: center; gap: 10px; width: max-content; color: #fff; font-size: 29px; font-weight: 720; letter-spacing: -.045em; }
+.brand-wordmark { display: inline-flex; align-items: baseline; width: max-content; font-weight: 730; line-height: 1; letter-spacing: -.05em; }
+.brand-wordmark img { align-self: center; width: .95em; height: .95em; object-fit: contain; }
 .brand-logo {
   position: relative;
   display: block;
@@ -340,8 +341,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 @media (max-width: 1100px) {
   html { scroll-padding-top: 72px; }
   .site-header { top: 0; width: 100%; height: 68px; padding: 0 14px; grid-template-columns: 1fr auto auto; gap: 10px; }
-  .nav-brand { font-size: 13px; gap: 7px; }
-  .nav-brand img { width: 38px; height: 38px; }
+  .nav-brand { font-size: 25px; }
   .site-header { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .site-header nav { position: absolute; z-index: 10; top: 68px; left: 0; right: 0; padding: 26px 20px 32px; display: flex; flex-direction: column; gap: 22px; color: #fff; background: rgba(5,6,6,.98); border-top: 1px solid rgba(223,52,45,.7); border-bottom: 1px solid rgba(255,255,255,.14); box-shadow: 0 20px 35px rgba(0,0,0,.32); opacity: 0; visibility: hidden; transform: translateY(-8px); pointer-events: none; transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease; }
   .site-header nav.open { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }

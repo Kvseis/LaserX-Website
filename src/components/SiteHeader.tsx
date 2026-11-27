@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, type MouseEvent } from 'react';
-import Image from 'next/image';
+import BrandWordmark from './BrandWordmark';
 import Link from 'next/link';
 import { languageNames, locales, sitePath, type Locale, type SitePage } from '@/lib/locales';
 import type { SiteCopy } from '@/lib/messages/az';
@@ -76,8 +76,7 @@ export default function SiteHeader({ locale, page, copy }: {
   return (
     <header className="site-header">
       <Link prefetch={false} className="wordmark nav-brand" href={home} aria-label={copy.home} onClick={navigateHome}>
-        <Image unoptimized src="/images/laserx-mark-128.webp" width={42} height={42} alt="" loading="eager" />
-        <span>LaserX</span>
+        <BrandWordmark />
       </Link>
       <nav id="main-navigation" className={menuOpen ? 'open' : ''} aria-label={copy.main}>
         {links.map(([label, href]) => href.includes('#')

@@ -29,7 +29,7 @@ export async function siteMetadata(locale: Locale, page: SitePage): Promise<Meta
 
   const url = absolutePageUrl(locale, page);
   const image = {
-    url: new URL('/images/laserx-share.jpg', siteOrigin).href,
+    url: new URL('/images/laserx-wordmark-share.jpg', siteOrigin).href,
     width: 1200,
     height: 630,
     type: 'image/jpeg',
