@@ -39,7 +39,7 @@ export async function siteMetadata(locale: Locale, page: SitePage): Promise<Meta
   return {
     metadataBase: new URL(siteOrigin),
     alternates: { canonical: url, languages: alternatePageUrls(page) },
-    icons: { icon: '/favicon.ico' },
+    icons: { icon: '/favicon.ico?v=2' },
     title,
     description,
     openGraph: {
