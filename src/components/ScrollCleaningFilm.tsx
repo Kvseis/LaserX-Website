@@ -11,6 +11,8 @@ const metalEnd = 0.396;
 const woodStart = 0.55;
 const dustStart = 0.32;
 const dustEnd = 0.60;
+const woodPreloadStart = 0.14;
+const dustPreloadStart = 0.22;
 const scrollResponseMs = 110;
 
 function clampProgress(value: number) {
@@ -98,28 +100,29 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       section.style.setProperty('--metal-title-opacity', String(1 - easeBetween(transition, 0, 0.42)));
       section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
 
+      if (target >= dustPreloadStart && target < dustEnd) dustFrames.preload();
       if (dustActive) dustFrames.paint(dustProgress);
       if (narrowViewport.matches) {
+        if (target >= woodPreloadStart && transition === 0) woodFrames.preload();
         if (transition < 1) metalFrames.paint(metalProgress);
         if (transition > 0) woodFrames.paint(woodProgress);
       } else {
+        if (target >= woodPreloadStart && !wood.hasAttribute('src')) {
+          wood.preload = 'auto';
+          wood.src = woodSource;
+        }
         if (transition < 1) seekVideo(metal, metalProgress);
         if (transition > 0) seekVideo(wood, woodProgress);
       }
     };
 
-    const loadMedia = () => {
+    const preloadMetal = () => {
       if (isStatic || !isNear) return;
-      if (narrowViewport.matches) {
-        metalFrames.preload();
-        woodFrames.preload();
-      } else if (!wood.hasAttribute('src')) {
+      if (narrowViewport.matches) metalFrames.preload();
+      else if (!metal.hasAttribute('src')) {
         metal.preload = 'auto';
         metal.src = metalSource;
-        wood.preload = 'auto';
-        wood.src = woodSource;
       }
-      dustFrames.preload();
     };
 
     const syncMode = () => {
@@ -132,7 +135,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         wood.pause();
         metal.pause();
       } else {
-        loadMedia();
+        preloadMetal();
         scheduleUpdate();
       }
     };
@@ -140,9 +143,9 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     const observer = new IntersectionObserver(([entry]) => {
       isNear = entry.isIntersecting;
       if (!isNear) displayedProgress = undefined;
-      loadMedia();
+      preloadMetal();
       scheduleUpdate();
-    }, { rootMargin: `${window.innerHeight}px 0px` });
+    }, { rootMargin: '0px 0px -64px' });
 
     syncMode();
     observer.observe(section);

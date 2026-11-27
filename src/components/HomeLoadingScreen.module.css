@@ -1,0 +1,78 @@
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: auto;
+  background: var(--paper);
+  color: var(--ink);
+  animation: appear 160ms ease-out both;
+}
+
+.panel {
+  width: min(100%, 192px);
+}
+
+.plate {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border: 1px solid #282b2c;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #25282a, #111314 68%);
+}
+
+.labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.labels strong { font-weight: 700; }
+.labels span { color: var(--muted); }
+
+.track {
+  height: 2px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.track::before {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: var(--red);
+  content: '';
+  animation: scan 1.15s ease-in-out infinite alternate;
+}
+
+.skip {
+  display: block;
+  min-height: 44px;
+  margin: 8px 0 0 auto;
+  padding: 0 0 0 10px;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@keyframes appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scan {
+  to { transform: translateX(138%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen, .track::before { animation: none; }
+}

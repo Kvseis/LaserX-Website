@@ -12,7 +12,9 @@ import { phone, whatsapp } from '@/lib/contact';
 import BeforeAfterCard from './BeforeAfterCard';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
 import ComparisonIcon from './ComparisonIcon';
+import HomeLoadingScreen from './HomeLoadingScreen';
 
+const heroImageId = 'home-hero-image';
 const resultIds = ['rust', 'coating', 'mold', 'grease', 'graffiti', 'soot', 'biofilm', 'wood'];
 const onest = Onest({ subsets: ['latin', 'latin-ext', 'cyrillic'], display: 'swap' });
 
@@ -21,12 +23,13 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
   const technologyPath = sitePath(locale, 'technology');
 
   return <div>
+    <HomeLoadingScreen imageId={heroImageId} copy={home.loading} />
     <SiteHeader locale={locale} page="home" copy={nav} />
 
     <main id="top" className="home-main">
       <div className="home-opening">
         <section className={`hero ${onest.className}`}>
-          <Image className="hero-sky" src="/images/hero-sky.webp" alt="" fill priority sizes="100vw" />
+          <Image id={heroImageId} className="hero-sky" src="/images/hero-sky.webp" alt="" fill preload sizes="100vw" />
           <div className="hero-shade" aria-hidden="true" />
           <div className="hero-copy">
             <h1><span>{home.headline[0]}</span>{' '}<em>{home.headline[1]}</em></h1>
