@@ -105,6 +105,9 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
         </div>
       </div></section>
 
+      <FaqSection copy={copy.faq} />
+      <ContactBanner copy={copy} />
+
       <section className="technology-preview" id="texnologiya">
         <div className="technology-preview-inner">
           <div className="technology-preview-media">
@@ -120,9 +123,6 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
           </div>
         </div>
       </section>
-
-      <FaqSection copy={copy.faq} />
-      <ContactBanner copy={copy} />
     </main>
 
     <SiteFooter locale={locale} copy={copy} />
