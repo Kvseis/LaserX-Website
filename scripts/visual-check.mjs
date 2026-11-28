@@ -44,21 +44,16 @@ async function verifyViewport(name, viewport) {
   if ((await page.locator('a[href^="https://wa.me/994553900028"]').count()) < 1) {
     throw new Error(`${name}: WhatsApp keçidi tapılmadı`);
   }
-  const comparison = page.getByRole('table', { name: 'Lazer təmizləmə nə ilə fərqlənir?' });
-  if (await comparison.getByRole('columnheader').count() !== 3
-    || await comparison.getByRole('rowheader').count() !== 6
-    || await comparison.getByRole('cell').count() !== 12) {
-    throw new Error(`${name}: müqayisənin başlıqları və ya məzmunu natamamdır`);
+  if ((await page.locator('.comparison-row').count()) !== 7) {
+    throw new Error(`${name}: müqayisə matrisinin sətirləri natamamdır`);
   }
-  const rowsAligned = await comparison.locator('tbody tr').evaluateAll((rows, stacked) => rows.every((row) => {
-    const [criterion, laser, traditional] = Array.from(row.cells, (cell) => cell.getBoundingClientRect());
-    const cellsAligned = Math.abs(laser.top - traditional.top) < 1 && Math.abs(laser.right - traditional.left) < 1;
-    return cellsAligned && (stacked
-      ? criterion.height > 20 && Math.abs(criterion.bottom - laser.top) < 1 && Math.abs(criterion.right - traditional.right) < 1
-      : Math.abs(criterion.top - laser.top) < 1 && Math.abs(criterion.right - laser.left) < 1);
-  }), mobile);
-  if (!rowsAligned || await page.locator('#ustunlukler .comparison-contact').getAttribute('href') !== 'tel:+994553900028') {
-    throw new Error(`${name}: müqayisə sətirlərinin düzülüşü və ya zəng keçidi yanlışdır`);
+  const criterion = page.locator('.comparison-head > .comparison-label-head');
+  if ((await criterion.textContent()) !== 'Meyar' || (await criterion.isVisible()) !== !mobile) {
+    throw new Error(`${name}: meyar sütununun başlığı yanlışdır`);
+  }
+  if ((await page.getByRole('cell', { name: 'Səthə zərər vermir', exact: true }).count()) !== 1
+    || (await page.getByRole('cell', { name: 'Daha yüksək uzunmüddətli xərc', exact: true }).count()) !== 1) {
+    throw new Error(`${name}: müqayisə mətni natamamdır`);
   }
   if ((await page.locator('.results-contact').count()) !== 0) {
     throw new Error(`${name}: Before/After əlaqə düyməsi silinməyib`);
@@ -237,9 +232,9 @@ async function verifyViewport(name, viewport) {
 
 async function verifyLanguages() {
   const variants = [
-    { locale: 'ru', name: 'Русский', services: 'Услуги лазерной очистки', technology: 'Лазерная технология', comparison: 'Чем отличается лазерная очистка?' },
-    { locale: 'en', name: 'English', services: 'Laser cleaning services', technology: 'Laser Technology', comparison: 'How does laser cleaning compare?' },
-    { locale: 'tr', name: 'Türkçe', services: 'Lazer temizleme hizmetleri', technology: 'Lazer Teknolojisi', comparison: 'Lazer temizlemenin farkı nedir?' },
+    { locale: 'ru', name: 'Русский', services: 'Услуги лазерной очистки', technology: 'Лазерная технология' },
+    { locale: 'en', name: 'English', services: 'Laser cleaning services', technology: 'Laser Technology' },
+    { locale: 'tr', name: 'Türkçe', services: 'Lazer temizleme hizmetleri', technology: 'Lazer Teknolojisi' },
   ];
   const page = await browser.newPage({
     viewport: { width: 390, height: 844 },
@@ -248,14 +243,13 @@ async function verifyLanguages() {
     reducedMotion: 'reduce',
   });
   const switcher = page.locator('.language-switch');
-  for (const { locale, name, services, technology, comparison } of variants) {
+  for (const { locale, name, services, technology } of variants) {
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     await switcher.locator('summary').tap();
     await switcher.getByRole('link', { name, exact: true }).tap();
     await page.waitForURL(`**/${locale}`, { waitUntil: 'networkidle' });
     if ((await page.locator('html').getAttribute('lang')) !== locale
-      || (await page.getByRole('heading', { name: services, exact: true }).count()) !== 1
-      || (await page.getByRole('table', { name: comparison }).getByRole('rowheader').count()) !== 6) {
+      || (await page.getByRole('heading', { name: services, exact: true }).count()) !== 1) {
       throw new Error(`${locale}: ana səhifənin dil versiyası natamamdır`);
     }
     const serviceLink = page.locator('#xidmetler a').first();
