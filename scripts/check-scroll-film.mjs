@@ -14,6 +14,8 @@ const metalSelector = '#proses video[poster*="scroll-poster"]';
 const woodFrames = '#proses [class*="woodScene"] canvas';
 const metalFrames = '#proses > div > canvas:not([class*="dustCloud"])';
 const dustFrames = '#proses canvas[class*="dustCloud"]';
+const metalEnd = .396;
+const dustStart = .32;
 await mkdir(artifactDir, { recursive: true });
 
 try {
@@ -30,18 +32,27 @@ try {
     if (!(introTravel > viewport.height * .9 && introTravel < viewport.height)) {
       throw new Error(`${name}: the opening transition should span nearly one viewport`);
     }
-    const scrollScreens = await film.evaluate((section, intro) => {
+    const { scrollScreens, metalExtra } = await film.evaluate((section, intro) => {
       const height = section.firstElementChild.offsetHeight;
-      return (section.offsetHeight - height - intro) / height;
+      return {
+        scrollScreens: (section.offsetHeight - height - intro) / height,
+        metalExtra: parseFloat(getComputedStyle(section).getPropertyValue('--metal-scroll-extra')),
+      };
     }, introTravel);
-    if (scrollScreens < (mobile ? 3.3 : 3.85)) throw new Error(`${name}: film üçün sürüşdürmə məsafəsi qısadır`);
+    const metalScreens = scrollScreens * (metalEnd + metalExtra) / (1 + metalExtra);
+    if (scrollScreens < (mobile ? 4.1 : 4.8) || metalScreens < (mobile ? 2.1 : 2.45)) {
+      throw new Error(`${name}: metal səhnəsi üçün sürüşdürmə məsafəsi qısadır`);
+    }
+    const scrollFraction = (progress) => (progress <= dustStart
+      ? progress * (dustStart + metalExtra) / dustStart
+      : progress + metalExtra) / (1 + metalExtra);
     const seekTo = async (progress) => {
       await page.evaluate((fraction) => {
         const section = document.getElementById('proses');
         const intro = parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll'));
         const travel = section.offsetHeight - section.firstElementChild.offsetHeight - intro;
         window.scrollTo({ top: section.offsetTop + intro + travel * fraction, behavior: 'instant' });
-      }, progress);
+      }, scrollFraction(progress));
     };
 
     const seekIntro = async (fraction) => film.evaluate(async (section, progress) => {
@@ -68,7 +79,7 @@ try {
         skyOpacity: Number(stage.opacity),
         masked: stage.maskImage !== 'none',
         revealPosition: parseFloat(stage.getPropertyValue('--hero-reveal')),
-        filmProgress: getComputedStyle(document.getElementById('proses')).getPropertyValue('--film-progress').trim(),
+        filmProgress: Number(getComputedStyle(document.getElementById('proses')).getPropertyValue('--film-progress')),
       };
     });
 
@@ -97,7 +108,7 @@ try {
       return parseFloat(getComputedStyle(stage).getPropertyValue('--hero-reveal')) >= 50;
     });
     const blended = await readIntro();
-    if (!blended.masked || blended.revealPosition >= 65 || blended.scale <= clouds.scale || blended.copyOpacity !== 0 || blended.filmProgress !== '0%') {
+    if (!blended.masked || blended.revealPosition >= 65 || blended.scale <= clouds.scale || blended.copyOpacity !== 0 || blended.filmProgress !== 0) {
       throw new Error(`${name}: the clouds should blend into the first film frame: ${JSON.stringify(blended)}`);
     }
     await page.screenshot({ path: path.join(artifactDir, `laserx-${name}-hero-transition.png`) });
@@ -189,22 +200,22 @@ try {
 
     await page.waitForFunction(() => {
       const progress = parseFloat(document.getElementById('proses').style.getPropertyValue('--film-progress'));
-      return Math.abs(progress - .18 / .396 * 100) < .25;
+      return Math.abs(progress - .18 / .396) < .0025;
     });
-    const { before, firstStep } = await film.evaluate(async (section) => {
+    const { before, firstStep } = await film.evaluate(async (section, fraction) => {
       const readProgress = () => parseFloat(section.style.getPropertyValue('--film-progress'));
       const before = readProgress();
       const intro = parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll'));
       const travel = section.offsetHeight - section.firstElementChild.offsetHeight - intro;
-      window.scrollTo({ top: section.offsetTop + intro + travel * .3, behavior: 'instant' });
+      window.scrollTo({ top: section.offsetTop + intro + travel * fraction, behavior: 'instant' });
       let firstStep = before;
       for (let i = 0; i < 12 && firstStep <= before; i++) {
         await new Promise(requestAnimationFrame);
         firstStep = readProgress();
       }
       return { before, firstStep };
-    });
-    if (!(firstStep > before && firstStep < 70)) throw new Error(`${name}: sürətli sürüşdürmədə səhnə birdən atlanır`);
+    }, scrollFraction(.3));
+    if (!(firstStep > before && firstStep < .70)) throw new Error(`${name}: sürətli sürüşdürmədə səhnə birdən atlanır`);
 
     if (mobile) {
       // These metal frames previously showed lines at the top of the image.
@@ -338,8 +349,39 @@ try {
       await waitForFrame(woodFrames, 15, 116);
       await touch.detach();
     }
-    console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll with eased progress; dust covers and clears in both directions`);
+    console.log(`${name}: ${scrollScreens.toFixed(2)} screens of scroll, including ${metalScreens.toFixed(2)} for metal; dust covers and clears in both directions`);
     await page.close();
+  }
+
+  const slow = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const initialSheets = [];
+  let releaseMetal;
+  const holdMetal = new Promise((resolve) => { releaseMetal = resolve; });
+  await slow.route('**/images/scroll-film/*.webp', async (route) => {
+    const file = new URL(route.request().url()).pathname.split('/').at(-1);
+    initialSheets.push(file);
+    if (file === 'metal-hd-24-0.webp') await holdMetal;
+    await route.continue();
+  });
+  try {
+    await slow.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+    await slow.locator('#proses[data-media="frames"]').waitFor();
+    await slow.waitForFunction(() => document.getElementById('home-hero-image').naturalWidth > 0);
+    await slow.waitForTimeout(450);
+    if (!initialSheets.includes('metal-hd-24-0.webp') || initialSheets.some((file) => !file.startsWith('metal-hd-24-'))
+      || await slow.locator('[data-home-loading]').isVisible()) {
+      throw new Error(`The homepage should preload only metal and stay usable while it loads: ${initialSheets.join(', ')}`);
+    }
+    await slow.locator('.hero-book').click({ trial: true });
+    releaseMetal();
+    await slow.locator(`${metalFrames}[data-frame="0"]`).waitFor();
+    if (initialSheets.filter((file) => file === 'metal-hd-24-0.webp').length !== 1) {
+      throw new Error('The first metal sheet should be requested once.');
+    }
+    console.log('Delayed mobile media: hero remains clickable while the opening HD frame loads once');
+  } finally {
+    releaseMetal();
+    await slow.close();
   }
 
   const reduced = await browser.newPage({ reducedMotion: 'reduce' });

@@ -1,9 +1,8 @@
 'use client';
 
 import BrandWordmark from './BrandWordmark';
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { SiteCopy } from '@/lib/messages/az';
-import { FilmAssetContext, getFilmConnection, usesStaticFilm, warmFilmAssets } from './ScrollFilmAssets';
 import styles from './HomeLoadingScreen.module.css';
 
 const showAfterMs = 350;
@@ -20,23 +19,18 @@ export default function HomeLoadingScreen({
 }) {
   const screenRef = useRef<HTMLDivElement>(null);
   const dismiss = useRef<() => void>(() => {});
-  const filmSources = useRef(new Map<string, string>());
-  const assetSource = useCallback((path: string) => filmSources.current.get(path) ?? path, []);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const image = document.getElementById(imageId);
-    if (!(image instanceof HTMLImageElement) || document.hidden ||
+    if (!(image instanceof HTMLImageElement) || image.complete || document.hidden ||
       window.location.hash || window.scrollY > 0 || document.activeElement !== document.body) return;
 
     const listeners = new AbortController();
     const { signal } = listeners;
-    const sources = filmSources.current;
-    let imageReady = image.complete;
-    let filmReady = usesStaticFilm(window.matchMedia('(prefers-reduced-motion: reduce)').matches, getFilmConnection());
-    if (imageReady && filmReady) return;
-
-    const showTimer = window.setTimeout(() => setVisible(true), showAfterMs);
+    const showTimer = window.setTimeout(() => {
+      if (!image.complete) setVisible(true);
+    }, showAfterMs);
     const timeout = window.setTimeout(finish, timeoutMs);
 
     function cleanup() {
@@ -51,24 +45,14 @@ export default function HomeLoadingScreen({
       setVisible(false);
     }
 
-    function finishIfReady() {
-      if (imageReady && filmReady) finish();
-    }
-
     function finishOutsideScreen(event: Event) {
       if (event.target instanceof Node && screenRef.current?.contains(event.target)) return;
       finish();
     }
 
-    function markImageReady() {
-      imageReady = true;
-      startFilmLoad();
-      finishIfReady();
-    }
-
     dismiss.current = finish;
-    image.addEventListener('load', markImageReady, { signal });
-    image.addEventListener('error', markImageReady, { signal });
+    image.addEventListener('load', finish, { signal });
+    image.addEventListener('error', finish, { signal });
     document.addEventListener('visibilitychange', finish, { signal });
     document.addEventListener('focusin', finishOutsideScreen, { signal });
     window.addEventListener('pointerdown', finishOutsideScreen, { signal, passive: true });
@@ -77,29 +61,10 @@ export default function HomeLoadingScreen({
       if (event.key === 'Escape') finish();
     }, { signal });
 
-    let filmStarted = false;
-    function startFilmLoad() {
-      if (filmStarted || filmReady || signal.aborted) return;
-      filmStarted = true;
-      const narrowViewport = window.matchMedia('(max-width: 760px)').matches;
-      void warmFilmAssets(narrowViewport, signal, (path, asset) => {
-        sources.set(path, URL.createObjectURL(asset));
-      }).then(() => {
-        filmReady = true;
-        finishIfReady();
-      });
-    }
-
-    if (imageReady) startFilmLoad();
-
-    return () => {
-      cleanup();
-      for (const source of sources.values()) URL.revokeObjectURL(source);
-      sources.clear();
-    };
+    return cleanup;
   }, [imageId]);
 
-  return <FilmAssetContext value={assetSource}>
+  return <>
     {visible && <div ref={screenRef} className={styles.screen} data-home-loading>
       <div className={styles.panel}>
         <div className={styles.labels}>
@@ -111,5 +76,5 @@ export default function HomeLoadingScreen({
       </div>
     </div>}
     {children}
-  </FilmAssetContext>;
+  </>;
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import type { SiteCopy } from '@/lib/messages/az';
-import { FilmAssetContext, filmFrameRate, filmSheets, getFilmConnection, metalSource, usesStaticFilm, woodSource } from './ScrollFilmAssets';
+import { filmFrameRate, filmSheets, getFilmConnection, metalSource, usesStaticFilm, woodSource } from './ScrollFilmAssets';
 import { createScrollFilmFrames } from './ScrollFilmFrames';
 import styles from './ScrollCleaningFilm.module.css';
 
@@ -12,8 +12,8 @@ const dustStart = 0.32;
 const dustEnd = 0.60;
 const woodPreloadStart = 0.14;
 const dustPreloadStart = 0.22;
-const heroPreloadStart = 0.18;
-const scrollResponseMs = 110;
+const metalScrollExtra = 0.24;
+const scrollResponseMs = 52;
 const metalFraming = [[0, .85], [96, .71], [156, .58], [191, .63]] as const;
 
 function clampProgress(value: number) {
@@ -36,6 +36,12 @@ function metalSubjectX(frame: number) {
   return metalFraming[metalFraming.length - 1][1];
 }
 
+function preloadVideo(video: HTMLVideoElement, source: string) {
+  if (video.hasAttribute('src')) return;
+  video.preload = 'auto';
+  video.src = source;
+}
+
 function seekVideo(video: HTMLVideoElement, progress: number) {
   if (!Number.isFinite(video.duration) || video.duration <= 0 || video.seeking) return;
   const lastFrame = Math.max(0, Math.round(video.duration * filmFrameRate) - 1);
@@ -46,7 +52,6 @@ function seekVideo(video: HTMLVideoElement, progress: number) {
 }
 
 export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] }) {
-  const assetSource = useContext(FilmAssetContext);
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const woodRef = useRef<HTMLVideoElement>(null);
@@ -74,14 +79,16 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     let mounted = true;
     let displayedProgress: number | undefined;
     let previousFrameTime = 0;
+    let heroScroll = 0;
+    let travel = 0;
 
     const scheduleUpdate = () => {
-      if (mounted && !frame) frame = window.requestAnimationFrame(update);
+      if (mounted && isNear && !isStatic && !frame) frame = window.requestAnimationFrame(update);
     };
 
-    const woodFrames = createScrollFilmFrames(woodCanvas, 'wood', scheduleUpdate, assetSource);
-    const metalFrames = createScrollFilmFrames(metalCanvas, 'metal', scheduleUpdate, assetSource);
-    const dustFrames = createScrollFilmFrames(dustCanvas, 'dust', scheduleUpdate, assetSource);
+    const woodFrames = createScrollFilmFrames(woodCanvas, 'wood', scheduleUpdate);
+    const metalFrames = createScrollFilmFrames(metalCanvas, 'metal', scheduleUpdate);
+    const dustFrames = createScrollFilmFrames(dustCanvas, 'dust', scheduleUpdate);
 
     const showDecodedVideo = (event: Event) => {
       const video = event.currentTarget as HTMLVideoElement;
@@ -89,27 +96,22 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       scheduleUpdate();
     };
 
-    const retryVideoSource = (event: Event) => {
-      const video = event.currentTarget as HTMLVideoElement;
-      if (!video.src.startsWith('blob:')) return;
-      delete video.dataset.ready;
-      video.src = video === metal ? metalSource : woodSource;
+    const measure = () => {
+      heroScroll = Number.parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll')) || 0;
+      travel = (section.offsetHeight - stage.offsetHeight - heroScroll) / (1 + metalScrollExtra);
+      scheduleUpdate();
     };
 
     const update = (now: number) => {
       frame = 0;
       if (isStatic || !isNear) return;
 
-      const heroScroll = Number.parseFloat(getComputedStyle(section).getPropertyValue('--hero-scroll')) || 0;
       const offset = -section.getBoundingClientRect().top;
-      if (displayedProgress === undefined) {
-        // Leave the initial warmup to the homepage loader while the framed hero is still on screen.
-        if (heroScroll > 0 && offset < heroScroll * heroPreloadStart) return;
-        preloadMetal();
-      }
-
-      const travel = section.offsetHeight - stage.offsetHeight - heroScroll;
-      const target = travel > 0 ? clampProgress((offset - heroScroll) / travel) : 0;
+      const scroll = travel > 0 ? (offset - heroScroll) / travel : 0;
+      // Give metal more scroll distance while preserving the timing of the wood and dust scenes.
+      const target = clampProgress(scroll <= dustStart + metalScrollExtra
+        ? scroll * dustStart / (dustStart + metalScrollExtra)
+        : scroll - metalScrollExtra);
       const previous = displayedProgress ?? target;
       const elapsed = Math.min(now - previousFrameTime, 32);
       const gap = target - previous;
@@ -135,7 +137,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         section.style.setProperty('--dust-opacity', dustActive ? '1' : '0');
         section.style.setProperty('--wood-title-opacity', String(woodTitleOpacity));
         section.style.setProperty('--metal-title-opacity', String(1 - easeBetween(transition, 0, 0.42)));
-        section.style.setProperty('--film-progress', `${metalProgress * 100}%`);
+        section.style.setProperty('--film-progress', String(metalProgress));
       }
 
       if (target >= dustPreloadStart && target < dustEnd) dustFrames.preload();
@@ -148,20 +150,12 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         }
         if (transition > 0) woodFrames.paint(woodProgress);
       } else {
-        if (target >= woodPreloadStart && !wood.hasAttribute('src')) {
-          wood.preload = 'auto';
-          wood.src = assetSource(woodSource);
+        if (target >= woodPreloadStart || transition > 0) preloadVideo(wood, woodSource);
+        if (transition < 1) {
+          preloadVideo(metal, metalSource);
+          seekVideo(metal, metalProgress);
         }
-        if (transition < 1) seekVideo(metal, metalProgress);
         if (transition > 0) seekVideo(wood, woodProgress);
-      }
-    };
-
-    const preloadMetal = () => {
-      if (narrowViewport.matches) metalFrames.preload();
-      else if (!metal.hasAttribute('src')) {
-        metal.preload = 'auto';
-        metal.src = assetSource(metalSource);
       }
     };
 
@@ -173,26 +167,27 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
       if (isStatic) {
         wood.pause();
         metal.pause();
-      } else {
-        scheduleUpdate();
       }
+      measure();
     };
 
     const observer = new IntersectionObserver(([entry]) => {
       isNear = entry.isIntersecting;
       if (!isNear) displayedProgress = undefined;
       scheduleUpdate();
-    }, { rootMargin: '0px 0px -64px' });
+    }, { rootMargin: '160px 0px' });
 
+    const resizeObserver = new ResizeObserver(measure);
     syncMode();
     observer.observe(section);
+    resizeObserver.observe(section);
+    resizeObserver.observe(stage);
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
     window.addEventListener('resize', scheduleUpdate);
     for (const video of [wood, metal]) {
       video.addEventListener('loadedmetadata', scheduleUpdate);
       video.addEventListener('loadeddata', showDecodedVideo);
       video.addEventListener('seeked', scheduleUpdate);
-      video.addEventListener('error', retryVideoSource);
     }
     reducedMotion.addEventListener('change', syncMode);
     narrowViewport.addEventListener('change', syncMode);
@@ -201,6 +196,7 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
     return () => {
       mounted = false;
       observer.disconnect();
+      resizeObserver.disconnect();
       for (const frames of [metalFrames, woodFrames, dustFrames]) frames.dispose();
       window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', scheduleUpdate);
@@ -209,15 +205,16 @@ export default function ScrollCleaningFilm({ copy }: { copy: SiteCopy['home'] })
         video.removeEventListener('loadedmetadata', scheduleUpdate);
         video.removeEventListener('loadeddata', showDecodedVideo);
         video.removeEventListener('seeked', scheduleUpdate);
-        video.removeEventListener('error', retryVideoSource);
       }
       reducedMotion.removeEventListener('change', syncMode);
       narrowViewport.removeEventListener('change', syncMode);
       connection?.removeEventListener('change', syncMode);
     };
-  }, [assetSource]);
+  }, []);
 
-  return <section ref={sectionRef} id="proses" className={styles.section} aria-labelledby="cleaning-film-title" aria-describedby="cleaning-film-disclosure">
+  return <section ref={sectionRef} id="proses" className={styles.section}
+    style={{ '--metal-scroll-extra': metalScrollExtra } as CSSProperties}
+    aria-labelledby="cleaning-film-title" aria-describedby="cleaning-film-disclosure">
     <div ref={stageRef} className={styles.stage}>
       <video
         ref={metalRef}

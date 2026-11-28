@@ -8,6 +8,7 @@
   padding: 16px 16px max(16px, env(safe-area-inset-bottom));
   overflow: auto;
   color: var(--ink);
+  pointer-events: none;
   animation: appear 160ms ease-out both;
 }
 
@@ -22,6 +23,7 @@
   border-radius: 12px;
   background: var(--paper);
   box-shadow: 0 3px 18px #15151524;
+  pointer-events: auto;
 }
 
 
