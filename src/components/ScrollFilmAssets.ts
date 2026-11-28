@@ -1,5 +1,3 @@
-import { createContext } from 'react';
-
 export const filmFrameRate = 24;
 export const metalSource = '/videos/laserx-scroll-cleaning.mp4';
 export const woodSource = '/videos/laserx-wood-cleaning.mp4';
@@ -11,7 +9,6 @@ export const filmSheets = {
 } as const;
 
 export type FilmScene = keyof typeof filmSheets;
-export const FilmAssetContext = createContext((path: string) => path);
 
 type FilmConnection = EventTarget & { saveData?: boolean; effectiveType?: string };
 
@@ -26,34 +23,4 @@ export function usesStaticFilm(reducedMotion: boolean, connection?: FilmConnecti
 
 export function filmSheetPath(scene: FilmScene, index: number) {
   return '/images/scroll-film/' + filmSheets[scene].name + '-' + index + '.webp';
-}
-
-export async function warmFilmAssets(
-  narrowViewport: boolean,
-  signal: AbortSignal,
-  remember: (path: string, asset: Blob) => void,
-) {
-  // Warm the opening frames. Each scene fetches and decodes its remaining sheets as it is scrubbed.
-  const paths = narrowViewport
-    ? [
-      filmSheetPath('metal', 0), filmSheetPath('wood', 0),
-      filmSheetPath('metal', 1), filmSheetPath('wood', 1),
-      filmSheetPath('metal', 2), filmSheetPath('metal', 3),
-    ]
-    : [metalSource, woodSource];
-  const queue = paths.values();
-
-  await Promise.all(Array.from({ length: Math.min(4, paths.length) }, async () => {
-    for (const path of queue) {
-      if (signal.aborted) return;
-      try {
-        const response = await fetch(path, { signal, priority: 'low' });
-        if (!response.ok) continue;
-        const asset = await response.blob();
-        if (!signal.aborted) remember(path, asset);
-      } catch {
-        // Leave a failed or cancelled request to the film's regular loading path.
-      }
-    }
-  }));
 }

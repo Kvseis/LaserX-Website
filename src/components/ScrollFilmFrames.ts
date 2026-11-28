@@ -1,8 +1,11 @@
 import { filmSheetPath, filmSheets, type FilmScene } from './ScrollFilmAssets';
 
-type Sheet = { drawable?: HTMLImageElement | ImageBitmap };
+type Sheet = { image: HTMLImageElement; drawable?: HTMLImageElement | ImageBitmap };
 
 function release(sheet: Sheet) {
+  sheet.image.onload = null;
+  sheet.image.onerror = null;
+  if (!sheet.image.complete) sheet.image.removeAttribute('src');
   if (sheet.drawable && 'close' in sheet.drawable) sheet.drawable.close();
 }
 
@@ -10,7 +13,6 @@ export function createScrollFilmFrames(
   canvas: HTMLCanvasElement,
   scene: FilmScene,
   onReady: () => void,
-  assetSource: (path: string) => string,
 ) {
   const { width, height } = canvas;
   const { frames, rows, columns, alpha, inset } = filmSheets[scene];
@@ -23,13 +25,16 @@ export function createScrollFilmFrames(
 
   canvas.dataset.frameCount = String(frames);
 
-  const load = (index: number) => {
+  const load = (index: number, priority: 'high' | 'low') => {
     if (index < 0 || index * framesPerSheet >= frames) return;
     const existing = sheets.get(index);
-    if (existing) return existing;
+    if (existing) {
+      if (priority === 'high') existing.image.fetchPriority = priority;
+      return existing;
+    }
 
     const image = new Image();
-    const sheet: Sheet = {};
+    const sheet: Sheet = { image };
     sheets.set(index, sheet);
     image.onload = async () => {
       sheet.drawable = typeof createImageBitmap === 'function'
@@ -38,14 +43,16 @@ export function createScrollFilmFrames(
       if (sheets.get(index) === sheet) onReady();
       else release(sheet);
     };
-    image.src = assetSource(filmSheetPath(scene, index));
+    image.onerror = () => sheets.delete(index);
+    image.fetchPriority = priority;
+    image.src = filmSheetPath(scene, index);
     return sheet;
   };
 
   return {
     preload() {
-      load(0);
-      load(1);
+      load(0, 'low');
+      load(1, 'low');
     },
     dispose() {
       for (const sheet of sheets.values()) release(sheet);
@@ -66,10 +73,10 @@ export function createScrollFilmFrames(
           sheets.delete(index);
         }
       }
-      const sheet = load(sheetIndex);
-      load(sheetIndex + direction);
+      const sheet = load(sheetIndex, 'high');
+      load(sheetIndex + direction, 'low');
       const remaining = direction === 1 ? framesPerSheet - tile - 1 : tile;
-      if (remaining < framesPerSheet / 2) load(sheetIndex + direction * 2);
+      if (remaining < framesPerSheet / 2) load(sheetIndex + direction * 2, 'low');
       if (!sheet?.drawable) return;
 
       context ??= canvas.getContext('2d', { alpha });
