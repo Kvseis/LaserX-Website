@@ -12,7 +12,6 @@ import { siteOrigin } from '@/lib/site-urls';
 import { phone, whatsapp } from '@/lib/contact';
 import BeforeAfterCard from './BeforeAfterCard';
 import ScrollCleaningFilm from './ScrollCleaningFilm';
-import ComparisonIcon from './ComparisonIcon';
 import HomeLoadingScreen from './HomeLoadingScreen';
 import HomeOpening from './HomeOpening';
 import openingStyles from './HomeOpening.module.css';
@@ -80,29 +79,31 @@ export default function HomePage({ locale, copy }: { locale: Locale; copy: SiteC
 
       <ServicesShowcase copy={copy.services} technologyPath={technologyPath} />
 
-      <section className="methods" id="ustunlukler"><div className="wrap methods-layout">
+      <section className="methods" id="ustunlukler" aria-labelledby="methods-title"><div className="wrap methods-layout">
         <div className="methods-copy">
-          <h2><span>{methods.laser}</span><em>VS</em><span>{methods.traditional}</span></h2>
+          <h2 id="methods-title">{methods.title}</h2>
+          <p>{methods.intro}</p>
         </div>
-        <div className="comparison-matrix">
-          <div role="table" aria-label={methods.label}>
-            <div className="comparison-head" role="row">
-              <span className="comparison-label-head" aria-hidden="true" />
-              <div className="comparison-laser-head" role="columnheader">
-                <span className="comparison-laser-brand"><Image unoptimized src="/images/laserx-mark-128.webp" width={28} height={28} alt="" />{methods.laser}</span>
-              </div>
-              <b role="columnheader">{methods.traditional}<small>{methods.examples}</small></b>
-            </div>
-            {methods.rows.map(([laser, traditional], index) => <div className="comparison-row" role="row" key={laser}>
-              <strong className="comparison-criterion" role="rowheader"><ComparisonIcon index={index} />{methods.rowLabels[index]}</strong>
-              <span className="comparison-value laser-value" role="cell"><i className="comparison-mark good" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.laser}</small>{laser}</span></span>
-              <span className="comparison-value traditional-value" role="cell"><i className="comparison-mark bad" aria-hidden="true" /><span><small className="comparison-mobile-label" aria-hidden="true">{methods.traditional}</small>{traditional}</span></span>
-            </div>)}
-          </div>
-          <div className="comparison-laser-footer">
-            <a className="comparison-contact" href={phone}>{methods.contact}<ButtonArrow /></a>
-          </div>
-        </div>
+        <table className="comparison-matrix" role="table" aria-labelledby="methods-title">
+          <thead role="rowgroup">
+            <tr className="comparison-head" role="row">
+              <th className="comparison-label-head" scope="col" role="columnheader">{methods.criterion}</th>
+              <th className="comparison-laser-head" scope="col" role="columnheader">{methods.laser}</th>
+              <th className="comparison-traditional-head" scope="col" role="columnheader">
+                {methods.traditional}
+                <small>{methods.examples}</small>
+              </th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            {methods.rows.map(([criterion, laser, traditional]) => <tr className="comparison-row" role="row" key={criterion}>
+              <th className="comparison-criterion" scope="row" role="rowheader">{criterion}</th>
+              <td className="laser-value" role="cell">{laser}</td>
+              <td className="traditional-value" role="cell">{traditional}</td>
+            </tr>)}
+          </tbody>
+        </table>
+        <a className="comparison-contact" href={phone}>{methods.contact}<ButtonArrow /></a>
       </div></section>
 
       <FaqSection copy={copy.faq} />
